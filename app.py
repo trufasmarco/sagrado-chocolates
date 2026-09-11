@@ -29,7 +29,7 @@ def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
     return conn
 
-# Cria a tabela de produtos na nuvem caso ela ainda não exista
+# Cria a tabela de produtos na nuvem caso ela ainda não exista com as colunas corretas
 def init_db():
     try:
         conn = get_db_connection()
@@ -37,18 +37,18 @@ def init_db():
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS produtos (
                 id SERIAL PRIMARY KEY,
-                nome TEXT NOT NULL,
-                preco REAL NOT NULL,
-                estoque INTEGER NOT NULL,
+                produto TEXT NOT NULL,
+                valor REAL NOT NULL,
+                quantidade INTEGER NOT NULL,
                 img TEXT NOT NULL
             )
         ''')
         conn.commit()
         cursor.close()
         conn.close()
-        print("Banco de dados na nuvem conectado e tabela verificada com sucesso!")
+        print("Tabela 'produtos' conectada e verificada com sucesso no Neon.tech!")
     except Exception as e:
-        print(f"Erro ao conectar ou criar tabela no Neon: {e}")
+        print(f"Erro ao criar tabela no Neon: {e}")
 
 # Rota para a loja principal
 @app.route('/')
@@ -60,7 +60,7 @@ def index():
 def admin():
     return render_template('admin.html')
 
-# API REST: Listar todos os produtos da nuvem
+# API REST: Listar todos os produtos da nuvem (convertendo para o padrão esperado pelo front-end)
 @app.route('/api/produtos', methods=['GET'])
 def listar_produtos():
     try:
@@ -71,20 +71,30 @@ def listar_produtos():
         cursor.close()
         conn.close()
         
-        lista = [{'id': p['id'], 'nome': p['nome'], 'preco': p['preco'], 'estoque': p['estoque'], 'img': p['img']} for p in produtos]
+        # Mapeia as colunas do banco para as chaves que o JavaScript lê (nome, preco, estoque)
+        lista = [{
+            'id': p['id'], 
+            'nome': p['produto'], 
+            'preco': p['valor'], 
+            'estoque': p['quantidade'], 
+            'img': p['img']
+        } for p in produtos]
+        
         return jsonify(lista)
     except Exception as e:
         return jsonify({'erro': str(e)}), 500
 
-# API REST: Cadastrar novo produto na nuvem
+# API REST: Cadastrar novo produto na nuvem usando as colunas produto, valor, quantidade
 @app.route('/api/produtos', methods=['POST'])
 def cadastrar_produto():
     try:
         dados = request.json
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO produtos (nome, preco, estoque, img) VALUES (%s, %s, %s, %s)',
-                     (dados['nome'], float(dados['preco']), int(dados['estoque']), dados['img']))
+        cursor.execute(
+            'INSERT INTO produtos (produto, valor, quantidade, img) VALUES (%s, %s, %s, %s)',
+            (dados['nome'], float(dados['preco']), int(dados['estoque']), dados['img'])
+        )
         conn.commit()
         cursor.close()
         conn.close()
