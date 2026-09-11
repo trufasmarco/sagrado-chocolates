@@ -12,14 +12,18 @@
     <div class="logo">Sagrado Chocolates</div>
     <nav>
       <button onclick="abrirModal('modalCarrinho')">Carrinho (<span id="cart-count">0</span>)</button>
-      <button onclick="abrirModal('modalLogin')">Login</button>
-      <button onclick="abrirModal('modalAdmin')">Painel Admin</button>
+      <button onclick="window.location.href='/admin'">Login</button>
+      <button onclick="window.location.href='/admin'">Painel Admin</button>
     </nav>
   </header>
 
+  <!-- Banner Hero com Zoom -->
   <section class="hero">
-    <img src="{{ url_for('static', filename='banner_principal.png') }}" alt="Banner Sagrado Chocolates - Cones Trufados" class="hero-banner-img">
+    <img src="/static/banner_principal.png" alt="Banner Sagrado Chocolates - Cones Trufados" class="hero-banner-img" id="banner-zoom" onclick="alternarZoomBanner()">
   </section>
+
+  <!-- Overlay para o efeito de Zoom -->
+  <div class="zoom-overlay" id="zoomOverlay" onclick="alternarZoomBanner()"></div>
 
   <main class="container">
     <h2 class="section-title">Nossos Sabores</h2>
@@ -40,32 +44,6 @@
         <span>Total:</span> <span>R$ <span id="total-carrinho">0,00</span></span>
       </p>
       <button class="btn-comprar" style="margin-top: 1rem;" onclick="finalizarPedido()">Finalizar Pedido</button>
-    </div>
-  </div>
-
-  <div class="modal" id="modalLogin">
-    <div class="modal-content">
-      <span class="close-btn" onclick="fecharModal('modalLogin')">×</span>
-      <h3 style="color: var(--gold); margin-bottom: 1rem;">Acesse sua Conta</h3>
-      <form onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="login-email">E-mail</label>
-          <input type="email" id="login-email" required placeholder="seu@email.com">
-        </div>
-        <div class="form-group">
-          <label for="login-senha">Senha</label>
-          <input type="password" id="login-senha" required placeholder="******">
-        </div>
-        <button class="btn-comprar" type="submit">Entrar</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal" id="modalAdmin">
-    <div class="modal-content" style="max-width: 800px;">
-      <span class="close-btn" onclick="fecharModal('modalAdmin')">×</span>
-      <h3 style="color: var(--gold); margin-bottom: 1rem;">Painel de Gestão</h3>
-      <p style="margin-bottom: 1rem;">Para cadastrar novos produtos, acesse a <a href="/admin" style="color: var(--gold);">Tela de Cadastro Administrativo</a>.</p>
     </div>
   </div>
 
