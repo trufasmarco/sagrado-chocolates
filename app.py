@@ -5,8 +5,8 @@ import psycopg2.extras
 
 app = Flask(__name__)
 
-# DEFINA A SENHA DO ADMINISTRADOR AQUI:
-SENHA_ADMIN = "123456"  # Altere para a senha que você preferir
+# SENHA DO ADMINISTRADOR
+SENHA_ADMIN = "123456"
 
 # Sua URL de conexão oficial do Neon.tech
 DATABASE_URL = "postgresql://neondb_owner:npg_aVBCmlS03XkO@ep-lingering-haze-ax7ral1g-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
@@ -42,7 +42,6 @@ def index():
 def admin():
     return render_template('admin.html')
 
-# ROTA PARA VALIDAR A SENHA DO ADMIN
 @app.route('/api/login', methods=['POST'])
 def login_admin():
     dados = request.json
