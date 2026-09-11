@@ -22,9 +22,10 @@ function alternarZoomBanner() {
   }
 }
 
-// Carregar produtos da API do Servidor (Neon.tech)
+// Carregar produtos da API do Servidor (Neon.tech) com tela de carregamento
 async function carregarProdutos() {  
   const container = document.getElementById('produtos-container');  
+  const loader = document.getElementById('loaderOverlay');
   if(!container) return; 
   
   try {
@@ -35,27 +36,31 @@ async function carregarProdutos() {
       
       if(produtosCadastrados.length === 0) {
           container.innerHTML = '<p style="text-align:center; color:var(--cream); width: 100%;">Nenhum produto cadastrado ainda.</p>';
-          return;
+      } else {
+          produtosCadastrados.forEach(p => {  
+            container.innerHTML += `  
+              <div class="card-produto">  
+                <div>  
+                  <img src="${p.img}" alt="${p.nome}" loading="lazy">  
+                  <h3>${p.nome}</h3>  
+                  <p>Recheio gourmet artesanal.</p>  
+                </div>  
+                <div>  
+                  <div class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>  
+                  <button class="btn-comprar" onclick="adicionarAoCarrinho(${p.id})">Adicionar</button>  
+                </div>  
+              </div>  
+            `;  
+          }); 
       }
-
-      produtosCadastrados.forEach(p => {  
-        container.innerHTML += `  
-          <div class="card-produto">  
-            <div>  
-              <img src="${p.img}" alt="${p.nome}" loading="lazy">  
-              <h3>${p.nome}</h3>  
-              <p>Recheio gourmet artesanal.</p>  
-            </div>  
-            <div>  
-              <div class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>  
-              <button class="btn-comprar" onclick="adicionarAoCarrinho(${p.id})">Adicionar</button>  
-            </div>  
-          </div>  
-        `;  
-      }); 
   } catch (error) {
       console.error("Erro ao carregar produtos:", error);
       container.innerHTML = '<p style="text-align:center; color:var(--gold);">Erro ao conectar com o servidor.</p>';
+  } finally {
+      if(loader) {
+          loader.classList.add('ocultar-loader');
+          setTimeout(() => loader.style.display = 'none', 500);
+      }
   }
 }  
 
