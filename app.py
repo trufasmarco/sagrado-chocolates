@@ -1,7 +1,8 @@
+import os
 import subprocess
 import sys
 
-# Função para verificar e instalar dependências automaticamente
+# Função para verificar e instalar dependências automaticamente (útil para testes locais)
 def verificar_e_instalar(pacote, import_nome=None):
     if import_nome is None:
         import_nome = pacote
@@ -11,7 +12,7 @@ def verificar_e_instalar(pacote, import_nome=None):
         print(f"Biblioteca '{pacote}' não encontrada. Instalando automaticamente...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
 
-# Garante que o Flask e o Psycopg2 estejam instalados antes de prosseguir
+# Garante que o Flask e o Psycopg2 estejam instalados
 verificar_e_instalar("flask")
 verificar_e_instalar("psycopg2-binary", "psycopg2")
 
@@ -29,7 +30,7 @@ def get_db_connection():
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
     return conn
 
-# Cria a tabela de produtos na nuvem caso ela ainda não exista com as colunas corretas
+# Cria a tabela de produtos na nuvem caso ela ainda não exista
 def init_db():
     try:
         conn = get_db_connection()
@@ -60,7 +61,7 @@ def index():
 def admin():
     return render_template('admin.html')
 
-# API REST: Listar todos os produtos da nuvem (convertendo para o padrão esperado pelo front-end)
+# API REST: Listar todos os produtos da nuvem
 @app.route('/api/produtos', methods=['GET'])
 def listar_produtos():
     try:
@@ -71,7 +72,6 @@ def listar_produtos():
         cursor.close()
         conn.close()
         
-        # Mapeia as colunas do banco para as chaves que o JavaScript lê (nome, preco, estoque)
         lista = [{
             'id': p['id'], 
             'nome': p['produto'], 
@@ -84,7 +84,7 @@ def listar_produtos():
     except Exception as e:
         return jsonify({'erro': str(e)}), 500
 
-# API REST: Cadastrar novo produto na nuvem usando as colunas produto, valor, quantidade
+# API REST: Cadastrar novo produto na nuvem
 @app.route('/api/produtos', methods=['POST'])
 def cadastrar_produto():
     try:
@@ -104,4 +104,6 @@ def cadastrar_produto():
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Pega a porta fornecida pelo Render ou usa 5000 por padrão localmente
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
