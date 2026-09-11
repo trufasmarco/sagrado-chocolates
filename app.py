@@ -1,62 +1,80 @@
 from flask import Flask, render_template, request, jsonify
-import sqlite3
+import psycopg2
+import psycopg2.extras
 
 app = Flask(__name__)
 
-# Função para conectar ao banco de dados SQLite
+# Sua URL de conexão oficial do Neon.tech
+DATABASE_URL = "postgresql://neondb_owner:npg_aVBCmlS03XkO@ep-lingering-haze-ax7ral1g-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+# Função para conectar ao PostgreSQL na nuvem
 def get_db_connection():
-    conn = sqlite3.connect('loja.db')
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
     return conn
 
-# Cria a tabela de produtos caso não exista
+# Cria a tabela de produtos na nuvem caso ela ainda não exista
 def init_db():
-    conn = get_db_connection()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS produtos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            preco REAL NOT NULL,
-            estoque INTEGER NOT NULL,
-            img TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS produtos (
+                id SERIAL PRIMARY KEY,
+                nome TEXT NOT NULL,
+                preco REAL NOT NULL,
+                estoque INTEGER NOT NULL,
+                img TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("Banco de dados na nuvem conectado e tabela verificada com sucesso!")
+    except Exception as e:
+        print(f"Erro ao conectar ou criar tabela no Neon: {e}")
 
 # Rota para a loja principal
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Rota para a nova tela de administração/cadastro
+# Rota para a tela de administração/cadastro
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
 
-# API REST: Listar todos os produtos
+# API REST: Listar todos os produtos da nuvem
 @app.route('/api/produtos', methods=['GET'])
 def listar_produtos():
-    conn = get_db_connection()
-    produtos = conn.execute('SELECT * FROM produtos').fetchall()
-    conn.close()
-    
-    # Converte os dados do banco para um formato que o JavaScript entende (JSON)
-    lista = [{'id': p['id'], 'nome': p['nome'], 'preco': p['preco'], 'estoque': p['estoque'], 'img': p['img']} for p in produtos]
-    return jsonify(lista)
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM produtos')
+        produtos = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        
+        lista = [{'id': p['id'], 'nome': p['nome'], 'preco': p['preco'], 'estoque': p['estoque'], 'img': p['img']} for p in produtos]
+        return jsonify(lista)
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
 
-# API REST: Cadastrar novo produto
+# API REST: Cadastrar novo produto na nuvem
 @app.route('/api/produtos', methods=['POST'])
 def cadastrar_produto():
-    dados = request.json
-    conn = get_db_connection()
-    conn.execute('INSERT INTO produtos (nome, preco, estoque, img) VALUES (?, ?, ?, ?)',
-                 (dados['nome'], float(dados['preco']), int(dados['estoque']), dados['img']))
-    conn.commit()
-    conn.close()
-    return jsonify({'status': 'sucesso', 'mensagem': 'Produto cadastrado com sucesso!'}), 201
+    try:
+        dados = request.json
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO produtos (nome, preco, estoque, img) VALUES (%s, %s, %s, %s)',
+                     (dados['nome'], float(dados['preco']), int(dados['estoque']), dados['img']))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'sucesso', 'mensagem': 'Produto cadastrado na nuvem com sucesso!'}), 201
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
 
 if __name__ == '__main__':
     init_db()
-    # host='0.0.0.0' permite que a aplicação seja acessada pelo celular na mesma rede Wi-Fi
     app.run(host='0.0.0.0', port=5000, debug=True)
