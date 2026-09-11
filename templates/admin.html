@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Produtos | Admin</title>
+    <title>Painel do Vendedor | Admin</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
         .admin-container {
@@ -15,6 +15,7 @@
             border-radius: 8px;
         }
         .form-group label { margin-top: 1rem; }
+        .oculto { display: none; }
     </style>
 </head>
 <body>
@@ -24,16 +25,29 @@
     </header>
 
     <main class="container">
-        <div class="admin-container">
+        <!-- TELA DE LOGIN DO ADMIN -->
+        <div class="admin-container" id="box-login">
+            <h2 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">Área Restrita</h2>
+            <form onsubmit="fazerLogin(event)">
+                <div class="form-group">
+                    <label for="senha-admin">Senha de Acesso</label>
+                    <input type="password" id="senha-admin" required placeholder="Digite a senha do admin">
+                </div>
+                <button type="submit" class="btn-comprar" style="margin-top: 1rem;">Entrar</button>
+            </form>
+        </div>
+
+        <!-- FORMULÁRIO DE CADASTRO (Oculto até digitar a senha certa) -->
+        <div class="admin-container oculto" id="box-cadastro">
             <h2 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">Cadastrar Novo Produto</h2>
             <form id="form-cadastro" onsubmit="cadastrarProduto(event)">
                 <div class="form-group">
                     <label for="nome">Nome do Produto</label>
-                    <input type="text" id="nome" required placeholder="Ex: Cone Trufado de Nutella">
+                    <input type="text" id="nome" required placeholder="Ex: Cone Trufado de Morango">
                 </div>
                 <div class="form-group">
                     <label for="preco">Preço (R$)</label>
-                    <input type="number" id="preco" step="0.01" required placeholder="15.00">
+                    <input type="number" id="preco" step="0.01" required placeholder="12.00">
                 </div>
                 <div class="form-group">
                     <label for="estoque">Estoque Inicial (unidades)</label>
@@ -41,10 +55,11 @@
                 </div>
                 <div class="form-group">
                     <label for="img">URL da Imagem</label>
-                    <input type="url" id="img" required placeholder="https://link-da-imagem.com/img.jpg">
+                    <input type="url" id="img" required placeholder="https://via.placeholder.com/300x200">
                 </div>
                 <button type="submit" class="btn-comprar" style="margin-top: 1rem;">Salvar Produto</button>
             </form>
+            <button onclick="sairAdmin()" style="background: transparent; border: none; color: var(--gold); cursor: pointer; margin-top: 1.5rem; width: 100%; text-align: center;">Sair do Painel</button>
         </div>
     </main>
 
@@ -58,6 +73,48 @@
             toast.innerText = mensagem;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Verifica se já estava logado na sessão do navegador
+        window.onload = function() {
+            if (sessionStorage.getItem('admin_logado') === 'true') {
+                document.getElementById('box-login').classList.add('oculto');
+                document.getElementById('box-cadastro').classList.remove('oculto');
+            }
+        }
+
+        async function fazerLogin(event) {
+            event.preventDefault();
+            const senha = document.getElementById('senha-admin').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ senha: senha })
+                });
+
+                const resultado = await response.json();
+
+                if (response.ok) {
+                    sessionStorage.setItem('admin_logado', 'true');
+                    document.getElementById('box-login').classList.add('oculto');
+                    document.getElementById('box-cadastro').classList.remove('oculto');
+                    showToast('Acesso autorizado!');
+                } else {
+                    showToast(resultado.erro || 'Senha incorreta.');
+                }
+            } catch (error) {
+                showToast('Erro ao validar login.');
+            }
+        }
+
+        function sairAdmin() {
+            sessionStorage.removeItem('admin_logado');
+            document.getElementById('box-cadastro').classList.add('oculto');
+            document.getElementById('box-login').classList.remove('oculto');
+            document.getElementById('senha-admin').value = '';
+            showToast('Você saiu do painel.');
         }
 
         async function cadastrarProduto(event) {
