@@ -1,4 +1,3 @@
-// Variáveis Globais
 let produtosCadastrados = [];
 let carrinho = JSON.parse(localStorage.getItem('sagrado_carrinho')) || [];  
 
@@ -12,7 +11,18 @@ function showToast(mensagem) {
   setTimeout(() => toast.remove(), 3000);
 }
 
-// BUSA OS PRODUTOS NO SERVIDOR PYTHON
+// Zoom do Banner
+function alternarZoomBanner() {
+  const banner = document.getElementById('banner-zoom');
+  const overlay = document.getElementById('zoomOverlay');
+  
+  if (banner && overlay) {
+    banner.classList.toggle('zoom-ativo');
+    overlay.classList.toggle('ativo');
+  }
+}
+
+// Carregar produtos da API do Servidor (Neon.tech)
 async function carregarProdutos() {  
   const container = document.getElementById('produtos-container');  
   if(!container) return; 
@@ -124,7 +134,7 @@ function atualizarCarrinho() {
 
 function finalizarPedido() {  
   if(carrinho.length === 0) return showToast('Seu carrinho está vazio!');  
-  showToast('Pedido finalizado localmente.');  
+  showToast('Pedido finalizado com sucesso!');  
   carrinho = [];  
   salvarCarrinho();
   atualizarCarrinho();  
