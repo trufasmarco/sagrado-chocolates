@@ -5,6 +5,9 @@ import psycopg2.extras
 
 app = Flask(__name__)
 
+# DEFINA A SENHA DO ADMINISTRADOR AQUI:
+SENHA_ADMIN = "123456"  # Altere para a senha que você preferir
+
 # Sua URL de conexão oficial do Neon.tech
 DATABASE_URL = "postgresql://neondb_owner:npg_aVBCmlS03XkO@ep-lingering-haze-ax7ral1g-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
@@ -39,6 +42,14 @@ def index():
 def admin():
     return render_template('admin.html')
 
+# ROTA PARA VALIDAR A SENHA DO ADMIN
+@app.route('/api/login', methods=['POST'])
+def login_admin():
+    dados = request.json
+    if dados and dados.get('senha') == SENHA_ADMIN:
+        return jsonify({'status': 'sucesso'}), 200
+    return jsonify({'erro': 'Senha incorreta!'}), 401
+
 @app.route('/api/produtos', methods=['GET'])
 def listar_produtos():
     try:
@@ -58,7 +69,6 @@ def listar_produtos():
         } for p in produtos]
         return jsonify(lista)
     except Exception as e:
-        print(f"Erro ao listar produtos: {e}")
         return jsonify([]), 200
 
 @app.route('/api/produtos', methods=['POST'])
@@ -76,7 +86,6 @@ def cadastrar_produto():
         conn.close()
         return jsonify({'status': 'sucesso'}), 201
     except Exception as e:
-        print(f"Erro ao cadastrar: {e}")
         return jsonify({'erro': str(e)}), 500
 
 if __name__ == '__main__':
@@ -84,7 +93,6 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
 else:
-    # Garante que a tabela inicialize mesmo quando rodando via Gunicorn no Render
     try:
         init_db()
     except Exception as e:
