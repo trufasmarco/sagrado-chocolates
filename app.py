@@ -1,3 +1,20 @@
+import subprocess
+import sys
+
+# Função para verificar e instalar dependências automaticamente
+def verificar_e_instalar(pacote, import_nome=None):
+    if import_nome is None:
+        import_nome = pacote
+    try:
+        __import__(import_nome)
+    except ImportError:
+        print(f"Biblioteca '{pacote}' não encontrada. Instalando automaticamente...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
+
+# Garante que o Flask e o Psycopg2 estejam instalados antes de prosseguir
+verificar_e_instalar("flask")
+verificar_e_instalar("psycopg2-binary", "psycopg2")
+
 from flask import Flask, render_template, request, jsonify
 import psycopg2
 import psycopg2.extras
