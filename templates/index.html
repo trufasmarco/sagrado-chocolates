@@ -1,60 +1,727 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sagrado Chocolates | Cones Trufados Artesanais</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cinzel & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0e0504',
+              surface: '#1b0c09',
+              card: '#24100c',
+              border: '#452019',
+              gold: '#E5C07B',
+              goldLight: '#F3E2B8',
+              goldDark: '#B89745',
+              ruby: '#6E121B',
+              rubyLight: '#991B28',
+              cream: '#FDFBF7',
+              muted: '#A99A8E'
+            }
+          },
+          fontFamily: {
+            serif: ['"Cinzel"', 'serif'],
+            sans: ['"Inter"', 'sans-serif']
+          },
+          boxShadow: {
+            'glow-gold': '0 0 25px -5px rgba(229, 192, 123, 0.3)',
+            'glow-ruby': '0 0 30px -5px rgba(153, 27, 40, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Luxury Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #120705;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3e1b14;
+      border-radius: 9999px;
+      border: 1px solid rgba(229, 192, 123, 0.2);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B89745;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: rgba(27, 12, 9, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(229, 192, 123, 0.18);
+    }
+    .glass-card {
+      background: linear-gradient(145deg, rgba(36, 16, 12, 0.8) 0%, rgba(20, 8, 6, 0.9) 100%);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(229, 192, 123, 0.12);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(229, 192, 123, 0.45);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 192, 123, 0.15);
+    }
+
+    /* Shimmer Button Effect */
+    .btn-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+      animation: shimmer 3.5s infinite;
+    }
+    @keyframes shimmer {
+      100% { transform: translateX(100%); }
+    }
+  </style>
 </head>
-<body>
+<body class="bg-brand-dark text-brand-cream font-sans antialiased selection:bg-brand-gold selection:text-brand-dark">
+  <div id="root"></div>
 
-  <!-- Tela de Carregamento -->
-  <div class="loader-overlay" id="loaderOverlay">
-    <div class="spinner"></div>
-    <div class="loader-text">Carregando Delícias...</div>
-  </div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
 
-  <header>
-    <div class="logo">Sagrado Chocolates</div>
-    <nav>
-      <button onclick="abrirModal('modalCarrinho')">Carrinho (<span id="cart-count">0</span>)</button>
-      <button onclick="window.location.href='/admin'">Login</button>
-      <button onclick="window.location.href='/admin'">Painel Admin</button>
-    </nav>
-  </header>
+    const INITIAL_PRODUCTS = [
+      {
+        id: 1,
+        nome: "Cone Trufado Morango Cremoso",
+        categoria: "frutados",
+        tag: "Mais Vendido",
+        preco: 12.00,
+        estoque: 50,
+        descricao: "Casquinha artesanal folhada crocante, blindada com chocolate nobre e recheada com ganache aveludada de morangos selecionados.",
+        ingredientes: "Chocolate belga 54%, morangos frescos, leite condensado artesanal, casquinha crocante.",
+        calorias: "285 kcal",
+        img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80",
+        rating: 4.9,
+        reviewsCount: 128
+      },
+      {
+        id: 2,
+        nome: "Cone Trufado Doce de Leite Imperial",
+        categoria: "classicos",
+        tag: "Receita Mineira",
+        preco: 11.00,
+        estoque: 45,
+        descricao: "Doce de leite de cozimento lento em tacho de cobre, toque sutil de flor de sal e casquinha banhada no chocolate meio amargo.",
+        ingredientes: "Doce de leite artesanal, flor de sal de Guérande, chocolate meio amargo 60%, casquinha de baunilha.",
+        calorias: "295 kcal",
+        img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
+        rating: 5.0,
+        reviewsCount: 94
+      },
+      {
+        id: 3,
+        nome: "Cone Trufado Brigadeiro Gourmet 70%",
+        categoria: "classicos",
+        tag: "Chef's Choice",
+        preco: 10.00,
+        estoque: 60,
+        descricao: "Brigadeiro aveludado feito com cacau 100% puro e pedaços de chocolate belga, finalizado com granulado artesanal crocante.",
+        ingredientes: "Cacau nobre, nibs de cacau, creme de leite fresco, raspas de chocolate meio amargo.",
+        calorias: "270 kcal",
+        img: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80",
+        rating: 4.8,
+        reviewsCount: 156
+      },
+      {
+        id: 4,
+        nome: "Cone Trufado Beijinho Nobre de Coco",
+        categoria: "classicos",
+        tag: "Novo",
+        preco: 10.00,
+        estoque: 40,
+        descricao: "Recheio cremoso com coco em flocos tostado levemente e chocolate branco caramelizado que derrete no paladar.",
+        ingredientes: "Coco ralado úmido, chocolate branco nobre, leite condensado e crocante de castanhas.",
+        calorias: "260 kcal",
+        img: "https://images.unsplash.com/photo-1575372587186-5007394dce63?auto=format&fit=crop&w=600&q=80",
+        rating: 4.7,
+        reviewsCount: 82
+      },
+      {
+        id: 5,
+        nome: "Cone Trufado Maracujá Tropical Ouro",
+        categoria: "frutados",
+        tag: "Refrescante",
+        preco: 11.00,
+        estoque: 55,
+        descricao: "Equilíbrio entre a acidez sedutora do maracujá natural e o dulçor envolvente do chocolate meio amargo.",
+        ingredientes: "Polpa pura de maracujá, chocolate ao leite nobre, casquinha crocante sabor canela.",
+        calorias: "275 kcal",
+        img: "https://images.unsplash.com/photo-1526081347589-7fa3cb41b4b2?auto=format&fit=crop&w=600&q=80",
+        rating: 4.9,
+        reviewsCount: 110
+      },
+      {
+        id: 6,
+        nome: "Cone Trufado Pistache Siciliano & Rubi",
+        categoria: "exclusivos",
+        tag: "Edição Especial",
+        preco: 14.50,
+        estoque: 25,
+        descricao: "Brigadeiro de pistache de Bronte com ganache aveludada e casquinha banhada no autêntico chocolate Ruby.",
+        ingredientes: "Pistache siciliano puro, chocolate Ruby Callebaut, manteiga noisette, casquinha folhada.",
+        calorias: "310 kcal",
+        img: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=600&q=80",
+        rating: 5.0,
+        reviewsCount: 204
+      }
+    ];
 
-  <!-- Banner Hero com Zoom -->
-  <section class="hero">
-    <img src="/static/banner_principal.png" alt="Banner Sagrado Chocolates - Cones Trufados" class="hero-banner-img" id="banner-zoom" onclick="alternarZoomBanner()">
-  </section>
+    function App() {
+      const [produtos, setProdutos] = useState(() => {
+        const saved = localStorage.getItem('sagrado_produtos');
+        return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+      });
 
-  <!-- Overlay para o efeito de Zoom -->
-  <div class="zoom-overlay" id="zoomOverlay" onclick="alternarZoomBanner()"></div>
+      const [carrinho, setCarrinho] = useState(() => {
+        const saved = localStorage.getItem('sagrado_carrinho_v2');
+        return saved ? JSON.parse(saved) : [];
+      });
 
-  <main class="container">
-    <h2 class="section-title">Nossos Sabores</h2>
-    <div class="grid-produtos" id="produtos-container">
-      <!-- Inserido via JavaScript -->
-    </div>
-  </main>
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isLoginOpen, setIsLoginOpen] = useState(false);
+      const [isAdminOpen, setIsAdminOpen] = useState(false);
+      const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  <div class="modal" id="modalCarrinho">
-    <div class="modal-content">
-      <span class="close-btn" onclick="fecharModal('modalCarrinho')">×</span>
-      <h3 style="color: var(--gold); margin-bottom: 1rem;">Seu Carrinho</h3>
-      <div id="itens-carrinho">
-        <p>O carrinho está vazio.</p>
-      </div>
-      <hr style="margin: 1rem 0; border-color: var(--gold);">
-      <p style="font-size: 1.2rem; font-weight: bold; display: flex; justify-content: space-between;">
-        <span>Total:</span> <span>R$ <span id="total-carrinho">0,00</span></span>
-      </p>
-      <button class="btn-comprar" style="margin-top: 1rem;" onclick="finalizarPedido()">Finalizar Pedido</button>
-    </div>
-  </div>
+      const [categoriaAtiva, setCategoriaAtiva] = useState('todos');
+      const [busca, setBusca] = useState('');
+      const [toasts, setToasts] = useState([]);
+      const [usuario, setUsuario] = useState(null);
 
-  <div id="toast-container"></div>
+      useEffect(() => {
+        localStorage.setItem('sagrado_carrinho_v2', JSON.stringify(carrinho));
+      }, [carrinho]);
 
-  <script src="/static/script.js"></script>
+      useEffect(() => {
+        localStorage.setItem('sagrado_produtos', JSON.stringify(produtos));
+      }, [produtos]);
+
+      useEffect(() => {
+        if (window.lucide) window.lucide.createIcons();
+      }, [produtos, carrinho, isCartOpen, isAdminOpen, isLoginOpen, quickViewProduct, toasts]);
+
+      const addToast = (mensagem) => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, mensagem }]);
+        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3500);
+      };
+
+      const adicionarAoCarrinho = (produto, e) => {
+        if (e) e.stopPropagation();
+        setCarrinho(prev => {
+          const item = prev.find(i => i.id === produto.id);
+          if (item) {
+            return prev.map(i => i.id === produto.id ? { ...i, quantidade: i.quantidade + 1 } : i);
+          }
+          return [...prev, { ...produto, quantidade: 1 }];
+        });
+        addToast(`Adicionado: ${produto.nome}`);
+      };
+
+      const alterarQuantidade = (id, delta) => {
+        setCarrinho(prev =>
+          prev.map(i => i.id === id ? { ...i, quantidade: i.quantidade + delta } : i)
+              .filter(i => i.quantidade > 0)
+        );
+      };
+
+      const removerDoCarrinho = (id) => {
+        setCarrinho(prev => prev.filter(i => i.id !== id));
+        addToast("Item removido da sacola.");
+      };
+
+      const totalItens = useMemo(() => carrinho.reduce((acc, i) => acc + i.quantidade, 0), [carrinho]);
+      const subtotalFinanceiro = useMemo(() => carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0), [carrinho]);
+
+      const produtosFiltrados = useMemo(() => {
+        return produtos.filter(p => {
+          const matchCat = categoriaAtiva === 'todos' || p.categoria === categoriaAtiva;
+          const matchBusca = p.nome.toLowerCase().includes(busca.toLowerCase()) ||
+                             p.descricao.toLowerCase().includes(busca.toLowerCase());
+          return matchCat && matchBusca;
+        });
+      }, [produtos, categoriaAtiva, busca]);
+
+      const finalizarPedidoWhatsApp = () => {
+        if (carrinho.length === 0) return addToast("A sacola está vazia.");
+        let texto = `*Olá, Sagrado Chocolates! Gostaria de fazer um pedido artesanal:*\n\n`;
+        carrinho.forEach(item => {
+          texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}\n`;
+        });
+        texto += `\n*Total do Pedido: R$ ${subtotalFinanceiro.toFixed(2).replace('.', ',')}*`;
+        texto += `\n\nPor favor, confirmem o tempo estimado de preparo e chave PIX!`;
+
+        window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
+        setCarrinho([]);
+        setIsCartOpen(false);
+        addToast("Pedido enviado para o WhatsApp com sucesso!");
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col bg-brand-dark">
+          {/* Top Announcement Bar */}
+          <div className="bg-gradient-to-r from-brand-ruby via-brand-surface to-brand-ruby text-brand-gold text-xs py-2 px-4 text-center font-medium border-b border-brand-gold/20 flex items-center justify-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
+            <span>Edição Especial: Frete Grátis em pedidos acima de R$ 50,00</span>
+          </div>
+
+          {/* Header Superior */}
+          <header className="sticky top-0 z-40 glass-panel border-b border-brand-gold/20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+              <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-brand-gold via-brand-goldDark to-brand-ruby flex items-center justify-center shadow-glow-gold border border-brand-gold/40">
+                  <span className="font-serif font-black text-brand-dark text-xl">S</span>
+                </div>
+                <div>
+                  <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-gold">
+                    SAGRADO
+                  </h1>
+                  <p className="text-[10px] tracking-[0.25em] text-brand-muted uppercase">Cones Trufados Artesanais</p>
+                </div>
+              </div>
+
+              <nav className="flex items-center gap-2 sm:gap-3">
+                <button
+                  onClick={() => setIsAdminOpen(true)}
+                  className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30"
+                >
+                  <i data-lucide="layout-dashboard" className="w-4 h-4"></i>
+                  <span>Painel Admin</span>
+                </button>
+
+                <button
+                  onClick={() => setIsLoginOpen(true)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border"
+                >
+                  <i data-lucide="user" className="w-4 h-4 text-brand-gold"></i>
+                  <span className="hidden md:inline">{usuario ? usuario.nome : 'Minha Conta'}</span>
+                </button>
+
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition"
+                >
+                  <i data-lucide="shopping-bag" className="w-4 h-4"></i>
+                  <span className="hidden sm:inline">Sacola</span>
+                  <span className="bg-brand-dark text-brand-gold text-xs font-black px-2 py-0.5 rounded-full border border-brand-gold/40">
+                    {totalItens}
+                  </span>
+                </button>
+              </nav>
+            </div>
+          </header>
+
+          {/* Hero Section */}
+          <section className="relative overflow-hidden pt-12 pb-20 border-b border-brand-gold/15 bg-gradient-to-b from-brand-surface via-brand-dark to-brand-dark">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div className="lg:col-span-7 text-center lg:text-left">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-semibold uppercase mb-6 backdrop-blur-sm">
+                    <i data-lucide="sparkles" className="w-3.5 h-3.5"></i>
+                    <span>Cacau 100% Nobre & Casquinha Secreta</span>
+                  </div>
+
+                  <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-cream leading-[1.15] mb-6">
+                    O Inconfundível <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-amber-400">
+                      Cone Trufado
+                    </span> <br />
+                    Artesanal.
+                  </h2>
+
+                  <p className="text-brand-muted text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8">
+                    Crocância por fora e ganache densamente aveludada por dentro. Banhado manualmente em chocolate nobre temperado.
+                  </p>
+
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                    <a
+                      href="#catalogo"
+                      className="btn-shimmer px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-semibold shadow-glow-ruby hover:brightness-110 transition flex items-center gap-2"
+                    >
+                      <span>Ver Cardápio</span>
+                      <i data-lucide="arrow-right" className="w-4 h-4"></i>
+                    </a>
+
+                    <button
+                      onClick={() => setIsCartOpen(true)}
+                      className="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2"
+                    >
+                      <i data-lucide="shopping-bag" className="w-4 h-4"></i>
+                      <span>Sacola ({totalItens})</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-5 flex justify-center">
+                  <div className="relative group w-full max-w-md">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-brand-gold via-brand-ruby to-brand-gold rounded-2xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
+                    <div className="relative rounded-2xl overflow-hidden glass-panel border border-brand-gold/40 p-3 shadow-2xl">
+                      <div className="relative h-80 sm:h-96 rounded-xl overflow-hidden">
+                        <img
+                          src="input_file_0.png"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85";
+                          }}
+                          alt="Cone Trufado Sagrado Chocolates"
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent opacity-80"></div>
+                        <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl glass-panel border border-brand-gold/20 flex items-center justify-between">
+                          <div>
+                            <p className="text-xs text-brand-gold uppercase tracking-wider font-semibold">Destaque do Mestre</p>
+                            <h4 className="font-serif text-sm font-bold text-brand-cream">Morango Cremoso & Chocolate Nobre</h4>
+                          </div>
+                          <span className="px-3 py-1 rounded-full bg-brand-gold text-brand-dark font-black text-sm">
+                            R$ 12,00
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Filtros e Catálogo */}
+          <section id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6 w-full">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+              <div>
+                <span className="text-brand-gold text-xs font-semibold tracking-widest uppercase">Cardápio Selecionado</span>
+                <h3 className="font-serif text-3xl font-bold text-brand-cream mt-1">Nossos Sabores Artesanais</h3>
+              </div>
+
+              <div className="relative w-full md:w-80">
+                <i data-lucide="search" className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted"></i>
+                <input
+                  type="text"
+                  placeholder="Buscar sabor ou ingrediente..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-brand-cream placeholder-brand-muted text-sm focus:outline-none focus:border-brand-gold transition"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-4">
+              {[
+                { id: 'todos', label: 'Todos os Sabores' },
+                { id: 'classicos', label: 'Tradicionais & Gourmet' },
+                { id: 'frutados', label: 'Frutas Nobres' },
+                { id: 'exclusivos', label: 'Especiais do Chef' }
+              ].map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setCategoriaAtiva(cat.id)}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap ${
+                    categoriaAtiva === cat.id
+                      ? 'bg-brand-gold text-brand-dark shadow-glow-gold'
+                      : 'glass-panel text-brand-muted hover:text-brand-cream'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* Grid de Produtos */}
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {produtosFiltrados.map(produto => (
+                <div
+                  key={produto.id}
+                  onClick={() => setQuickViewProduct(produto)}
+                  className="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group cursor-pointer"
+                >
+                  <div>
+                    <div className="relative h-60 overflow-hidden bg-brand-surface">
+                      <img
+                        src={produto.img}
+                        alt={produto.nome}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <span className="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-brand-dark/80 text-brand-gold border border-brand-gold/30 backdrop-blur-md">
+                          {produto.tag}
+                        </span>
+                      </div>
+                      <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-dark/80 text-brand-cream text-xs font-semibold border border-white/10 backdrop-blur-md">
+                        <i data-lucide="star" className="w-3.5 h-3.5 fill-brand-gold text-brand-gold"></i>
+                        <span>{produto.rating}</span>
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <h4 className="font-serif text-lg font-bold text-brand-gold mb-2">{produto.nome}</h4>
+                      <p className="text-brand-muted text-xs leading-relaxed line-clamp-2">{produto.descricao}</p>
+                    </div>
+                  </div>
+
+                  <div className="px-6 pb-6 pt-2 border-t border-brand-border/40 flex items-center justify-between gap-4">
+                    <div>
+                      <span className="text-[10px] uppercase text-brand-muted font-bold block">Preço</span>
+                      <span className="font-serif text-xl font-bold text-brand-cream">
+                        R$ {produto.preco.toFixed(2).replace('.', ',')}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={(e) => adicionarAoCarrinho(produto, e)}
+                      className="btn-shimmer flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight hover:from-brand-gold hover:to-brand-goldDark text-brand-cream hover:text-brand-dark font-bold text-xs transition flex items-center justify-center gap-2"
+                    >
+                      <i data-lucide="plus" className="w-4 h-4"></i>
+                      <span>Adicionar</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </main>
+
+          {/* Drawer Lateral do Carrinho */}
+          {isCartOpen && (
+            <div className="fixed inset-0 z-50 overflow-hidden">
+              <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
+              <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+                <div className="w-screen max-w-md glass-panel bg-brand-dark/95 border-l border-brand-gold/30 flex flex-col justify-between shadow-2xl">
+                  <div className="p-6 border-b border-brand-border/80 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <i data-lucide="shopping-bag" className="w-5 h-5 text-brand-gold"></i>
+                      <h3 className="font-serif text-xl font-bold text-brand-cream">Sua Sacola Gourmet</h3>
+                    </div>
+                    <button onClick={() => setIsCartOpen(false)} className="p-2 text-brand-muted hover:text-brand-cream">
+                      <i data-lucide="x" className="w-5 h-5"></i>
+                    </button>
+                  </div>
+
+                  {/* Frete Grátis */}
+                  <div className="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
+                      <span className="font-bold text-brand-gold">
+                        {subtotalFinanceiro >= 50 ? 'Garantido!' : `Faltam R$ ${(50 - subtotalFinanceiro).toFixed(2).replace('.', ',')}`}
+                      </span>
+                    </div>
+                    <div className="w-full bg-brand-card rounded-full h-1.5 overflow-hidden">
+                      <div
+                        className="bg-brand-gold h-full transition-all duration-300"
+                        style={{ width: `${Math.min(100, (subtotalFinanceiro / 50) * 100)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Lista */}
+                  <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                    {carrinho.length === 0 ? (
+                      <p className="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
+                    ) : (
+                      carrinho.map(item => (
+                        <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl bg-brand-surface/60 border border-brand-border/60">
+                          <img src={item.img} alt={item.nome} className="w-14 h-14 object-cover rounded-lg" />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-sm text-brand-cream truncate">{item.nome}</h4>
+                            <span className="text-xs text-brand-gold font-bold">R$ {item.preco.toFixed(2).replace('.', ',')}</span>
+                            <div className="flex items-center gap-2 mt-2">
+                              <button onClick={() => alterarQuantidade(item.id, -1)} className="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">-</button>
+                              <span className="text-xs font-bold w-4 text-center">{item.quantidade}</span>
+                              <button onClick={() => alterarQuantidade(item.id, 1)} className="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">+</button>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end justify-between self-stretch">
+                            <button onClick={() => removerDoCarrinho(item.id)} className="text-brand-muted hover:text-rose-400">
+                              <i data-lucide="trash-2" className="w-4 h-4"></i>
+                            </button>
+                            <span className="font-serif font-bold text-sm text-brand-cream">
+                              R$ {(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {carrinho.length > 0 && (
+                    <div className="p-6 border-t border-brand-border/80 bg-brand-surface/40 space-y-4">
+                      <div className="flex justify-between text-base font-bold text-brand-cream">
+                        <span>Total:</span>
+                        <span className="font-serif text-xl text-brand-gold">R$ {subtotalFinanceiro.toFixed(2).replace('.', ',')}</span>
+                      </div>
+
+                      <button
+                        onClick={finalizarPedidoWhatsApp}
+                        className="btn-shimmer w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition"
+                      >
+                        <i data-lucide="message-circle" className="w-4 h-4"></i>
+                        <span>Pedir no WhatsApp</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Quick View Modal */}
+          {quickViewProduct && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+              <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8">
+                <button onClick={() => setQuickViewProduct(null)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                  <i data-lucide="x" className="w-5 h-5"></i>
+                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                  <img src={quickViewProduct.img} alt={quickViewProduct.nome} className="rounded-2xl w-full h-64 object-cover" />
+                  <div>
+                    <span className="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
+                      {quickViewProduct.tag}
+                    </span>
+                    <h3 className="font-serif text-2xl font-bold text-brand-cream mt-3 mb-2">{quickViewProduct.nome}</h3>
+                    <p className="text-brand-muted text-xs mb-4">{quickViewProduct.descricao}</p>
+                    <div className="text-xs space-y-1 bg-brand-surface/60 p-3 rounded-xl border border-brand-border/40 mb-6">
+                      <p><strong className="text-brand-gold">Ingredientes:</strong> {quickViewProduct.ingredientes}</p>
+                      <p><strong className="text-brand-gold">Calorias:</strong> {quickViewProduct.calorias}</p>
+                    </div>
+                    <button
+                      onClick={() => { adicionarAoCarrinho(quickViewProduct); setQuickViewProduct(null); }}
+                      className="btn-shimmer w-full py-3 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2"
+                    >
+                      <i data-lucide="plus" className="w-4 h-4"></i>
+                      <span>Adicionar à Sacola</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal Login */}
+          {isLoginOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+              <div className="relative w-full max-w-md glass-panel rounded-3xl p-8">
+                <button onClick={() => setIsLoginOpen(false)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                  <i data-lucide="x" className="w-5 h-5"></i>
+                </button>
+                <h3 className="font-serif text-2xl font-bold text-center text-brand-cream mb-6">Acesse sua Conta</h3>
+                <form onSubmit={(e) => { e.preventDefault(); setUsuario({ nome: 'Cliente VIP' }); setIsLoginOpen(false); addToast('Sessão iniciada!'); }} className="space-y-4">
+                  <input type="email" required placeholder="seu@email.com" className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream" />
+                  <input type="password" required placeholder="Senha" className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream" />
+                  <button type="submit" className="btn-shimmer w-full py-3 rounded-xl bg-brand-gold text-brand-dark font-bold text-sm">Entrar</button>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Admin Dashboard */}
+          {isAdminOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md">
+              <div className="relative w-full max-w-4xl glass-panel rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-brand-border">
+                  <h3 className="font-serif text-2xl font-bold text-brand-cream">Painel de Gestão e Confeitaria</h3>
+                  <button onClick={() => setIsAdminOpen(false)} className="p-2 text-brand-muted hover:text-brand-cream">
+                    <i data-lucide="x" className="w-5 h-5"></i>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                  <div className="glass-card p-5 rounded-2xl">
+                    <span className="text-brand-muted text-xs">Vendas Hoje</span>
+                    <div className="font-serif text-3xl font-bold text-brand-cream mt-1">R$ 1.480,00</div>
+                  </div>
+                  <div className="glass-card p-5 rounded-2xl">
+                    <span className="text-brand-muted text-xs">Estoque Total</span>
+                    <div className="font-serif text-3xl font-bold text-brand-cream mt-1">
+                      {produtos.reduce((acc, p) => acc + p.estoque, 0)} un
+                    </div>
+                  </div>
+                  <div className="glass-card p-5 rounded-2xl">
+                    <span className="text-brand-muted text-xs">Margem Média</span>
+                    <div className="font-serif text-3xl font-bold text-brand-cream mt-1">68.4%</div>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto rounded-2xl border border-brand-border">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-brand-surface text-brand-gold text-xs uppercase">
+                      <tr>
+                        <th className="p-4">Sabor</th>
+                        <th className="p-4">Estoque</th>
+                        <th className="p-4">Preço</th>
+                        <th className="p-4 text-right">Ajuste</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-brand-border/40">
+                      {produtos.map(p => (
+                        <tr key={p.id}>
+                          <td className="p-4 font-semibold text-brand-cream">{p.nome}</td>
+                          <td className="p-4">{p.estoque} un</td>
+                          <td className="p-4 text-brand-gold font-bold">R$ {p.preco.toFixed(2).replace('.', ',')}</td>
+                          <td className="p-4 text-right space-x-1">
+                            <button
+                              onClick={() => setProdutos(prev => prev.map(i => i.id === p.id ? { ...i, estoque: Math.max(0, i.estoque - 5) } : i))}
+                              className="px-2.5 py-1 rounded bg-brand-surface text-xs text-brand-muted hover:text-brand-cream border border-brand-border"
+                            >-5</button>
+                            <button
+                              onClick={() => setProdutos(prev => prev.map(i => i.id === p.id ? { ...i, estoque: i.estoque + 10 } : i))}
+                              className="px-2.5 py-1 rounded bg-brand-surface text-xs text-brand-gold hover:text-brand-goldLight border border-brand-gold/30"
+                            >+10</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Toast Container */}
+          <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none">
+            {toasts.map(t => (
+              <div key={t.id} className="pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-brand-gold animate-ping"></div>
+                <span>{t.mensagem}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
 </body>
 </html>
