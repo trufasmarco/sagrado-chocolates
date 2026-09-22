@@ -11,12 +11,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
   <!-- React & ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
   <!-- Babel for JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -91,9 +91,34 @@
       100% { transform: translateX(100%); }
     }
   </style>
+
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error("Erro detectado na tela:", e);
+      var box = document.getElementById('erro-carregamento');
+      if (box) {
+        box.style.display = 'block';
+        box.innerHTML = '<strong>⚠️ Erro ao carregar a loja:</strong><br>' + 
+          (e.message || 'Falha ao executar o script React') + 
+          '<br><br><small style="color:#fbd38d;">Dica: Limpe o cache do navegador ou verifique a conexão com a internet.</small>';
+      }
+    });
+  </script>
 </head>
 <body class="bg-brand-dark text-brand-cream font-sans antialiased selection:bg-brand-gold selection:text-brand-dark">
-  <div id="root"></div>
+
+  <!-- Container principal com tela de carregamento inicial -->
+  <div id="root">
+    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #0e0504; color: #E5C07B; font-family: 'Cinzel', serif; text-align: center; padding: 20px;">
+      <div style="width: 50px; height: 50px; border: 4px solid #452019; border-top: 4px solid #E5C07B; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+      <h2 style="font-size: 22px; letter-spacing: 4px; margin: 0; font-weight: bold;">SAGRADO CHOCOLATES</h2>
+      <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #A99A8E; margin-top: 8px; letter-spacing: 1px;">Carregando cardápio artesanal...</p>
+      <div id="erro-carregamento" style="display:none; margin-top: 25px; padding: 15px; background: #260c0c; border: 1px solid #e53e3e; border-radius: 10px; color: #ffcccc; font-family: sans-serif; font-size: 12px; max-width: 420px; text-align: left;"></div>
+    </div>
+    <style>
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+  </div>
 
   <script type="text/babel">
 {% raw %}
@@ -139,47 +164,39 @@
     ];
 
     function App() {
-      // PRODUTOS
       const [produtos, setProdutos] = useState(PRODUTOS_PADRAO);
       
-      // CARRINHO
       const [carrinho, setCarrinho] = useState(() => {
         const saved = localStorage.getItem('sagrado_carrinho');
         return saved ? JSON.parse(saved) : [];
       });
 
-      // USUÁRIO LOGADO
       const [usuario, setUsuario] = useState(() => {
         const saved = localStorage.getItem('sagrado_usuario');
         return saved ? JSON.parse(saved) : null;
       });
 
-      // MODAIS E ESTADOS
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-      const [authTab, setAuthTab] = useState('entrar'); // 'entrar' ou 'cadastrar'
+      const [authTab, setAuthTab] = useState('entrar');
       const [isContaModalOpen, setIsContaModalOpen] = useState(false);
       const [quickViewProduct, setQuickViewProduct] = useState(null);
       const [imgIndexModal, setImgIndexModal] = useState(0);
 
-      // FIADOS DO CLIENTE
       const [fiados, setFiados] = useState([]);
       const [fiadoParaPagar, setFiadoParaPagar] = useState(null);
       const [comprovanteBase64, setComprovanteBase64] = useState('');
       const [enviandoComprovante, setEnviandoComprovante] = useState(false);
 
-      // CHAVE PIX DO ADMIN
       const [infoPix, setInfoPix] = useState({
         chave_pix: 'sagradochocolates@gmail.com',
         beneficiario: 'Sagrado Chocolates'
       });
 
-      // FILTROS
       const [categoriaAtiva, setCategoriaAtiva] = useState('todos');
       const [busca, setBusca] = useState('');
       const [toasts, setToasts] = useState([]);
 
-      // FORMULÁRIOS DE AUTH
       const [authNome, setAuthNome] = useState('');
       const [authEmail, setAuthEmail] = useState('');
       const [authSenha, setAuthSenha] = useState('');
@@ -249,8 +266,6 @@
         }
       }
 
-      // ================= AUTENTICAÇÃO =================
-
       async function handleCadastro(e) {
         e.preventDefault();
         setAuthLoading(true);
@@ -269,7 +284,7 @@
           if (res.ok) {
             setUsuario(data.usuario);
             setIsAuthModalOpen(false);
-            addToast(`Bem-vindo(a), ${data.usuario.nome}! Sua conta foi criada no PostgreSQL com sucesso!`, 'sucesso');
+            addToast(`Bem-vindo(a), ${data.usuario.nome}!`, 'sucesso');
             setAuthNome(''); setAuthEmail(''); setAuthSenha(''); setAuthTelefone('');
           } else {
             addToast(data.erro || 'Erro ao criar conta.');
@@ -315,8 +330,6 @@
         addToast('Você saiu da sua conta.');
       }
 
-      // ================= FIADO E PAGAMENTO PIX =================
-
       function abrirModalPagarPix(fiado) {
         setFiadoParaPagar(fiado);
         setComprovanteBase64('');
@@ -324,7 +337,7 @@
 
       function copiarChavePix() {
         navigator.clipboard.writeText(infoPix.chave_pix);
-        addToast('Chave PIX copiada para a área de transferência!', 'sucesso');
+        addToast('Chave PIX copiada!', 'sucesso');
       }
 
       function processarComprovanteArquivo(event) {
@@ -334,14 +347,14 @@
         const reader = new FileReader();
         reader.onload = function(e) {
           setComprovanteBase64(e.target.result);
-          addToast('Comprovante carregado com sucesso!');
+          addToast('Comprovante carregado!');
         };
         reader.readAsDataURL(file);
       }
 
       async function enviarComprovantePagamento() {
         if (!comprovanteBase64) {
-          return addToast('Por favor, anexe a foto ou arquivo do comprovante primeiro!');
+          return addToast('Anexe a foto do comprovante primeiro!');
         }
 
         setEnviandoComprovante(true);
@@ -356,7 +369,7 @@
           });
           const data = await res.json();
           if (res.ok) {
-            addToast('Comprovante enviado! O vendedor irá conferir no painel.', 'sucesso');
+            addToast('Comprovante enviado para o vendedor!', 'sucesso');
             setFiadoParaPagar(null);
             setComprovanteBase64('');
             if (usuario) carregarMeusFiados(usuario.id);
@@ -364,13 +377,11 @@
             addToast(data.erro || 'Erro ao enviar comprovante.');
           }
         } catch (e) {
-          addToast('Erro de conexão ao enviar comprovante.');
+          addToast('Erro de conexão com o servidor.');
         } finally {
           setEnviandoComprovante(false);
         }
       }
-
-      // ================= CARRINHO =================
 
       const adicionarAoCarrinho = (produto, e) => {
         if (e) e.stopPropagation();
@@ -421,24 +432,22 @@
           texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}\n`;
         });
         texto += `\n*Total do Pedido: R$ ${subtotalFinanceiro.toFixed(2).replace('.', ',')}*`;
-        texto += `\n\nPor favor, confirmem a disponibilidade para entrega/retirada!`;
+        texto += `\n\nPor favor, confirmem a disponibilidade!`;
 
         window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
         setCarrinho([]);
         setIsCartOpen(false);
-        addToast("Pedido enviado para o WhatsApp com sucesso!");
+        addToast("Pedido enviado para o WhatsApp!");
       };
 
       return (
         <div className="min-h-screen flex flex-col bg-brand-dark">
 
-          {/* Top Announcement Bar */}
           <div className="bg-gradient-to-r from-brand-ruby via-brand-surface to-brand-ruby text-brand-gold text-xs py-2 px-4 text-center font-medium border-b border-brand-gold/20 flex items-center justify-center gap-2">
             <span className="w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
-            <span>Edição Especial: Cones Trufados Artesanais feitos com Cacau Nobre</span>
+            <span>Edição Especial: Cones Trufados Artesanais com Cacau Nobre</span>
           </div>
 
-          {/* Header Superior */}
           <header className="sticky top-0 z-40 glass-panel border-b border-brand-gold/20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
               
@@ -463,7 +472,6 @@
                   <span>Painel Admin</span>
                 </a>
 
-                {/* BOTÃO DA CONTA DO CLIENTE */}
                 <button
                   onClick={() => {
                     if (usuario) {
@@ -478,13 +486,11 @@
                   <i data-lucide="user" className="w-4 h-4 text-brand-gold"></i>
                   <span>{usuario ? `Olá, ${usuario.nome.split(' ')[0]}` : 'Entrar / Criar Conta'}</span>
                   
-                  {/* Alerta se o usuário tiver fiado pendente */}
                   {totalDevendoCliente > 0 && (
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
                   )}
                 </button>
 
-                {/* SACOLA */}
                 <button
                   onClick={() => setIsCartOpen(true)}
                   className="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition"
@@ -499,7 +505,6 @@
             </div>
           </header>
 
-          {/* Banner de Aviso de Débito Pendente (se logado) */}
           {usuario && totalDevendoCliente > 0 && (
             <div className="bg-amber-950/80 border-b border-amber-600/40 px-4 py-2 text-center text-xs text-amber-200 flex items-center justify-center gap-3">
               <i data-lucide="alert-circle" className="w-4 h-4 text-amber-400"></i>
@@ -513,7 +518,6 @@
             </div>
           )}
 
-          {/* Hero Section */}
           <section className="relative overflow-hidden pt-12 pb-20 border-b border-brand-gold/15 bg-gradient-to-b from-brand-surface via-brand-dark to-brand-dark">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -592,7 +596,6 @@
             </div>
           </section>
 
-          {/* Filtros e Catálogo */}
           <section id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6 w-full">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
@@ -634,7 +637,6 @@
             </div>
           </section>
 
-          {/* Grid de Produtos */}
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {produtosFiltrados.map(produto => (
@@ -690,7 +692,6 @@
             </div>
           </main>
 
-          {/* ================= MODAL: QUICK VIEW DO PRODUTO (COM ATÉ 4 FOTOS) ================= */}
           {quickViewProduct && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
               <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
@@ -699,7 +700,6 @@
                 </button>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
                   <div>
-                    {/* Imagem Principal */}
                     <div className="relative rounded-2xl overflow-hidden h-64 bg-brand-dark border border-brand-border">
                       <img
                         src={(quickViewProduct.imagens && quickViewProduct.imagens[imgIndexModal]) || quickViewProduct.img}
@@ -707,7 +707,6 @@
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    {/* Miniaturas de até 4 fotos */}
                     {quickViewProduct.imagens && quickViewProduct.imagens.length > 1 && (
                       <div className="grid grid-cols-4 gap-2 mt-3">
                         {quickViewProduct.imagens.map((foto, idx) => (
@@ -750,7 +749,6 @@
             </div>
           )}
 
-          {/* ================= MODAL: CRIAR CONTA OU ENTRAR ================= */}
           {isAuthModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
               <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
@@ -758,7 +756,6 @@
                   <i data-lucide="x" className="w-5 h-5"></i>
                 </button>
 
-                {/* Abas Entrar / Cadastrar */}
                 <div className="flex border-b border-brand-border mb-6">
                   <button
                     onClick={() => setAuthTab('entrar')}
@@ -866,7 +863,6 @@
             </div>
           )}
 
-          {/* ================= MODAL: MINHA CONTA / ABA DE FIADOS ================= */}
           {isContaModalOpen && usuario && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
               <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -874,7 +870,6 @@
                   <i data-lucide="x" className="w-5 h-5"></i>
                 </button>
 
-                {/* Perfil Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-brand-border gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center font-bold text-lg font-serif">
@@ -894,7 +889,6 @@
                   </button>
                 </div>
 
-                {/* Resumo Financeiro de Fiados */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
                   <div className="glass-card p-4 rounded-2xl border border-brand-gold/30">
                     <span className="text-xs text-brand-muted uppercase font-semibold">Total a Pagar em Aberto</span>
@@ -918,7 +912,6 @@
                   </div>
                 </div>
 
-                {/* ABA DE FIADOS */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="font-serif text-lg font-bold text-brand-gold">Meus Fiados / Consumo Anotado</h4>
@@ -996,7 +989,6 @@
             </div>
           )}
 
-          {/* ================= MODAL: PAGAR COM PIX E ANEXAR COMPROVANTE ================= */}
           {fiadoParaPagar && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
               <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
@@ -1015,7 +1007,6 @@
                   </div>
                 </div>
 
-                {/* Chave Pix e Botão Copiar */}
                 <div className="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-2 mb-6">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-brand-muted">Beneficiário:</span>
@@ -1034,19 +1025,18 @@
                   </button>
                 </div>
 
-                {/* ANEXAR COMPROVANTE */}
                 <div className="p-4 rounded-2xl bg-brand-surface/70 border border-brand-border space-y-3 mb-6">
                   <label className="block text-xs font-bold text-brand-gold uppercase">
                     Anexar Comprovante do PIX *
                   </label>
                   <p className="text-[11px] text-brand-muted">
-                    Tire um print ou foto do comprovante e anexe abaixo para o vendedor confirmar seu pagamento:
+                    Tire um print ou foto do comprovante e anexe abaixo:
                   </p>
 
                   <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-xl cursor-pointer bg-brand-dark/50 hover:bg-brand-gold/5 transition group">
                     <i data-lucide="upload" className="w-6 h-6 text-brand-gold group-hover:scale-110 transition"></i>
                     <span className="text-xs font-bold text-brand-gold mt-1.5">Escolher Comprovante (Galeria/Arquivos)</span>
-                    <input type="file" accept="image/*" onChange={processarComprovanteArquivo} className="hidden">
+                    <input type="file" accept="image/*" onChange={processarComprovanteArquivo} className="hidden" />
                   </label>
 
                   {comprovanteBase64 && (
@@ -1078,7 +1068,6 @@
             </div>
           )}
 
-          {/* ================= DRAWER DO CARRINHO ================= */}
           {isCartOpen && (
             <div className="fixed inset-0 z-50 overflow-hidden">
               <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
@@ -1094,13 +1083,14 @@
                     </button>
                   </div>
 
-                  {/* Frete Grátis */}
                   <div className="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
                     <div className="flex justify-between mb-1.5">
                       <span className="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
                       <span className="font-bold text-brand-gold">
                         {subtotalFinanceiro >= 50 ? 'Garantido!' : `Faltam R$ ${(50 - subtotalFinanceiro).toFixed(2).replace('.', ',')}`}
                       </span>
+                    </div>
+                    <div className="w-full bg-brand-card rounded-full h-1.</span>
                     </div>
                     <div className="w-full bg-brand-card rounded-full h-1.5 overflow-hidden">
                       <div
@@ -1110,7 +1100,6 @@
                     </div>
                   </div>
 
-                  {/* Lista */}
                   <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {carrinho.length === 0 ? (
                       <p className="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
@@ -1161,7 +1150,6 @@
             </div>
           )}
 
-          {/* Toast Container */}
           <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none">
             {toasts.map(t => (
               <div key={t.id} className="pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3">
@@ -1175,8 +1163,13 @@
       );
     }
 
-    ReactDOM.render(<App />, document.getElementById('root'));
-  {% endraw %}
+    const rootElem = document.getElementById('root');
+    if (ReactDOM.createRoot) {
+      ReactDOM.createRoot(rootElem).render(<App />);
+    } else {
+      ReactDOM.render(<App />, rootElem);
+    }
+{% endraw %}
   </script>
 </body>
 </html>
