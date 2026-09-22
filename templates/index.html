@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
-  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
   <script>
     tailwind.config = {
@@ -47,19 +47,23 @@
   </script>
 
   <style>
-    html, body { font-size: 16px; }
+    html, body { 
+      font-size: 16px; 
+      background-color: #0e0504;
+      color: #FDFBF7;
+    }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #120705; }
     ::-webkit-scrollbar-thumb { background: #3e1b14; border-radius: 9999px; border: 1px solid rgba(229, 192, 123, 0.2); }
     ::-webkit-scrollbar-thumb:hover { background: #B89745; }
 
     .glass-panel {
-      background: rgba(27, 12, 9, 0.85);
+      background: rgba(27, 12, 9, 0.9);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(229, 192, 123, 0.2);
     }
     .glass-card {
-      background: linear-gradient(145deg, rgba(36, 16, 12, 0.85) 0%, rgba(20, 8, 6, 0.95) 100%);
+      background: linear-gradient(145deg, rgba(36, 16, 12, 0.9) 0%, rgba(20, 8, 6, 0.95) 100%);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(229, 192, 123, 0.15);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -83,6 +87,11 @@
       animation: shimmer 3.5s infinite;
     }
     @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+    button, a {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
   </style>
 </head>
 <body class="bg-brand-dark text-brand-cream font-sans antialiased selection:bg-brand-gold selection:text-brand-dark min-h-screen flex flex-col">
@@ -112,20 +121,20 @@
 
       <!-- Navegação / Ações -->
       <nav class="flex items-center gap-2 sm:gap-3">
-        <a href="/admin" class="hidden sm:flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30">
+        <a href="/admin" class="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
           <span>Painel Admin</span>
         </a>
 
         <!-- Botão Conta -->
-        <button id="btn-conta" onclick="clicarBotaoConta()" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border">
+        <button type="button" id="btn-conta" onclick="clicarBotaoConta()" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border">
           <i data-lucide="user" class="w-4 h-4 text-brand-gold"></i>
           <span id="label-conta">Entrar / Criar Conta</span>
-          <span id="badge-alerta-fiado" class="hidden w-3 h-3 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
+          <span id="badge-alerta-fiado" style="display:none;" class="w-3 h-3 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
         </button>
 
         <!-- Botão Sacola -->
-        <button onclick="abrirCarrinho()" class="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition">
+        <button type="button" id="btn-sacola-header" onclick="abrirCarrinho()" class="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition">
           <i data-lucide="shopping-bag" class="w-5 h-5"></i>
           <span class="hidden sm:inline">Sacola</span>
           <span id="cart-count-badge" class="bg-brand-dark text-brand-gold text-xs font-black px-2.5 py-0.5 rounded-full border border-brand-gold/40">0</span>
@@ -135,10 +144,10 @@
   </header>
 
   <!-- Banner de Fiado Pendente -->
-  <div id="banner-aviso-fiado" class="hidden bg-amber-950/90 border-b border-amber-600/40 px-4 py-3 text-center text-sm text-amber-200 flex items-center justify-center gap-3">
+  <div id="banner-aviso-fiado" style="display:none;" class="bg-amber-950/90 border-b border-amber-600/40 px-4 py-3 text-center text-sm text-amber-200 flex items-center justify-center gap-3">
     <i data-lucide="alert-circle" class="w-5 h-5 text-amber-400 shrink-0"></i>
     <span>Você possui um débito pendente de <strong id="banner-valor-fiado" class="text-amber-300 font-bold">R$ 0,00</strong>.</span>
-    <button onclick="abrirModalMinhaConta()" class="underline text-amber-300 font-bold hover:text-white ml-2">Pagar com PIX agora</button>
+    <button type="button" onclick="abrirModalMinhaConta()" class="underline text-amber-300 font-bold hover:text-white ml-2">Pagar com PIX agora</button>
   </div>
 
   <!-- Hero Section -->
@@ -169,7 +178,7 @@
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
 
-            <button id="hero-btn-acao" onclick="clicarBotaoConta()" class="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2 text-base">
+            <button type="button" id="hero-btn-acao" onclick="clicarBotaoConta()" class="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2 text-base">
               <i data-lucide="user-plus" class="w-5 h-5"></i>
               <span>Criar Minha Conta</span>
             </button>
@@ -219,24 +228,24 @@
 
     <!-- Categorias -->
     <div class="flex items-center gap-2 overflow-x-auto pb-4">
-      <button onclick="selecionarCategoria('todos')" id="cat-todos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold">Todos os Sabores</button>
-      <button onclick="selecionarCategoria('classicos')" id="cat-classicos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Tradicionais & Gourmet</button>
-      <button onclick="selecionarCategoria('frutados')" id="cat-frutados" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Frutas Nobres</button>
-      <button onclick="selecionarCategoria('exclusivos')" id="cat-exclusivos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Especiais do Chef</button>
+      <button type="button" onclick="selecionarCategoria('todos')" id="cat-todos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold">Todos os Sabores</button>
+      <button type="button" onclick="selecionarCategoria('classicos')" id="cat-classicos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Tradicionais & Gourmet</button>
+      <button type="button" onclick="selecionarCategoria('frutados')" id="cat-frutados" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Frutas Nobres</button>
+      <button type="button" onclick="selecionarCategoria('exclusivos')" id="cat-exclusivos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Especiais do Chef</button>
     </div>
   </section>
 
   <!-- Grid de Produtos -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
     <div id="grid-produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Injetado dinamicamente via JS -->
+      <!-- Injetado dinamicamente -->
     </div>
   </main>
 
   <!-- ================= MODAL: DETALHES DO PRODUTO (QUICK VIEW COM ATÉ 4 FOTOS) ================= -->
-  <div id="modal-produto" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+  <div id="modal-produto" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
     <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
-      <button onclick="fecharModalProduto()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+      <button type="button" onclick="fecharModalProduto()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
@@ -257,8 +266,8 @@
             <p id="modal-prod-preco" class="text-2xl font-serif font-bold text-brand-gold mt-2">R$ 0,00</p>
           </div>
 
-          <button id="modal-prod-btn-add" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
-            <i data-lucide="plus" class="w-4 h-4"></i>
+          <button type="button" id="modal-prod-btn-add" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
+            <i data-lucide="plus" class="w-5 h-5"></i>
             <span>Adicionar à Sacola</span>
           </button>
         </div>
@@ -267,17 +276,17 @@
   </div>
 
   <!-- ================= MODAL: CRIAR CONTA OU ENTRAR ================= -->
-  <div id="modal-auth" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+  <div id="modal-auth" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
     <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
-      <button onclick="fecharModalAuth()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+      <button type="button" onclick="fecharModalAuth()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
 
       <div class="flex border-b border-brand-border mb-6">
-        <button onclick="alternarAbaAuth('entrar')" id="tab-auth-entrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition">
+        <button type="button" onclick="alternarAbaAuth('entrar')" id="tab-auth-entrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition">
           Entrar na Conta
         </button>
-        <button onclick="alternarAbaAuth('cadastrar')" id="tab-auth-cadastrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition">
+        <button type="button" onclick="alternarAbaAuth('cadastrar')" id="tab-auth-cadastrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition">
           Criar Nova Conta
         </button>
       </div>
@@ -300,7 +309,7 @@
       </form>
 
       <!-- Formulário Cadastrar -->
-      <form id="form-cadastro-cliente" onsubmit="fazerCadastroCliente(event)" class="hidden space-y-4">
+      <form id="form-cadastro-cliente" onsubmit="fazerCadastroCliente(event)" style="display:none;" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome Completo *</label>
           <input type="text" id="cad-nome" required placeholder="Seu nome"
@@ -329,9 +338,9 @@
   </div>
 
   <!-- ================= MODAL: MINHA CONTA / MEUS FIADOS ================= -->
-  <div id="modal-conta" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+  <div id="modal-conta" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
     <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <button onclick="fecharModalMinhaConta()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+      <button type="button" onclick="fecharModalMinhaConta()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
 
@@ -343,7 +352,7 @@
             <p id="perfil-contato" class="text-xs text-brand-muted">email@exemplo.com</p>
           </div>
         </div>
-        <button onclick="fazerLogoutCliente()" class="px-4 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto">
+        <button type="button" onclick="fazerLogoutCliente()" class="px-4 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto">
           <i data-lucide="log-out" class="w-4 h-4"></i>
           <span>Sair da Conta</span>
         </button>
@@ -367,7 +376,7 @@
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <h4 class="font-serif text-lg font-bold text-brand-gold">Meus Fiados / Consumo Anotado</h4>
-          <button onclick="recarregarFiadosCliente()" class="text-xs text-brand-muted hover:text-brand-gold flex items-center gap-1">
+          <button type="button" onclick="recarregarFiadosCliente()" class="text-xs text-brand-muted hover:text-brand-gold flex items-center gap-1">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             <span>Atualizar</span>
           </button>
@@ -381,9 +390,9 @@
   </div>
 
   <!-- ================= MODAL: PAGAR COM PIX E ANEXAR COMPROVANTE ================= -->
-  <div id="modal-pagar-pix" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+  <div id="modal-pagar-pix" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
     <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
-      <button onclick="fecharModalPagarPix()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+      <button type="button" onclick="fecharModalPagarPix()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
 
@@ -405,7 +414,7 @@
           <span class="text-brand-muted">Chave PIX:</span>
           <strong id="pix-chave" class="text-brand-gold">sagradochocolates@gmail.com</strong>
         </div>
-        <button onclick="copiarChavePix()" class="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition">
+        <button type="button" onclick="copiarChavePix()" class="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition">
           <i data-lucide="copy" class="w-4 h-4"></i>
           <span>Copiar Chave PIX</span>
         </button>
@@ -425,7 +434,7 @@
           <input type="file" id="comprovante-file-input" accept="image/*" onchange="processarComprovanteSelecionado(event)" class="hidden" />
         </label>
 
-        <div id="preview-comprovante-box" class="hidden relative rounded-xl overflow-hidden border border-emerald-500 h-28 bg-brand-dark">
+        <div id="preview-comprovante-box" style="display:none;" class="relative rounded-xl overflow-hidden border border-emerald-500 h-28 bg-brand-dark">
           <img id="preview-comprovante-img" src="" alt="Comprovante" class="w-full h-full object-contain" />
           <span class="absolute bottom-1 right-2 text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full font-bold">
             Anexado com sucesso ✓
@@ -434,10 +443,10 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <button onclick="fecharModalPagarPix()" class="flex-1 py-3 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream">
+        <button type="button" onclick="fecharModalPagarPix()" class="flex-1 py-3 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream">
           Cancelar
         </button>
-        <button id="btn-enviar-comprovante" onclick="enviarComprovante()" class="btn-shimmer flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-xs shadow-lg hover:brightness-110 transition">
+        <button type="button" id="btn-enviar-comprovante" onclick="enviarComprovante()" class="btn-shimmer flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-xs shadow-lg hover:brightness-110 transition">
           Enviar Comprovante
         </button>
       </div>
@@ -445,7 +454,7 @@
   </div>
 
   <!-- ================= DRAWER DA SACOLA (CARRINHO) ================= -->
-  <div id="drawer-carrinho" class="hidden fixed inset-0 z-50 overflow-hidden">
+  <div id="drawer-carrinho" style="display:none;" class="fixed inset-0 z-50 overflow-hidden">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="fecharCarrinho()"></div>
     <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
       <div class="w-screen max-w-md glass-panel bg-brand-dark/95 border-l border-brand-gold/30 flex flex-col justify-between shadow-2xl">
@@ -454,7 +463,7 @@
             <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-gold"></i>
             <h3 class="font-serif text-xl font-bold text-brand-cream">Sua Sacola Gourmet</h3>
           </div>
-          <button onclick="fecharCarrinho()" class="p-2 text-brand-muted hover:text-brand-cream">
+          <button type="button" onclick="fecharCarrinho()" class="p-2 text-brand-muted hover:text-brand-cream">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
@@ -473,13 +482,13 @@
           <p class="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
         </div>
 
-        <div id="carrinho-footer" class="hidden p-6 border-t border-brand-border/80 bg-brand-surface/40 space-y-4">
+        <div id="carrinho-footer" style="display:none;" class="p-6 border-t border-brand-border/80 bg-brand-surface/40 space-y-4">
           <div class="flex justify-between text-base font-bold text-brand-cream">
             <span>Total:</span>
             <span id="carrinho-total-valor" class="font-serif text-xl text-brand-gold">R$ 0,00</span>
           </div>
 
-          <button onclick="finalizarPedidoWhatsApp()" class="btn-shimmer w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition">
+          <button type="button" onclick="finalizarPedidoWhatsApp()" class="btn-shimmer w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition">
             <i data-lucide="message-circle" class="w-4 h-4"></i>
             <span>Pedir no WhatsApp</span>
           </button>
@@ -491,8 +500,24 @@
   <!-- Toasts -->
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
 
-  <!-- JAVASCRIPT NATIVO (VANILLA JS - ZERO BABEL, ZERO REACT) -->
+  <!-- JAVASCRIPT ULTRA ROBUSTO (VANILLA JS - ZERO BABEL, ZERO REACT) -->
   <script>
+    function safeGet(key, fallback) {
+      try {
+        const val = localStorage.getItem(key);
+        if (!val || val === 'undefined' || val === 'null') return fallback;
+        return JSON.parse(val);
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function safeSet(key, val) {
+      try {
+        localStorage.setItem(key, JSON.stringify(val));
+      } catch (e) {}
+    }
+
     const PRODUTOS_PADRAO = [
       {
         id: 1,
@@ -532,23 +557,24 @@
     let listaProdutos = [...PRODUTOS_PADRAO];
     let categoriaAtual = 'todos';
     let termoBusca = '';
-    let carrinho = JSON.parse(localStorage.getItem('sagrado_carrinho')) || [];
-    let usuarioLogado = JSON.parse(localStorage.getItem('sagrado_usuario')) || null;
+    let carrinho = safeGet('sagrado_carrinho', []);
+    let usuarioLogado = safeGet('sagrado_usuario', null);
     let fiadosUsuario = [];
     let fiadoSelecionadoParaPagar = null;
     let comprovanteBase64 = '';
     let infoPix = { chave_pix: 'sagradochocolates@gmail.com', beneficiario: 'Sagrado Chocolates' };
 
-    window.addEventListener('DOMContentLoaded', () => {
-      atualizarEstadoUsuario();
-      carregarProdutosDoBanco();
-      carregarChavePix();
-      atualizarBadgeCarrinho();
-      if (window.lucide) window.lucide.createIcons();
-    });
+    function renderizarIcones() {
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (e) {}
+    }
 
     function showToast(mensagem, tipo = 'info') {
       const container = document.getElementById('toast-container');
+      if (!container) return;
       const toast = document.createElement('div');
       toast.className = 'pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3 animate-bounce';
       toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'}"></span> <span>${mensagem}</span>`;
@@ -556,17 +582,34 @@
       setTimeout(() => toast.remove(), 4000);
     }
 
+    function iniciarPagina() {
+      atualizarEstadoUsuario();
+      renderizarProdutos();
+      atualizarBadgeCarrinho();
+      carregarProdutosDoBanco();
+      carregarChavePix();
+      renderizarIcones();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', iniciarPagina);
+    } else {
+      iniciarPagina();
+    }
+
+    // ================= PRODUTOS =================
+
     async function carregarProdutosDoBanco() {
       try {
         const res = await fetch('/api/produtos');
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           listaProdutos = data;
+          renderizarProdutos();
         }
       } catch (err) {
-        console.error("Erro ao carregar produtos:", err);
+        console.warn("Erro ao buscar da API, mantendo produtos padrão:", err);
       }
-      renderizarProdutos();
     }
 
     async function carregarChavePix() {
@@ -574,13 +617,13 @@
         const res = await fetch('/api/admin/info-pix');
         const data = await res.json();
         if (data && data.chave_pix) infoPix = data;
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) {}
     }
 
     function renderizarProdutos() {
       const grid = document.getElementById('grid-produtos');
+      if (!grid) return;
+
       const filtrados = listaProdutos.filter(p => {
         const matchCat = categoriaAtual === 'todos' || p.categoria === categoriaAtual;
         const matchBusca = (p.nome || '').toLowerCase().includes(termoBusca.toLowerCase()) ||
@@ -625,7 +668,7 @@
                 </span>
               </div>
 
-              <button onclick="adicionarAoCarrinhoPorId(${p.id}, event)" class="btn-shimmer flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight hover:from-brand-gold hover:to-brand-goldDark text-brand-cream hover:text-brand-dark font-bold text-xs transition flex items-center justify-center gap-2">
+              <button type="button" onclick="adicionarAoCarrinhoPorId(${p.id}, event)" class="btn-shimmer flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight hover:from-brand-gold hover:to-brand-goldDark text-brand-cream hover:text-brand-dark font-bold text-xs transition flex items-center justify-center gap-2">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 <span>Adicionar</span>
               </button>
@@ -634,7 +677,7 @@
         `;
       }).join('');
 
-      if (window.lucide) window.lucide.createIcons();
+      renderizarIcones();
     }
 
     function selecionarCategoria(cat) {
@@ -680,13 +723,15 @@
         fecharModalProduto();
       };
 
-      document.getElementById('modal-produto').classList.remove('hidden');
-      if (window.lucide) window.lucide.createIcons();
+      document.getElementById('modal-produto').style.display = 'flex';
+      renderizarIcones();
     }
 
     function fecharModalProduto() {
-      document.getElementById('modal-produto').classList.add('hidden');
+      document.getElementById('modal-produto').style.display = 'none';
     }
+
+    // ================= CARRINHO =================
 
     function adicionarAoCarrinhoPorId(id, event) {
       if (event) event.stopPropagation();
@@ -701,29 +746,25 @@
       } else {
         carrinho.push({ ...p, quantidade: 1 });
       }
-      salvarCarrinho();
+      safeSet('sagrado_carrinho', carrinho);
       atualizarBadgeCarrinho();
-      renderizarCarrinhoItens();
       showToast(`Adicionado: ${p.nome}`);
-    }
-
-    function salvarCarrinho() {
-      localStorage.setItem('sagrado_carrinho', JSON.stringify(carrinho));
     }
 
     function atualizarBadgeCarrinho() {
       const total = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
-      document.getElementById('cart-count-badge').innerText = total;
+      const badge = document.getElementById('cart-count-badge');
+      if (badge) badge.innerText = total;
     }
 
     function abrirCarrinho() {
       renderizarCarrinhoItens();
-      document.getElementById('drawer-carrinho').classList.remove('hidden');
-      if (window.lucide) window.lucide.createIcons();
+      document.getElementById('drawer-carrinho').style.display = 'block';
+      renderizarIcones();
     }
 
     function fecharCarrinho() {
-      document.getElementById('drawer-carrinho').classList.add('hidden');
+      document.getElementById('drawer-carrinho').style.display = 'none';
     }
 
     function alterarQtdCarrinho(id, delta) {
@@ -733,14 +774,14 @@
       if (item.quantidade <= 0) {
         carrinho = carrinho.filter(i => i.id !== id);
       }
-      salvarCarrinho();
+      safeSet('sagrado_carrinho', carrinho);
       atualizarBadgeCarrinho();
       renderizarCarrinhoItens();
     }
 
     function removerDoCarrinho(id) {
       carrinho = carrinho.filter(i => i.id !== id);
-      salvarCarrinho();
+      safeSet('sagrado_carrinho', carrinho);
       atualizarBadgeCarrinho();
       renderizarCarrinhoItens();
       showToast('Item removido da sacola.');
@@ -749,25 +790,29 @@
     function renderizarCarrinhoItens() {
       const container = document.getElementById('lista-carrinho-itens');
       const footer = document.getElementById('carrinho-footer');
+      if (!container || !footer) return;
+
       const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
 
       const statusFrete = document.getElementById('frete-gratis-status');
       const barraFrete = document.getElementById('frete-gratis-barra');
-      if (subtotal >= 50) {
-        statusFrete.innerText = 'Garantido!';
-        barraFrete.style.width = '100%';
-      } else {
-        statusFrete.innerText = `Faltam R$ ${(50 - subtotal).toFixed(2).replace('.', ',')}`;
-        barraFrete.style.width = `${(subtotal / 50) * 100}%`;
+      if (statusFrete && barraFrete) {
+        if (subtotal >= 50) {
+          statusFrete.innerText = 'Garantido!';
+          barraFrete.style.width = '100%';
+        } else {
+          statusFrete.innerText = `Faltam R$ ${(50 - subtotal).toFixed(2).replace('.', ',')}`;
+          barraFrete.style.width = `${(subtotal / 50) * 100}%`;
+        }
       }
 
       if (carrinho.length === 0) {
         container.innerHTML = '<p class="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>';
-        footer.classList.add('hidden');
+        footer.style.display = 'none';
         return;
       }
 
-      footer.classList.remove('hidden');
+      footer.style.display = 'block';
       document.getElementById('carrinho-total-valor').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 
       container.innerHTML = carrinho.map(item => `
@@ -777,13 +822,13 @@
             <h4 class="font-semibold text-sm text-brand-cream truncate">${item.nome}</h4>
             <span class="text-xs text-brand-gold font-bold">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
             <div class="flex items-center gap-2 mt-2">
-              <button onclick="alterarQtdCarrinho(${item.id}, -1)" class="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">-</button>
+              <button type="button" onclick="alterarQtdCarrinho(${item.id}, -1)" class="w-7 h-7 rounded bg-brand-card text-brand-cream text-xs font-bold">-</button>
               <span class="text-xs font-bold w-4 text-center">${item.quantidade}</span>
-              <button onclick="alterarQtdCarrinho(${item.id}, 1)" class="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">+</button>
+              <button type="button" onclick="alterarQtdCarrinho(${item.id}, 1)" class="w-7 h-7 rounded bg-brand-card text-brand-cream text-xs font-bold">+</button>
             </div>
           </div>
           <div class="flex flex-col items-end justify-between self-stretch">
-            <button onclick="removerDoCarrinho(${item.id})" class="text-brand-muted hover:text-rose-400">
+            <button type="button" onclick="removerDoCarrinho(${item.id})" class="text-brand-muted hover:text-rose-400 p-1">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
             <span class="font-serif font-bold text-sm text-brand-cream">
@@ -793,7 +838,7 @@
         </div>
       `).join('');
 
-      if (window.lucide) window.lucide.createIcons();
+      renderizarIcones();
     }
 
     function finalizarPedidoWhatsApp() {
@@ -811,11 +856,13 @@
 
       window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
       carrinho = [];
-      salvarCarrinho();
+      safeSet('sagrado_carrinho', carrinho);
       atualizarBadgeCarrinho();
       fecharCarrinho();
       showToast("Pedido enviado para o WhatsApp!");
     }
+
+    // ================= CONTA E LOGIN =================
 
     function clicarBotaoConta() {
       if (usuarioLogado) {
@@ -826,12 +873,13 @@
     }
 
     function abrirModalAuth() {
-      document.getElementById('modal-auth').classList.remove('hidden');
+      document.getElementById('modal-auth').style.display = 'flex';
       alternarAbaAuth('entrar');
+      renderizarIcones();
     }
 
     function fecharModalAuth() {
-      document.getElementById('modal-auth').classList.add('hidden');
+      document.getElementById('modal-auth').style.display = 'none';
     }
 
     function alternarAbaAuth(aba) {
@@ -843,13 +891,13 @@
       if (aba === 'entrar') {
         tabEntrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition';
         tabCadastrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition';
-        formLogin.classList.remove('hidden');
-        formCad.classList.add('hidden');
+        formLogin.style.display = 'block';
+        formCad.style.display = 'none';
       } else {
         tabCadastrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition';
         tabEntrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition';
-        formCad.classList.remove('hidden');
-        formLogin.classList.add('hidden');
+        formCad.style.display = 'block';
+        formLogin.style.display = 'none';
       }
     }
 
@@ -871,7 +919,7 @@
         const data = await res.json();
         if (res.ok) {
           usuarioLogado = data.usuario;
-          localStorage.setItem('sagrado_usuario', JSON.stringify(usuarioLogado));
+          safeSet('sagrado_usuario', usuarioLogado);
           atualizarEstadoUsuario();
           fecharModalAuth();
           showToast(`Olá novamente, ${usuarioLogado.nome}!`, 'sucesso');
@@ -907,7 +955,7 @@
         const data = await res.json();
         if (res.ok) {
           usuarioLogado = data.usuario;
-          localStorage.setItem('sagrado_usuario', JSON.stringify(usuarioLogado));
+          safeSet('sagrado_usuario', usuarioLogado);
           atualizarEstadoUsuario();
           fecharModalAuth();
           showToast(`Bem-vindo(a), ${usuarioLogado.nome}! Conta criada com sucesso!`, 'sucesso');
@@ -926,7 +974,7 @@
     function fazerLogoutCliente() {
       usuarioLogado = null;
       fiadosUsuario = [];
-      localStorage.removeItem('sagrado_usuario');
+      try { localStorage.removeItem('sagrado_usuario'); } catch (e) {}
       atualizarEstadoUsuario();
       fecharModalMinhaConta();
       showToast('Você saiu da sua conta.');
@@ -937,16 +985,18 @@
       const heroBtn = document.getElementById('hero-btn-acao');
 
       if (usuarioLogado) {
-        labelConta.innerText = `Olá, ${usuarioLogado.nome.split(' ')[0]}`;
-        heroBtn.innerHTML = `<i data-lucide="receipt" class="w-5 h-5"></i><span>Meus Fiados / Débitos</span>`;
+        if (labelConta) labelConta.innerText = `Olá, ${usuarioLogado.nome.split(' ')[0]}`;
+        if (heroBtn) heroBtn.innerHTML = `<i data-lucide="receipt" class="w-5 h-5"></i><span>Meus Fiados / Débitos</span>`;
         carregarMeusFiados();
       } else {
-        labelConta.innerText = 'Entrar / Criar Conta';
-        heroBtn.innerHTML = `<i data-lucide="user-plus" class="w-5 h-5"></i><span>Criar Minha Conta</span>`;
-        document.getElementById('banner-aviso-fiado').classList.add('hidden');
-        document.getElementById('badge-alerta-fiado').classList.add('hidden');
+        if (labelConta) labelConta.innerText = 'Entrar / Criar Conta';
+        if (heroBtn) heroBtn.innerHTML = `<i data-lucide="user-plus" class="w-5 h-5"></i><span>Criar Minha Conta</span>`;
+        const banner = document.getElementById('banner-aviso-fiado');
+        const badge = document.getElementById('badge-alerta-fiado');
+        if (banner) banner.style.display = 'none';
+        if (badge) badge.style.display = 'none';
       }
-      if (window.lucide) window.lucide.createIcons();
+      renderizarIcones();
     }
 
     async function carregarMeusFiados() {
@@ -958,9 +1008,7 @@
           fiadosUsuario = data;
           atualizarResumoFiados();
         }
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) {}
     }
 
     function recarregarFiadosCliente() {
@@ -974,23 +1022,30 @@
       const badge = document.getElementById('badge-alerta-fiado');
 
       if (totalPendente > 0) {
-        banner.classList.remove('hidden');
-        badge.classList.remove('hidden');
-        document.getElementById('banner-valor-fiado').innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
+        if (banner) banner.style.display = 'flex';
+        if (badge) badge.style.display = 'block';
+        const v = document.getElementById('banner-valor-fiado');
+        if (v) v.innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
       } else {
-        banner.classList.add('hidden');
-        badge.classList.add('hidden');
+        if (banner) banner.style.display = 'none';
+        if (badge) badge.style.display = 'none';
       }
 
-      document.getElementById('conta-total-devedor').innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
+      const totDev = document.getElementById('conta-total-devedor');
+      if (totDev) totDev.innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
+
       const statusBox = document.getElementById('conta-status-geral');
-      if (totalPendente === 0) {
-        statusBox.innerHTML = `<span class="text-emerald-400 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Você não possui débitos pendentes!</span>`;
-      } else {
-        statusBox.innerHTML = `<span class="text-amber-400 flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> Há valores pendentes para acerto.</span>`;
+      if (statusBox) {
+        if (totalPendente === 0) {
+          statusBox.innerHTML = `<span class="text-emerald-400 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Você não possui débitos pendentes!</span>`;
+        } else {
+          statusBox.innerHTML = `<span class="text-amber-400 flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> Há valores pendentes para acerto.</span>`;
+        }
       }
 
       const listaContainer = document.getElementById('lista-meus-fiados');
+      if (!listaContainer) return;
+
       if (fiadosUsuario.length === 0) {
         listaContainer.innerHTML = '<div class="p-8 text-center glass-card rounded-2xl border border-brand-border text-xs text-brand-muted">Nenhum fiado ou débito lançado na sua conta. Você está 100% em dia!</div>';
         return;
@@ -1008,8 +1063,7 @@
           acaoBotao = `<div class="text-xs text-amber-300 font-semibold bg-amber-950/60 px-3 py-2 rounded-xl border border-amber-800/40 text-center">Aguardando confirmação</div>`;
         } else {
           badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-800">Pendente</span>';
-          acaoBotao =rose-300 border border-rose-800">Pendente</span>';
-          acaoBotao = `<button onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="qr-code" class="w-4 h-4"></i><span>Pagar com PIX</span></button>`;
+          acaoBotao = `<button type="button" onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="qr-code" class="w-4 h-4"></i><span>Pagar com PIX</span></button>`;
         }
 
         return `
@@ -1027,7 +1081,7 @@
         `;
       }).join('');
 
-      if (window.lucide) window.lucide.createIcons();
+      renderizarIcones();
     }
 
     function abrirModalMinhaConta() {
@@ -1035,13 +1089,13 @@
       document.getElementById('perfil-avatar').innerText = usuarioLogado.nome.charAt(0).toUpperCase();
       document.getElementById('perfil-nome').innerText = usuarioLogado.nome;
       document.getElementById('perfil-contato').innerText = `${usuarioLogado.email} • ${usuarioLogado.telefone || 'Sem telefone'}`;
-      document.getElementById('modal-conta').classList.remove('hidden');
+      document.getElementById('modal-conta').style.display = 'flex';
       carregarMeusFiados();
-      if (window.lucide) window.lucide.createIcons();
+      renderizarIcones();
     }
 
     function fecharModalMinhaConta() {
-      document.getElementById('modal-conta').classList.add('hidden');
+      document.getElementById('modal-conta').style.display = 'none';
     }
 
     function abrirModalPagarPix(fiadoId) {
@@ -1053,19 +1107,28 @@
       document.getElementById('pix-valor').innerText = `R$ ${fiadoSelecionadoParaPagar.valor.toFixed(2).replace('.', ',')}`;
       document.getElementById('pix-beneficiario').innerText = infoPix.beneficiario;
       document.getElementById('pix-chave').innerText = infoPix.chave_pix;
-      document.getElementById('preview-comprovante-box').classList.add('hidden');
+      document.getElementById('preview-comprovante-box').style.display = 'none';
       document.getElementById('comprovante-file-input').value = '';
 
-      document.getElementById('modal-pagar-pix').classList.remove('hidden');
-      if (window.lucide) window.lucide.createIcons();
+      document.getElementById('modal-pagar-pix').style.display = 'flex';
+      renderizarIcones();
     }
 
     function fecharModalPagarPix() {
-      document.getElementById('modal-pagar-pix').classList.add('hidden');
+      document.getElementById('modal-pagar-pix').style.display = 'none';
     }
 
     function copiarChavePix() {
-      navigator.clipboard.writeText(infoPix.chave_pix);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(infoPix.chave_pix);
+      } else {
+        const input = document.createElement('input');
+        input.value = infoPix.chave_pix;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+      }
       showToast('Chave PIX copiada para a área de transferência!', 'sucesso');
     }
 
@@ -1077,7 +1140,7 @@
       reader.onload = function(e) {
         comprovanteBase64 = e.target.result;
         document.getElementById('preview-comprovante-img').src = comprovanteBase64;
-        document.getElementById('preview-comprovante-box').classList.remove('hidden');
+        document.getElementById('preview-comprovante-box').style.display = 'block';
         showToast('Comprovante anexado!');
       };
       reader.readAsDataURL(file);
@@ -1116,6 +1179,32 @@
         btn.innerText = 'Enviar Comprovante';
       }
     }
+
+    window.clicarBotaoConta = clicarBotaoConta;
+    window.abrirModalAuth = abrirModalAuth;
+    window.fecharModalAuth = fecharModalAuth;
+    window.alternarAbaAuth = alternarAbaAuth;
+    window.fazerLoginCliente = fazerLoginCliente;
+    window.fazerCadastroCliente = fazerCadastroCliente;
+    window.fazerLogoutCliente = fazerLogoutCliente;
+    window.abrirModalMinhaConta = abrirModalMinhaConta;
+    window.fecharModalMinhaConta = fecharModalMinhaConta;
+    window.abrirCarrinho = abrirCarrinho;
+    window.fecharCarrinho = fecharCarrinho;
+    window.alterarQtdCarrinho = alterarQtdCarrinho;
+    window.removerDoCarrinho = removerDoCarrinho;
+    window.finalizarPedidoWhatsApp = finalizarPedidoWhatsApp;
+    window.selecionarCategoria = selecionarCategoria;
+    window.filtrarCardapio = filtrarCardapio;
+    window.abrirModalProduto = abrirModalProduto;
+    window.fecharModalProduto = fecharModalProduto;
+    window.adicionarAoCarrinhoPorId = adicionarAoCarrinhoPorId;
+    window.recarregarFiadosCliente = recarregarFiadosCliente;
+    window.abrirModalPagarPix = abrirModalPagarPix;
+    window.fecharModalPagarPix = fecharModalPagarPix;
+    window.copiarChavePix = copiarChavePix;
+    window.processarComprovanteSelecionado = processarComprovanteSelecionado;
+    window.enviarComprovante = enviarComprovante;
   </script>
 </body>
 </html>
