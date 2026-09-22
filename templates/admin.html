@@ -3,145 +3,850 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Vendedor | Admin</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <style>
-        .admin-container {
-            max-width: 500px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: var(--chocolate-brown);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
+    <title>Painel do Administrador | Sagrado Chocolates</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                dark: '#0e0504',
+                surface: '#1b0c09',
+                card: '#24100c',
+                border: '#452019',
+                gold: '#E5C07B',
+                goldLight: '#F3E2B8',
+                goldDark: '#B89745',
+                ruby: '#6E121B',
+                rubyLight: '#991B28',
+                cream: '#FDFBF7',
+                muted: '#A99A8E'
+              }
+            },
+            fontFamily: {
+              serif: ['"Cinzel"', 'serif'],
+              sans: ['"Inter"', 'sans-serif']
+            }
+          }
         }
-        .form-group label { margin-top: 1rem; }
-        .oculto { display: none; }
+      }
+    </script>
+    <style>
+      .glass-panel {
+        background: rgba(27, 12, 9, 0.85);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(229, 192, 123, 0.2);
+      }
+      .glass-card {
+        background: linear-gradient(145deg, rgba(36, 16, 12, 0.9) 0%, rgba(20, 8, 6, 0.95) 100%);
+        border: 1px solid rgba(229, 192, 123, 0.15);
+      }
     </style>
 </head>
-<body>
-    <header>
-        <div class="logo">Painel Vendedor</div>
-        <nav><button onclick="window.location.href='/'">Ver Loja</button></nav>
+<body class="bg-brand-dark text-brand-cream font-sans min-h-screen">
+
+    <!-- Header Admin -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-brand-gold/20 px-4 sm:px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-gold to-brand-ruby flex items-center justify-center font-serif font-black text-brand-dark">
+                S
+            </div>
+            <div>
+                <h1 class="font-serif text-lg sm:text-xl font-bold text-brand-gold tracking-wider">Painel Administrativo</h1>
+                <p class="text-[10px] text-brand-muted uppercase tracking-widest">Sagrado Chocolates • Gestão Geral</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/" target="_blank" class="px-3 py-2 rounded-xl text-xs font-semibold text-brand-muted hover:text-brand-gold border border-brand-border hover:border-brand-gold/40 transition flex items-center gap-2">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Ver Loja</span>
+            </a>
+            <button id="btn-sair" onclick="sairAdmin()" class="hidden px-3 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                <span>Sair</span>
+            </button>
+        </div>
     </header>
 
-    <main class="container">
-        <!-- TELA DE LOGIN DO ADMIN -->
-        <div class="admin-container" id="box-login">
-            <h2 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">Área Restrita</h2>
-            <form onsubmit="fazerLogin(event)">
-                <div class="form-group">
-                    <label for="senha-admin">Senha de Acesso</label>
-                    <input type="password" id="senha-admin" required placeholder="Digite a senha do admin">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. TELA DE LOGIN DO ADMIN -->
+        <div id="secao-login" class="max-w-md mx-auto my-12 glass-panel p-8 rounded-3xl border border-brand-gold/30 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-brand-gold/10 border border-brand-gold/30 text-brand-gold flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="shield-check" class="w-7 h-7"></i>
+            </div>
+            <h2 class="font-serif text-2xl font-bold text-center text-brand-cream mb-2">Acesso Restrito</h2>
+            <p class="text-xs text-center text-brand-muted mb-6">Digite sua senha de administrador para acessar o gerenciamento de produtos e fiados.</p>
+            
+            <form onsubmit="fazerLoginAdmin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gold uppercase tracking-wider mb-2">Senha do Admin</label>
+                    <input type="password" id="senha-admin" required placeholder="Digite a senha"
+                           class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-brand-cream placeholder-brand-muted text-sm focus:outline-none focus:border-brand-gold transition">
                 </div>
-                <button type="submit" class="btn-comprar" style="margin-top: 1rem;">Entrar</button>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm hover:brightness-110 active:scale-95 transition shadow-lg">
+                    Entrar no Painel
+                </button>
             </form>
         </div>
 
-        <!-- FORMULÁRIO DE CADASTRO (Oculto até digitar a senha certa) -->
-        <div class="admin-container oculto" id="box-cadastro">
-            <h2 style="color: var(--gold); margin-bottom: 1.5rem; text-align: center;">Cadastrar Novo Produto</h2>
-            <form id="form-cadastro" onsubmit="cadastrarProduto(event)">
-                <div class="form-group">
-                    <label for="nome">Nome do Produto</label>
-                    <input type="text" id="nome" required placeholder="Ex: Cone Trufado de Morango">
+        <!-- 2. CONTEÚDO DO PAINEL (PROTEGIDO) -->
+        <div id="secao-painel" class="hidden space-y-8">
+
+            <!-- Navegação de Abas -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-brand-border/60">
+                <button onclick="trocarAba('fiado')" id="tab-btn-fiado" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition bg-brand-gold text-brand-dark shadow-lg">
+                    <i data-lucide="receipt" class="w-4 h-4"></i>
+                    <span>Tela de Fiado (Clientes)</span>
+                    <span id="badge-fiados-pendentes" class="hidden bg-brand-ruby text-white text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+                </button>
+                <button onclick="trocarAba('comprovantes')" id="tab-btn-comprovantes" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition glass-panel text-brand-muted hover:text-brand-cream">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span>Comprovantes Enviados</span>
+                    <span id="badge-comprovantes" class="hidden bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+                </button>
+                <button onclick="trocarAba('produtos')" id="tab-btn-produtos" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition glass-panel text-brand-muted hover:text-brand-cream">
+                    <i data-lucide="package-plus" class="w-4 h-4"></i>
+                    <span>Cadastrar Produtos (Galeria/Fotos)</span>
+                </button>
+            </div>
+
+            <!-- ================= ABA 1: TELA DE FIADO (CLIENTES) ================= -->
+            <div id="aba-fiado" class="space-y-6">
+                <!-- Cards de Resumo -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card p-5 rounded-2xl border border-brand-border">
+                        <span class="text-xs text-brand-muted uppercase font-semibold">Total a Receber em Fiados</span>
+                        <div id="resumo-total-fiado" class="font-serif text-3xl font-bold text-brand-gold mt-1">R$ 0,00</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-border">
+                        <span class="text-xs text-brand-muted uppercase font-semibold">Clientes Cadastrados</span>
+                        <div id="resumo-total-clientes" class="font-serif text-3xl font-bold text-brand-cream mt-1">0</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-border">
+                        <span class="text-xs text-brand-muted uppercase font-semibold">Comprovantes para Conferir</span>
+                        <div id="resumo-total-comprovantes" class="font-serif text-3xl font-bold text-emerald-400 mt-1">0</div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="preco">Preço (R$)</label>
-                    <input type="number" id="preco" step="0.01" required placeholder="12.00">
+
+                <!-- Tabela / Lista de Clientes -->
+                <div class="glass-panel p-6 rounded-3xl border border-brand-border">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="font-serif text-xl font-bold text-brand-cream">Pessoas Cadastradas no Site</h3>
+                            <p class="text-xs text-brand-muted">Clique em qualquer cliente para lançar um novo fiado (débito) diretamente na conta dele.</p>
+                        </div>
+                        <div class="relative w-full sm:w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted"></i>
+                            <input type="text" id="filtro-cliente" oninput="filtrarClientes()" placeholder="Filtrar por nome ou e-mail..."
+                                   class="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-brand-cream placeholder-brand-muted focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-2xl border border-brand-border/60">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-brand-surface text-brand-gold text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="p-4">Cliente</th>
+                                    <th class="p-4">E-mail (Login)</th>
+                                    <th class="p-4">Telefone / Whats</th>
+                                    <th class="p-4">Débito Atual</th>
+                                    <th class="p-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-clientes-tabela" class="divide-y divide-brand-border/40">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-brand-muted text-xs">Carregando clientes...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="estoque">Estoque Inicial (unidades)</label>
-                    <input type="number" id="estoque" required placeholder="50">
+            </div>
+
+            <!-- ================= ABA 2: COMPROVANTES ENVIADOS ================= -->
+            <div id="aba-comprovantes" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-3xl border border-brand-border">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="font-serif text-xl font-bold text-brand-cream">Comprovantes de Pagamento PIX</h3>
+                            <p class="text-xs text-brand-muted">Confira os comprovantes enviados pelos clientes e confirme o pagamento para liquidar a dívida.</p>
+                        </div>
+                        <button onclick="carregarFiadosAdmin()" class="px-3 py-2 rounded-xl text-xs font-semibold text-brand-gold glass-card hover:bg-brand-gold/10 transition flex items-center gap-1.5">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            <span>Atualizar</span>
+                        </button>
+                    </div>
+
+                    <div id="lista-comprovantes-container" class="space-y-4">
+                        <p class="text-xs text-brand-muted text-center py-8">Nenhum comprovante pendente no momento.</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="img">URL da Imagem</label>
-                    <input type="url" id="img" required placeholder="https://via.placeholder.com/300x200">
+
+                <!-- Histórico Geral de Débitos -->
+                <div class="glass-panel p-6 rounded-3xl border border-brand-border">
+                    <h3 class="font-serif text-lg font-bold text-brand-cream mb-4">Histórico Geral de Débitos</h3>
+                    <div class="overflow-x-auto rounded-2xl border border-brand-border/60">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-brand-surface text-brand-gold uppercase">
+                                <tr>
+                                    <th class="p-3">Data</th>
+                                    <th class="p-3">Cliente</th>
+                                    <th class="p-3">Descrição dos Itens</th>
+                                    <th class="p-3">Valor</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3 text-center">Comprovante</th>
+                                    <th class="p-3 text-right">Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historico-fiados-tabela" class="divide-y divide-brand-border/40">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <button type="submit" class="btn-comprar" style="margin-top: 1rem;">Salvar Produto</button>
-            </form>
-            <button onclick="sairAdmin()" style="background: transparent; border: none; color: var(--gold); cursor: pointer; margin-top: 1.5rem; width: 100%; text-align: center;">Sair do Painel</button>
+            </div>
+
+            <!-- ================= ABA 3: CADASTRAR PRODUTOS (COM ATÉ 4 FOTOS DA GALERIA) ================= -->
+            <div id="aba-produtos" class="hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Formulário de Cadastro -->
+                    <div class="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-brand-border">
+                        <h3 class="font-serif text-xl font-bold text-brand-cream mb-2">Cadastrar Novo Produto</h3>
+                        <p class="text-xs text-brand-muted mb-6">Agora você não precisa de URL de imagem! Basta escolher até 4 fotos direto da sua galeria ou arquivos.</p>
+
+                        <form id="form-produto" onsubmit="salvarProduto(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome do Produto *</label>
+                                <input type="text" id="prod-nome" required placeholder="Ex: Cone Trufado Ninho com Nutella"
+                                       class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Preço (R$) *</label>
+                                    <input type="number" id="prod-preco" step="0.01" required placeholder="12.00"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Estoque Inicial *</label>
+                                    <input type="number" id="prod-estoque" required placeholder="30"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Categoria</label>
+                                <select id="prod-categoria" class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                                    <option value="classicos">Tradicionais & Gourmet</option>
+                                    <option value="frutados">Frutas Nobres</option>
+                                    <option value="exclusivos">Especiais do Chef</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Descrição do Cone</label>
+                                <textarea id="prod-descricao" rows="2" placeholder="Descreva os ingredientes, recheio e crocância..."
+                                          class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"></textarea>
+                            </div>
+
+                            <!-- UPLOAD DE FOTOS DA GALERIA / ARQUIVOS -->
+                            <div class="p-4 rounded-2xl bg-brand-surface border border-brand-gold/30 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="block text-xs font-bold text-brand-gold uppercase tracking-wider">
+                                        Fotos do Produto (Até 4 fotos)
+                                    </label>
+                                    <span id="contador-fotos" class="text-[11px] text-brand-muted font-bold">0 de 4 selecionadas</span>
+                                </div>
+                                
+                                <p class="text-[11px] text-brand-muted">
+                                    Selecione imagens direto da galeria do celular ou dos arquivos do seu computador:
+                                </p>
+
+                                <label class="flex flex-col items-center justify-center p-5 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-2xl cursor-pointer bg-brand-dark/40 hover:bg-brand-gold/5 transition group">
+                                    <i data-lucide="image-plus" class="w-8 h-8 text-brand-gold group-hover:scale-110 transition"></i>
+                                    <span class="text-xs font-bold text-brand-gold mt-2">Clique aqui para abrir a Galeria / Arquivos</span>
+                                    <span class="text-[10px] text-brand-muted mt-1">Formatos aceitos: JPG, PNG, WEBP (Máx. 4 fotos)</span>
+                                    <input type="file" id="fotos-input" accept="image/*" multiple onchange="processarFotosSelecionadas(event)" class="hidden">
+                                </label>
+
+                                <!-- Pré-visualização das 4 fotos -->
+                                <div id="preview-fotos-grid" class="grid grid-cols-4 gap-2 pt-2"></div>
+                            </div>
+
+                            <button type="submit" id="btn-salvar-produto" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center justify-center gap-2">
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                <span>Salvar Produto no Cardápio</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Produtos Cadastrados -->
+                    <div class="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-brand-border">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-bold text-brand-cream">Produtos no Banco de Dados</h3>
+                            <button onclick="carregarProdutosAdmin()" class="p-2 text-brand-muted hover:text-brand-gold">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div id="lista-produtos-admin" class="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                            <p class="text-xs text-brand-muted text-center py-8">Carregando produtos...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <div id="toast-container"></div>
+    <!-- ================= MODAL: LANÇAR DÉBITO / FIADO ================= -->
+    <div id="modal-lancar-fiado" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+            <button onclick="fecharModalFiado()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-gold/10 border border-brand-gold/30 text-brand-gold flex items-center justify-center">
+                    <i data-lucide="receipt" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-brand-cream">Lançar Fiado</h3>
+                    <p id="modal-fiado-cliente-nome" class="text-xs text-brand-gold font-semibold">Cliente: Nome</p>
+                </div>
+            </div>
+
+            <form onsubmit="confirmarLancamentoFiado(event)" class="space-y-4">
+                <input type="hidden" id="modal-fiado-cliente-id">
+
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Valor da Dívida (R$) *</label>
+                    <input type="number" id="modal-fiado-valor" step="0.01" min="0.01" required placeholder="Ex: 24.00"
+                           class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-lg font-bold text-brand-cream focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">O que a pessoa pegou? (Descrição) *</label>
+                    <textarea id="modal-fiado-desc" rows="3" required placeholder="Ex: 2 Cones Trufados de Morango e 1 de Nutella"
+                              class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+
+                <div class="p-3 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] text-brand-muted flex items-start gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-brand-gold shrink-0 mt-0.5"></i>
+                    <span>Assim que você salvar, este valor vai aparecer imediatamente na conta do cliente com status <strong>Pendente</strong>, junto com a chave PIX e botão de pagar.</span>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" onclick="fecharModalFiado()" class="flex-1 py-3 rounded-xl border border-brand-border text-brand-muted hover:text-brand-cream text-xs font-semibold">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-xs hover:brightness-110 transition shadow-lg">
+                        Confirmar e Lançar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ZOOM DO COMPROVANTE ================= -->
+    <div id="modal-comprovante" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div class="relative w-full max-w-xl glass-panel rounded-3xl p-6 border border-brand-gold/40 shadow-2xl flex flex-col items-center">
+            <button onclick="fecharModalComprovante()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="font-serif text-lg font-bold text-brand-cream mb-4">Comprovante de Pagamento PIX</h3>
+            <div class="w-full max-h-[70vh] overflow-auto rounded-xl border border-brand-border mb-4 bg-brand-dark/50 flex justify-center">
+                <img id="img-zoom-comprovante" src="" alt="Comprovante" class="max-w-full h-auto object-contain">
+            </div>
+            <div id="botoes-acao-comprovante" class="flex items-center gap-3 w-full">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Container de Toasts / Notificações -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
-        function showToast(mensagem) {
+        let clientesCache = [];
+        let fiadosCache = [];
+        let fotosBase64 = []; // Guarda até 4 fotos em Base64
+
+        function showToast(msg, tipo = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerText = mensagem;
+            toast.className = 'pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-xl text-brand-cream text-xs font-semibold flex items-center gap-2 animate-bounce';
+            toast.innerHTML = `<span class="w-2 h-2 rounded-full ${tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'}"></span> <span>${msg}</span>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 4000);
         }
 
-        // Verifica se já estava logado na sessão do navegador
         window.onload = function() {
-            if (sessionStorage.getItem('admin_logado') === 'true') {
-                document.getElementById('box-login').classList.add('oculto');
-                document.getElementById('box-cadastro').classList.remove('oculto');
+            if (sessionStorage.getItem('sagrado_admin_logado') === 'true') {
+                mostrarPainel();
             }
+            if (window.lucide) window.lucide.createIcons();
         }
 
-        async function fazerLogin(event) {
-            event.preventDefault();
+        async function fazerLoginAdmin(e) {
+            e.preventDefault();
             const senha = document.getElementById('senha-admin').value;
-
             try {
-                const response = await fetch('/api/login', {
+                const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ senha: senha })
+                    body: JSON.stringify({ senha })
                 });
-
-                const resultado = await response.json();
-
-                if (response.ok) {
-                    sessionStorage.setItem('admin_logado', 'true');
-                    document.getElementById('box-login').classList.add('oculto');
-                    document.getElementById('box-cadastro').classList.remove('oculto');
-                    showToast('Acesso autorizado!');
+                const data = await res.json();
+                if (res.ok) {
+                    sessionStorage.setItem('sagrado_admin_logado', 'true');
+                    showToast('Acesso autorizado ao painel!', 'sucesso');
+                    mostrarPainel();
                 } else {
-                    showToast(resultado.erro || 'Senha incorreta.');
+                    showToast(data.erro || 'Senha incorreta!');
                 }
-            } catch (error) {
-                showToast('Erro ao validar login.');
+            } catch (err) {
+                showToast('Erro de conexão ao tentar fazer login.');
             }
+        }
+
+        function mostrarPainel() {
+            document.getElementById('secao-login').classList.add('hidden');
+            document.getElementById('secao-painel').classList.remove('hidden');
+            document.getElementById('btn-sair').classList.remove('hidden');
+            carregarClientesAdmin();
+            carregarFiadosAdmin();
+            carregarProdutosAdmin();
+            if (window.lucide) window.lucide.createIcons();
         }
 
         function sairAdmin() {
-            sessionStorage.removeItem('admin_logado');
-            document.getElementById('box-cadastro').classList.add('oculto');
-            document.getElementById('box-login').classList.remove('oculto');
+            sessionStorage.removeItem('sagrado_admin_logado');
+            document.getElementById('secao-painel').classList.add('hidden');
+            document.getElementById('btn-sair').classList.add('hidden');
+            document.getElementById('secao-login').classList.remove('hidden');
             document.getElementById('senha-admin').value = '';
-            showToast('Você saiu do painel.');
+            showToast('Você saiu do painel administrativo.');
         }
 
-        async function cadastrarProduto(event) {
-            event.preventDefault();
-            
-            const produto = {
-                nome: document.getElementById('nome').value,
-                preco: document.getElementById('preco').value,
-                estoque: document.getElementById('estoque').value,
-                img: document.getElementById('img').value
+        function trocarAba(aba) {
+            ['fiado', 'comprovantes', 'produtos'].forEach(a => {
+                document.getElementById(`aba-${a}`).classList.add('hidden');
+                const btn = document.getElementById(`tab-btn-${a}`);
+                btn.className = 'px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition glass-panel text-brand-muted hover:text-brand-cream';
+            });
+
+            document.getElementById(`aba-${aba}`).classList.remove('hidden');
+            const btnAtivo = document.getElementById(`tab-btn-${aba}`);
+            btnAtivo.className = 'px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition bg-brand-gold text-brand-dark shadow-lg';
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        // ================= CLIENTES E FIADO =================
+
+        async function carregarClientesAdmin() {
+            try {
+                const res = await fetch('/api/admin/clientes');
+                clientesCache = await res.json();
+                renderizarClientes(clientesCache);
+                atualizarResumos();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderizarClientes(lista) {
+            const tbody = document.getElementById('lista-clientes-tabela');
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-brand-muted text-xs">Nenhum cliente cadastrado ainda. Assim que as pessoas criarem conta no site, elas aparecerão aqui!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = lista.map(c => `
+                <tr class="hover:bg-brand-surface/50 transition">
+                    <td class="p-4 font-semibold text-brand-cream flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-brand-card border border-brand-border flex items-center justify-center font-bold text-xs text-brand-gold">
+                            ${c.nome.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <div>${c.nome}</div>
+                            <span class="text-[10px] text-brand-muted">Cadastrado em: ${c.data_cadastro}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-brand-muted text-xs">${c.email}</td>
+                    <td class="p-4 text-brand-muted text-xs">${c.telefone}</td>
+                    <td class="p-4">
+                        <span class="font-serif font-bold text-sm ${c.total_devendo > 0 ? 'text-amber-400' : 'text-emerald-400'}">
+                            R$ ${c.total_devendo.toFixed(2).replace('.', ',')}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center">
+                        <button onclick="abrirModalFiado(${c.id}, '${c.nome.replace(/'/g, "\\'")}')" 
+                                class="px-3.5 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-dark font-bold text-xs shadow transition flex items-center gap-1.5 mx-auto">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                            <span>Adicionar Débito</span>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function filtrarClientes() {
+            const termo = document.getElementById('filtro-cliente').value.toLowerCase();
+            const filtrados = clientesCache.filter(c => 
+                c.nome.toLowerCase().includes(termo) || c.email.toLowerCase().includes(termo)
+            );
+            renderizarClientes(filtrados);
+        }
+
+        function abrirModalFiado(id, nome) {
+            document.getElementById('modal-fiado-cliente-id').value = id;
+            document.getElementById('modal-fiado-cliente-nome').innerText = `Cliente selecionado: ${nome}`;
+            document.getElementById('modal-fiado-valor').value = '';
+            document.getElementById('modal-fiado-desc').value = '';
+            document.getElementById('modal-lancar-fiado').classList.remove('hidden');
+        }
+
+        function fecharModalFiado() {
+            document.getElementById('modal-lancar-fiado').classList.add('hidden');
+        }
+
+        async function confirmarLancamentoFiado(e) {
+            e.preventDefault();
+            const usuario_id = document.getElementById('modal-fiado-cliente-id').value;
+            const valor = parseFloat(document.getElementById('modal-fiado-valor').value);
+            const descricao = document.getElementById('modal-fiado-desc').value;
+
+            try {
+                const res = await fetch('/api/admin/fiados', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario_id, valor, descricao })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Débito lançado com sucesso na conta do cliente!', 'sucesso');
+                    fecharModalFiado();
+                    carregarClientesAdmin();
+                    carregarFiadosAdmin();
+                } else {
+                    showToast(data.erro || 'Erro ao lançar débito.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão com o servidor.');
+            }
+        }
+
+        // ================= COMPROVANTES E HISTÓRICO =================
+
+        async function carregarFiadosAdmin() {
+            try {
+                const res = await fetch('/api/admin/fiados');
+                fiadosCache = await res.json();
+                renderizarComprovantes(fiadosCache.filter(f => f.status === 'comprovante_enviado'));
+                renderizarHistoricoFiados(fiadosCache);
+                atualizarResumos();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderizarComprovantes(pendentes) {
+            const container = document.getElementById('lista-comprovantes-container');
+            const badge = document.getElementById('badge-comprovantes');
+
+            if (pendentes.length > 0) {
+                badge.innerText = pendentes.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            if (!pendentes || pendentes.length === 0) {
+                container.innerHTML = '<p class="text-xs text-brand-muted text-center py-8">Nenhum comprovante aguardando conferência no momento. Excelente!</p>';
+                return;
+            }
+
+            container.innerHTML = pendentes.map(f => `
+                <div class="glass-card p-4 sm:p-5 rounded-2xl border border-brand-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden bg-brand-surface border border-brand-border shrink-0 cursor-pointer" onclick="verComprovante('${f.comprovante}', ${f.id})">
+                            <img src="${f.comprovante}" alt="Comprovante" class="w-full h-full object-cover hover:scale-110 transition">
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-bold text-sm text-brand-cream">${f.cliente_nome}</h4>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante Anexado</span>
+                            </div>
+                            <p class="text-xs text-brand-muted">${f.cliente_email} • ${f.cliente_telefone || 'Sem Whats'}</p>
+                            <p class="text-xs text-brand-gold mt-1"><strong>Itens:</strong> ${f.descricao}</p>
+                            <span class="text-[10px] text-brand-muted">Enviado em: ${f.criado_em}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2">
+                        <div class="font-serif font-bold text-xl text-brand-gold">R$ ${f.valor.toFixed(2).replace('.', ',')}</div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="verComprovante('${f.comprovante}', ${f.id})" class="px-3 py-2 rounded-xl glass-panel text-xs text-brand-cream hover:text-brand-gold border border-brand-border">
+                                Ver Foto
+                            </button>
+                            <button onclick="alterarStatusFiado(${f.id}, 'pago')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1.5">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                <span>Confirmar Pagamento</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function renderizarHistoricoFiados(lista) {
+            const tbody = document.getElementById('historico-fiados-tabela');
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-brand-muted">Nenhum registro encontrado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map(f => {
+                let statusBadge = '';
+                if (f.status === 'pago') {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">Pago ✓</span>';
+                } else if (f.status === 'comprovante_enviado') {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante Enviado</span>';
+                } else {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-800">Pendente</span>';
+                }
+
+                return `
+                    <tr class="hover:bg-brand-surface/40 transition">
+                        <td class="p-3 text-brand-muted">${f.criado_em}</td>
+                        <td class="p-3 font-semibold text-brand-cream">${f.cliente_nome}</td>
+                        <td class="p-3 text-brand-muted max-w-xs truncate">${f.descricao}</td>
+                        <td class="p-3 font-bold text-brand-gold">R$ ${f.valor.toFixed(2).replace('.', ',')}</td>
+                        <td class="p-3">${statusBadge}</td>
+                        <td class="p-3 text-center">
+                            ${f.tem_comprovante ? `
+                                <button onclick="verComprovante('${f.comprovante}',${f.id})" class="text-brand-gold hover:underline text-xs">Visualizar</button>
+                            ` : '<span class="text-brand-muted text-[10px]">Sem anexo</span>'}
+                        </td>
+                        <td class="p-3 text-right">
+                            ${f.status !== 'pago' ? `
+                                <button onclick="alterarStatusFiado(${f.id}, 'pago')" class="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-[11px] font-bold">
+                                    Marcar Pago
+                                </button>
+                            ` : `<span class="text-emerald-400 text-xs font-bold">Liquidado</span>`}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function verComprovante(urlBase64, fiadoId) {
+            document.getElementById('img-zoom-comprovante').src = urlBase64;
+            const containerBotoes = document.getElementById('botoes-acao-comprovante');
+            containerBotoes.innerHTML = `
+                <button onclick="fecharModalComprovante()" class="flex-1 py-2.5 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream">
+                    Fechar
+                </button>
+                <button onclick="alterarStatusFiado(${fiadoId}, 'pago'); fecharModalComprovante();" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center justify-center gap-1.5">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    <span>Confirmar Pagamento e Marcar como Pago</span>
+                </button>
+            `;
+            document.getElementById('modal-comprovante').classList.remove('hidden');
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function fecharModalComprovante() {
+            document.getElementById('modal-comprovante').classList.add('hidden');
+        }
+
+        async function alterarStatusFiado(fiadoId, status) {
+            try {
+                const res = await fetch(`/api/admin/fiados/${fiadoId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(data.mensagem || 'Status atualizado!', 'sucesso');
+                    carregarFiadosAdmin();
+                    carregarClientesAdmin();
+                } else {
+                    showToast(data.erro || 'Erro ao alterar status.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão ao alterar status.');
+            }
+        }
+
+        function atualizarResumos() {
+            const total = clientesCache.reduce((acc, c) => acc + (c.total_devendo || 0), 0);
+            document.getElementById('resumo-total-fiado').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resumo-total-clientes').innerText = clientesCache.length;
+
+            const comprovantesPendentes = fiadosCache.filter(f => f.status === 'comprovante_enviado').length;
+            document.getElementById('resumo-total-comprovantes').innerText = comprovantesPendentes;
+        }
+
+        // ================= CADASTRAR PRODUTOS COM ATÉ 4 FOTOS =================
+
+        function processarFotosSelecionadas(event) {
+            const files = Array.from(event.target.files);
+            if (!files.length) return;
+
+            if (fotosBase64.length + files.length > 4) {
+                showToast('Você só pode cadastrar no máximo 4 fotos por produto!');
+            }
+
+            const disponiveis = 4 - fotosBase64.length;
+            const paraAdicionar = files.slice(0, disponiveis);
+
+            paraAdicionar.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotosBase64.push(e.target.result);
+                    atualizarGridFotos();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            event.target.value = '';
+        }
+
+        function removerFoto(index) {
+            fotosBase64.splice(index, 1);
+            atualizarGridFotos();
+        }
+
+        function atualizarGridFotos() {
+            const grid = document.getElementById('preview-fotos-grid');
+            const contador = document.getElementById('contador-fotos');
+            contador.innerText = `${fotosBase64.length} de 4 selecionadas`;
+
+            grid.innerHTML = fotosBase64.map((src, idx) => `
+                <div class="relative group rounded-xl overflow-hidden border border-brand-gold/40 h-20 bg-brand-dark">
+                    <img src="${src}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removerFoto(${idx})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-90 hover:opacity-100 shadow">
+                        <i data-lucide="x" class="w-3 h-3"></i>
+                    </button>
+                    ${idx === 0 ? '<span class="absolute bottom-0 inset-x-0 bg-brand-gold/90 text-brand-dark font-black text-[8px] text-center uppercase">Capa</span>' : ''}
+                </div>
+            `).join('');
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        async function salvarProduto(e) {
+            e.preventDefault();
+            const nome = document.getElementById('prod-nome').value;
+            const preco = document.getElementById('prod-preco').value;
+            const estoque = document.getElementById('prod-estoque').value;
+            const categoria = document.getElementById('prod-categoria').value;
+            const descricao = document.getElementById('prod-descricao').value;
+
+            if (fotosBase64.length === 0) {
+                if (!confirm("Você não selecionou nenhuma foto da galeria. Deseja cadastrar o produto mesmo assim com imagem padrão?")) {
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('btn-salvar-produto');
+            btn.disabled = true;
+            btn.innerText = 'Salvando produto no banco...';
+
+            const payload = {
+                nome,
+                preco,
+                estoque,
+                categoria,
+                descricao,
+                imagens: fotosBase64,
+                img: fotosBase64.length > 0 ? fotosBase64[0] : 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80'
             };
 
             try {
-                const response = await fetch('/api/produtos', {
+                const res = await fetch('/api/produtos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(produto)
+                    body: JSON.stringify(payload)
                 });
-
-                if (response.ok) {
-                    showToast('Produto salvo no banco de dados!');
-                    document.getElementById('form-cadastro').reset();
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Produto cadastrado com sucesso!', 'sucesso');
+                    document.getElementById('form-produto').reset();
+                    fotosBase64 = [];
+                    atualizarGridFotos();
+                    carregarProdutosAdmin();
                 } else {
-                    showToast('Erro ao salvar produto.');
+                    showToast(data.erro || 'Erro ao cadastrar produto.');
                 }
-            } catch (error) {
-                showToast('Erro de conexão com o servidor.');
+            } catch (err) {
+                showToast('Erro de conexão ao salvar produto.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i><span>Salvar Produto no Cardápio</span>`;
+                if (window.lucide) window.lucide.createIcons();
+            }
+        }
+
+        async function carregarProdutosAdmin() {
+            try {
+                const res = await fetch('/api/produtos');
+                const prods = await res.json();
+                const container = document.getElementById('lista-produtos-admin');
+
+                if (!prods || prods.length === 0) {
+                    container.innerHTML = '<p class="text-xs text-brand-muted text-center py-8">Nenhum produto cadastrado no banco de dados.</p>';
+                    return;
+                }
+
+                container.innerHTML = prods.map(p => `
+                    <div class="glass-card p-3 rounded-2xl border border-brand-border flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <img src="${p.img || 'https://via.placeholder.com/60'}" class="w-12 h-12 rounded-xl object-cover border border-brand-border">
+                            <div>
+                                <h4 class="font-bold text-xs text-brand-cream">${p.nome}</h4>
+                                <span class="text-[11px] text-brand-gold font-bold">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
+                                <span class="text-[10px] text-brand-muted ml-2">Estoque: ${p.estoque} un</span>
+                                <div class="text-[9px] text-brand-muted mt-0.5">${(p.imagens || []).length} fotos anexadas</div>
+                            </div>
+                        </div>
+                        <button onclick="excluirProduto(${p.id})" class="p-2 text-brand-muted hover:text-rose-400" title="Excluir produto">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+                if (window.lucide) window.lucide.createIcons();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function excluirProduto(id) {
+            if (!confirm("Tem certeza que deseja excluir este produto do cardápio?")) return;
+            try {
+                const res = await fetch(`/api/produtos/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Produto excluído com sucesso!', 'sucesso');
+                    carregarProdutosAdmin();
+                } else {
+                    showToast('Erro ao excluir produto.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão ao excluir.');
             }
         }
     </script>
