@@ -96,6 +96,7 @@
   <div id="root"></div>
 
   <script type="text/babel">
+{% raw %}
     const { useState, useEffect, useMemo } = React;
 
     const PRODUTOS_PADRAO = [
@@ -156,7 +157,7 @@
       // MODAIS E ESTADOS
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-      const [authTab, setAuthTab] = useState('entrar');
+      const [authTab, setAuthTab] = useState('entrar'); // 'entrar' ou 'cadastrar'
       const [isContaModalOpen, setIsContaModalOpen] = useState(false);
       const [quickViewProduct, setQuickViewProduct] = useState(null);
       const [imgIndexModal, setImgIndexModal] = useState(0);
@@ -477,6 +478,7 @@
                   <i data-lucide="user" className="w-4 h-4 text-brand-gold"></i>
                   <span>{usuario ? `Olá, ${usuario.nome.split(' ')[0]}` : 'Entrar / Criar Conta'}</span>
                   
+                  {/* Alerta se o usuário tiver fiado pendente */}
                   {totalDevendoCliente > 0 && (
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
                   )}
@@ -497,7 +499,7 @@
             </div>
           </header>
 
-          {/* Banner de Aviso de Débito Pendente */}
+          {/* Banner de Aviso de Débito Pendente (se logado) */}
           {usuario && totalDevendoCliente > 0 && (
             <div className="bg-amber-950/80 border-b border-amber-600/40 px-4 py-2 text-center text-xs text-amber-200 flex items-center justify-center gap-3">
               <i data-lucide="alert-circle" className="w-4 h-4 text-amber-400"></i>
@@ -688,7 +690,7 @@
             </div>
           </main>
 
-          {/* ================= MODAL: QUICK VIEW DO PRODUTO ================= */}
+          {/* ================= MODAL: QUICK VIEW DO PRODUTO (COM ATÉ 4 FOTOS) ================= */}
           {quickViewProduct && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
               <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
@@ -697,6 +699,7 @@
                 </button>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
                   <div>
+                    {/* Imagem Principal */}
                     <div className="relative rounded-2xl overflow-hidden h-64 bg-brand-dark border border-brand-border">
                       <img
                         src={(quickViewProduct.imagens && quickViewProduct.imagens[imgIndexModal]) || quickViewProduct.img}
@@ -704,6 +707,7 @@
                         className="w-full h-full object-cover"
                       />
                     </div>
+                    {/* Miniaturas de até 4 fotos */}
                     {quickViewProduct.imagens && quickViewProduct.imagens.length > 1 && (
                       <div className="grid grid-cols-4 gap-2 mt-3">
                         {quickViewProduct.imagens.map((foto, idx) => (
@@ -754,6 +758,7 @@
                   <i data-lucide="x" className="w-5 h-5"></i>
                 </button>
 
+                {/* Abas Entrar / Cadastrar */}
                 <div className="flex border-b border-brand-border mb-6">
                   <button
                     onClick={() => setAuthTab('entrar')}
@@ -869,6 +874,7 @@
                   <i data-lucide="x" className="w-5 h-5"></i>
                 </button>
 
+                {/* Perfil Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-brand-border gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center font-bold text-lg font-serif">
@@ -883,11 +889,12 @@
                     onClick={handleLogout}
                     className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto"
                   >
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <i data-lucide="log-out" className="w-3.5 h-3.5"></i>
                     <span>Sair da Conta</span>
                   </button>
                 </div>
 
+                {/* Resumo Financeiro de Fiados */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
                   <div className="glass-card p-4 rounded-2xl border border-brand-gold/30">
                     <span className="text-xs text-brand-muted uppercase font-semibold">Total a Pagar em Aberto</span>
@@ -953,7 +960,7 @@
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-brand-gold mt-1"><strong>Itens:</strong> ${f.descricao}</p>
+                            <p className="text-xs text-brand-gold mt-1"><strong>Itens:</strong> {f.descricao}</p>
                             <span className="text-[10px] text-brand-muted">Lançado em: {f.criado_em}</span>
                           </div>
 
@@ -1008,6 +1015,7 @@
                   </div>
                 </div>
 
+                {/* Chave Pix e Botão Copiar */}
                 <div className="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-2 mb-6">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-brand-muted">Beneficiário:</span>
@@ -1038,7 +1046,7 @@
                   <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-xl cursor-pointer bg-brand-dark/50 hover:bg-brand-gold/5 transition group">
                     <i data-lucide="upload" className="w-6 h-6 text-brand-gold group-hover:scale-110 transition"></i>
                     <span className="text-xs font-bold text-brand-gold mt-1.5">Escolher Comprovante (Galeria/Arquivos)</span>
-                    <input type="file" accept="image/*" onChange={processarComprovanteArquivo} className="hidden" />
+                    <input type="file" accept="image/*" onChange={processarComprovanteArquivo} className="hidden">
                   </label>
 
                   {comprovanteBase64 && (
@@ -1086,6 +1094,7 @@
                     </button>
                   </div>
 
+                  {/* Frete Grátis */}
                   <div className="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
                     <div className="flex justify-between mb-1.5">
                       <span className="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
@@ -1101,6 +1110,7 @@
                     </div>
                   </div>
 
+                  {/* Lista */}
                   <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {carrinho.length === 0 ? (
                       <p className="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
@@ -1122,8 +1132,6 @@
                               <i data-lucide="trash-2" className="w-4 h-4"></i>
                             </button>
                             <span className="font-serif font-bold text-sm text-brand-cream">
-                              R$ {(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
-                            ">
                               R$ {(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
                             </span>
                           </div>
@@ -1168,6 +1176,7 @@
     }
 
     ReactDOM.render(<App />, document.getElementById('root'));
+  {% endraw %}
   </script>
 </body>
 </html>

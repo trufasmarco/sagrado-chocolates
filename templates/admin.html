@@ -189,7 +189,7 @@
                     </div>
                 </div>
 
-                <!-- Histórico Geral de Débitos -->
+                <!-- Histórico Completo de Fiados -->
                 <div class="glass-panel p-6 rounded-3xl border border-brand-border">
                     <h3 class="font-serif text-lg font-bold text-brand-cream mb-4">Histórico Geral de Débitos</h3>
                     <div class="overflow-x-auto rounded-2xl border border-brand-border/60">
@@ -636,7 +636,7 @@
                         <td class="p-3">${statusBadge}</td>
                         <td class="p-3 text-center">
                             ${f.tem_comprovante ? `
-                                <button onclick="verComprovante('${f.comprovante}',${f.id})" class="text-brand-gold hover:underline text-xs">Visualizar</button>
+                                <button onclick="verComprovante('${f.comprovante}', ${f.id})" class="text-brand-gold hover:underline text-xs">Visualizar</button>
                             ` : '<span class="text-brand-muted text-[10px]">Sem anexo</span>'}
                         </td>
                         <td class="p-3 text-right">
@@ -722,6 +722,7 @@
                 reader.readAsDataURL(file);
             });
 
+            // Reseta o input para permitir escolher os mesmos arquivos novamente se quiser
             event.target.value = '';
         }
 
