@@ -12,11 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
-  <!-- React & ReactDOM -->
-  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- Babel for JSX -->
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -52,6 +47,7 @@
   </script>
 
   <style>
+    html, body { font-size: 16px; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #120705; }
     ::-webkit-scrollbar-thumb { background: #3e1b14; border-radius: 9999px; border: 1px solid rgba(229, 192, 123, 0.2); }
@@ -60,7 +56,6 @@
     .glass-panel {
       background: rgba(27, 12, 9, 0.85);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(229, 192, 123, 0.2);
     }
     .glass-card {
@@ -87,43 +82,417 @@
       background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
       animation: shimmer 3.5s infinite;
     }
-    @keyframes shimmer {
-      100% { transform: translateX(100%); }
-    }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
   </style>
-
-  <script>
-    window.addEventListener('error', function(e) {
-      console.error("Erro detectado na tela:", e);
-      var box = document.getElementById('erro-carregamento');
-      if (box) {
-        box.style.display = 'block';
-        box.innerHTML = '<strong>⚠️ Erro ao carregar a loja:</strong><br>' + 
-          (e.message || 'Falha ao executar o script React') + 
-          '<br><br><small style="color:#fbd38d;">Dica: Limpe o cache do navegador ou verifique a conexão com a internet.</small>';
-      }
-    });
-  </script>
 </head>
-<body class="bg-brand-dark text-brand-cream font-sans antialiased selection:bg-brand-gold selection:text-brand-dark">
+<body class="bg-brand-dark text-brand-cream font-sans antialiased selection:bg-brand-gold selection:text-brand-dark min-h-screen flex flex-col">
 
-  <!-- Container principal com tela de carregamento inicial -->
-  <div id="root">
-    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #0e0504; color: #E5C07B; font-family: 'Cinzel', serif; text-align: center; padding: 20px;">
-      <div style="width: 50px; height: 50px; border: 4px solid #452019; border-top: 4px solid #E5C07B; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
-      <h2 style="font-size: 22px; letter-spacing: 4px; margin: 0; font-weight: bold;">SAGRADO CHOCOLATES</h2>
-      <p style="font-family: 'Inter', sans-serif; font-size: 13px; color: #A99A8E; margin-top: 8px; letter-spacing: 1px;">Carregando cardápio artesanal...</p>
-      <div id="erro-carregamento" style="display:none; margin-top: 25px; padding: 15px; background: #260c0c; border: 1px solid #e53e3e; border-radius: 10px; color: #ffcccc; font-family: sans-serif; font-size: 12px; max-width: 420px; text-align: left;"></div>
-    </div>
-    <style>
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+  <!-- Faixa Promocional Superior -->
+  <div class="bg-gradient-to-r from-brand-ruby via-brand-surface to-brand-ruby text-brand-gold text-xs py-2.5 px-4 text-center font-medium border-b border-brand-gold/20 flex items-center justify-center gap-2">
+    <span class="w-2.5 h-2.5 rounded-full bg-brand-gold animate-pulse"></span>
+    <span class="text-sm">Edição Especial: Cones Trufados Artesanais com Cacau Nobre</span>
   </div>
 
-  <script type="text/babel">
-{% raw %}
-    const { useState, useEffect, useMemo } = React;
+  <!-- Header Superior -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-brand-gold/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-brand-gold via-brand-goldDark to-brand-ruby flex items-center justify-center shadow-glow-gold border border-brand-gold/40">
+          <span class="font-serif font-black text-brand-dark text-2xl">S</span>
+        </div>
+        <div>
+          <h1 class="font-serif text-xl sm:text-2xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-gold">
+            SAGRADO
+          </h1>
+          <p class="text-xs tracking-[0.25em] text-brand-muted uppercase">Cones Trufados Artesanais</p>
+        </div>
+      </div>
 
+      <!-- Navegação / Ações -->
+      <nav class="flex items-center gap-2 sm:gap-3">
+        <a href="/admin" class="hidden sm:flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Painel Admin</span>
+        </a>
+
+        <!-- Botão Conta -->
+        <button id="btn-conta" onclick="clicarBotaoConta()" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border">
+          <i data-lucide="user" class="w-4 h-4 text-brand-gold"></i>
+          <span id="label-conta">Entrar / Criar Conta</span>
+          <span id="badge-alerta-fiado" class="hidden w-3 h-3 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
+        </button>
+
+        <!-- Botão Sacola -->
+        <button onclick="abrirCarrinho()" class="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span class="hidden sm:inline">Sacola</span>
+          <span id="cart-count-badge" class="bg-brand-dark text-brand-gold text-xs font-black px-2.5 py-0.5 rounded-full border border-brand-gold/40">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Banner de Fiado Pendente -->
+  <div id="banner-aviso-fiado" class="hidden bg-amber-950/90 border-b border-amber-600/40 px-4 py-3 text-center text-sm text-amber-200 flex items-center justify-center gap-3">
+    <i data-lucide="alert-circle" class="w-5 h-5 text-amber-400 shrink-0"></i>
+    <span>Você possui um débito pendente de <strong id="banner-valor-fiado" class="text-amber-300 font-bold">R$ 0,00</strong>.</span>
+    <button onclick="abrirModalMinhaConta()" class="underline text-amber-300 font-bold hover:text-white ml-2">Pagar com PIX agora</button>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-12 pb-20 border-b border-brand-gold/15 bg-gradient-to-b from-brand-surface via-brand-dark to-brand-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-semibold uppercase mb-6 backdrop-blur-sm">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Cacau Nobre Selecionado & Recheio Cremoso</span>
+          </div>
+
+          <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-cream leading-[1.15] mb-6">
+            O Inconfundível <br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-amber-400">
+              Cone Trufado
+            </span> <br />
+            Artesanal.
+          </h2>
+
+          <p class="text-brand-muted text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8">
+            Casquinha ultra crocante por fora e ganache densamente aveludada por dentro. Banhado no mais puro chocolate nobre temperado.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+            <a href="#catalogo" class="btn-shimmer px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-semibold shadow-glow-ruby hover:brightness-110 transition flex items-center gap-2 text-base">
+              <span>Ver Cardápio</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+
+            <button id="hero-btn-acao" onclick="clicarBotaoConta()" class="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2 text-base">
+              <i data-lucide="user-plus" class="w-5 h-5"></i>
+              <span>Criar Minha Conta</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative group w-full max-w-md">
+            <div class="absolute -inset-1 bg-gradient-to-r from-brand-gold via-brand-ruby to-brand-gold rounded-2xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
+            <div class="relative rounded-2xl overflow-hidden glass-panel border border-brand-gold/40 p-3 shadow-2xl">
+              <div class="relative h-80 sm:h-96 rounded-xl overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85"
+                     alt="Cone Trufado Sagrado Chocolates"
+                     class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent opacity-80"></div>
+                <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl glass-panel border border-brand-gold/20 flex items-center justify-between">
+                  <div>
+                    <p class="text-xs text-brand-gold uppercase tracking-wider font-semibold">Destaque da Casa</p>
+                    <h4 class="font-serif text-base font-bold text-brand-cream">Morango Cremoso Especial</h4>
+                  </div>
+                  <span class="px-3.5 py-1.5 rounded-full bg-brand-gold text-brand-dark font-black text-sm">
+                    R$ 12,00
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filtros e Catálogo -->
+  <section id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6 w-full">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      <div>
+        <span class="text-brand-gold text-xs font-semibold tracking-widest uppercase">Cardápio de Delícias</span>
+        <h3 class="font-serif text-3xl font-bold text-brand-cream mt-1">Nossos Sabores Artesanais</h3>
+      </div>
+
+      <div class="relative w-full md:w-80">
+        <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted"></i>
+        <input type="text" id="campo-busca" oninput="filtrarCardapio()" placeholder="Buscar sabor ou ingrediente..."
+               class="w-full pl-11 pr-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-brand-cream placeholder-brand-muted text-sm focus:outline-none focus:border-brand-gold transition" />
+      </div>
+    </div>
+
+    <!-- Categorias -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-4">
+      <button onclick="selecionarCategoria('todos')" id="cat-todos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold">Todos os Sabores</button>
+      <button onclick="selecionarCategoria('classicos')" id="cat-classicos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Tradicionais & Gourmet</button>
+      <button onclick="selecionarCategoria('frutados')" id="cat-frutados" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Frutas Nobres</button>
+      <button onclick="selecionarCategoria('exclusivos')" id="cat-exclusivos" class="btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream">Especiais do Chef</button>
+    </div>
+  </section>
+
+  <!-- Grid de Produtos -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
+    <div id="grid-produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Injetado dinamicamente via JS -->
+    </div>
+  </main>
+
+  <!-- ================= MODAL: DETALHES DO PRODUTO (QUICK VIEW COM ATÉ 4 FOTOS) ================= -->
+  <div id="modal-produto" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+      <button onclick="fecharModalProduto()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+        <div>
+          <div class="relative rounded-2xl overflow-hidden h-64 bg-brand-dark border border-brand-border">
+            <img id="modal-prod-img-principal" src="" alt="Produto" class="w-full h-full object-cover">
+          </div>
+          <div id="modal-prod-miniaturas" class="grid grid-cols-4 gap-2 mt-3"></div>
+        </div>
+
+        <div>
+          <span id="modal-prod-tag" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">Gourmet</span>
+          <h3 id="modal-prod-nome" class="font-serif text-2xl font-bold text-brand-cream mt-3 mb-2">Cone Trufado</h3>
+          <p id="modal-prod-desc" class="text-brand-muted text-sm mb-4">Feito artesanalmente.</p>
+          
+          <div class="text-sm space-y-1.5 bg-brand-surface/60 p-4 rounded-xl border border-brand-border/40 mb-6">
+            <p><strong class="text-brand-gold">Estoque Disponível:</strong> <span id="modal-prod-estoque">0</span> unidades</p>
+            <p id="modal-prod-preco" class="text-2xl font-serif font-bold text-brand-gold mt-2">R$ 0,00</p>
+          </div>
+
+          <button id="modal-prod-btn-add" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Adicionar à Sacola</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CRIAR CONTA OU ENTRAR ================= -->
+  <div id="modal-auth" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+      <button onclick="fecharModalAuth()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="flex border-b border-brand-border mb-6">
+        <button onclick="alternarAbaAuth('entrar')" id="tab-auth-entrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition">
+          Entrar na Conta
+        </button>
+        <button onclick="alternarAbaAuth('cadastrar')" id="tab-auth-cadastrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition">
+          Criar Nova Conta
+        </button>
+      </div>
+
+      <!-- Formulário Entrar -->
+      <form id="form-login" onsubmit="fazerLoginCliente(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail</label>
+          <input type="email" id="login-email" required placeholder="exemplo@email.com"
+                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Sua Senha</label>
+          <input type="password" id="login-senha" required placeholder="••••••••"
+                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
+        </div>
+        <button type="submit" id="btn-login-submit" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition">
+          Entrar
+        </button>
+      </form>
+
+      <!-- Formulário Cadastrar -->
+      <form id="form-cadastro-cliente" onsubmit="fazerCadastroCliente(event)" class="hidden space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome Completo *</label>
+          <input type="text" id="cad-nome" required placeholder="Seu nome"
+                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail *</label>
+          <input type="email" id="cad-email" required placeholder="seu@email.com"
+                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">WhatsApp / Telefone</label>
+          <input type="tel" id="cad-telefone" placeholder="(16) 99999-9999"
+                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Crie uma Senha *</label>
+          <input type="password" id="cad-senha" required placeholder="Mínimo de 4 caracteres"
+                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
+        </div>
+        <button type="submit" id="btn-cad-submit" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition">
+          Criar Minha Conta no Site
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: MINHA CONTA / MEUS FIADOS ================= -->
+  <div id="modal-conta" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <button onclick="fecharModalMinhaConta()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-brand-border gap-4">
+        <div class="flex items-center gap-3">
+          <div id="perfil-avatar" class="w-12 h-12 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center font-bold text-lg font-serif">U</div>
+          <div>
+            <h3 id="perfil-nome" class="font-serif text-xl font-bold text-brand-cream">Nome do Usuário</h3>
+            <p id="perfil-contato" class="text-xs text-brand-muted">email@exemplo.com</p>
+          </div>
+        </div>
+        <button onclick="fazerLogoutCliente()" class="px-4 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          <span>Sair da Conta</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+        <div class="glass-card p-4 rounded-2xl border border-brand-gold/30">
+          <span class="text-xs text-brand-muted uppercase font-semibold">Total a Pagar em Aberto</span>
+          <div id="conta-total-devedor" class="font-serif text-3xl font-bold text-amber-400 mt-1">R$ 0,00</div>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border border-brand-border">
+          <span class="text-xs text-brand-muted uppercase font-semibold">Status Geral</span>
+          <div id="conta-status-geral" class="text-sm font-bold text-brand-cream mt-2 flex items-center gap-2">
+            <span class="text-emerald-400 flex items-center gap-1">
+              <i data-lucide="check-circle" class="w-4 h-4"></i> Você não possui débitos pendentes!
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h4 class="font-serif text-lg font-bold text-brand-gold">Meus Fiados / Consumo Anotado</h4>
+          <button onclick="recarregarFiadosCliente()" class="text-xs text-brand-muted hover:text-brand-gold flex items-center gap-1">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>Atualizar</span>
+          </button>
+        </div>
+
+        <div id="lista-meus-fiados" class="space-y-3">
+          <!-- Injetado dinamicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PAGAR COM PIX E ANEXAR COMPROVANTE ================= -->
+  <div id="modal-pagar-pix" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+      <button onclick="fecharModalPagarPix()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-950/80 border border-emerald-600/40 text-emerald-400 flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="qr-code" class="w-6 h-6"></i>
+        </div>
+        <h3 class="font-serif text-xl font-bold text-brand-cream">Pagar com PIX</h3>
+        <p id="pix-descricao" class="text-xs text-brand-muted">Débito</p>
+        <div id="pix-valor" class="font-serif text-3xl font-bold text-brand-gold mt-2">R$ 0,00</div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-2 mb-6">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-brand-muted">Beneficiário:</span>
+          <strong id="pix-beneficiario" class="text-brand-cream">Sagrado Chocolates</strong>
+        </div>
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-brand-muted">Chave PIX:</span>
+          <strong id="pix-chave" class="text-brand-gold">sagradochocolates@gmail.com</strong>
+        </div>
+        <button onclick="copiarChavePix()" class="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>Copiar Chave PIX</span>
+        </button>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-brand-surface/70 border border-brand-border space-y-3 mb-6">
+        <label class="block text-xs font-bold text-brand-gold uppercase">
+          Anexar Comprovante do PIX *
+        </label>
+        <p class="text-xs text-brand-muted">
+          Tire um print ou foto do comprovante na sua galeria e anexe abaixo:
+        </p>
+
+        <label class="flex flex-col items-center justify-center p-4 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-xl cursor-pointer bg-brand-dark/50 hover:bg-brand-gold/5 transition group">
+          <i data-lucide="upload" class="w-6 h-6 text-brand-gold group-hover:scale-110 transition"></i>
+          <span class="text-xs font-bold text-brand-gold mt-1.5">Escolher Comprovante (Galeria/Arquivos)</span>
+          <input type="file" id="comprovante-file-input" accept="image/*" onchange="processarComprovanteSelecionado(event)" class="hidden" />
+        </label>
+
+        <div id="preview-comprovante-box" class="hidden relative rounded-xl overflow-hidden border border-emerald-500 h-28 bg-brand-dark">
+          <img id="preview-comprovante-img" src="" alt="Comprovante" class="w-full h-full object-contain" />
+          <span class="absolute bottom-1 right-2 text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full font-bold">
+            Anexado com sucesso ✓
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="fecharModalPagarPix()" class="flex-1 py-3 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream">
+          Cancelar
+        </button>
+        <button id="btn-enviar-comprovante" onclick="enviarComprovante()" class="btn-shimmer flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-xs shadow-lg hover:brightness-110 transition">
+          Enviar Comprovante
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DRAWER DA SACOLA (CARRINHO) ================= -->
+  <div id="drawer-carrinho" class="hidden fixed inset-0 z-50 overflow-hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="fecharCarrinho()"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md glass-panel bg-brand-dark/95 border-l border-brand-gold/30 flex flex-col justify-between shadow-2xl">
+        <div class="p-6 border-b border-brand-border/80 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-gold"></i>
+            <h3 class="font-serif text-xl font-bold text-brand-cream">Sua Sacola Gourmet</h3>
+          </div>
+          <button onclick="fecharCarrinho()" class="p-2 text-brand-muted hover:text-brand-cream">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
+          <div class="flex justify-between mb-1.5">
+            <span class="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
+            <span id="frete-gratis-status" class="font-bold text-brand-gold">Faltam R$ 50,00</span>
+          </div>
+          <div class="w-full bg-brand-card rounded-full h-1.5 overflow-hidden">
+            <div id="frete-gratis-barra" class="bg-brand-gold h-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div id="lista-carrinho-itens" class="flex-1 overflow-y-auto p-6 space-y-4">
+          <p class="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
+        </div>
+
+        <div id="carrinho-footer" class="hidden p-6 border-t border-brand-border/80 bg-brand-surface/40 space-y-4">
+          <div class="flex justify-between text-base font-bold text-brand-cream">
+            <span>Total:</span>
+            <span id="carrinho-total-valor" class="font-serif text-xl text-brand-gold">R$ 0,00</span>
+          </div>
+
+          <button onclick="finalizarPedidoWhatsApp()" class="btn-shimmer w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Pedir no WhatsApp</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
+
+  <!-- JAVASCRIPT NATIVO (VANILLA JS - ZERO BABEL, ZERO REACT) -->
+  <script>
     const PRODUTOS_PADRAO = [
       {
         id: 1,
@@ -134,8 +503,7 @@
         estoque: 50,
         descricao: "Casquinha artesanal folhada crocante, blindada com chocolate nobre e recheada com ganache aveludada de morangos frescos.",
         img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80"],
-        rating: 4.9
+        imagens: ["https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80"]
       },
       {
         id: 2,
@@ -146,8 +514,7 @@
         estoque: 45,
         descricao: "Doce de leite de cozimento lento em tacho, toque sutil de flor de sal e casquinha banhada no chocolate meio amargo.",
         img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"],
-        rating: 5.0
+        imagens: ["https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"]
       },
       {
         id: 3,
@@ -158,1018 +525,597 @@
         estoque: 60,
         descricao: "Brigadeiro aveludado feito com cacau nobre puro e casquinha crocante banhada no chocolate ao leite belga.",
         img: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80"],
-        rating: 4.8
+        imagens: ["https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80"]
       }
     ];
 
-    function App() {
-      const [produtos, setProdutos] = useState(PRODUTOS_PADRAO);
-      
-      const [carrinho, setCarrinho] = useState(() => {
-        const saved = localStorage.getItem('sagrado_carrinho');
-        return saved ? JSON.parse(saved) : [];
+    let listaProdutos = [...PRODUTOS_PADRAO];
+    let categoriaAtual = 'todos';
+    let termoBusca = '';
+    let carrinho = JSON.parse(localStorage.getItem('sagrado_carrinho')) || [];
+    let usuarioLogado = JSON.parse(localStorage.getItem('sagrado_usuario')) || null;
+    let fiadosUsuario = [];
+    let fiadoSelecionadoParaPagar = null;
+    let comprovanteBase64 = '';
+    let infoPix = { chave_pix: 'sagradochocolates@gmail.com', beneficiario: 'Sagrado Chocolates' };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      atualizarEstadoUsuario();
+      carregarProdutosDoBanco();
+      carregarChavePix();
+      atualizarBadgeCarrinho();
+      if (window.lucide) window.lucide.createIcons();
+    });
+
+    function showToast(mensagem, tipo = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3 animate-bounce';
+      toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'}"></span> <span>${mensagem}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    async function carregarProdutosDoBanco() {
+      try {
+        const res = await fetch('/api/produtos');
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          listaProdutos = data;
+        }
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+      }
+      renderizarProdutos();
+    }
+
+    async function carregarChavePix() {
+      try {
+        const res = await fetch('/api/admin/info-pix');
+        const data = await res.json();
+        if (data && data.chave_pix) infoPix = data;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderizarProdutos() {
+      const grid = document.getElementById('grid-produtos');
+      const filtrados = listaProdutos.filter(p => {
+        const matchCat = categoriaAtual === 'todos' || p.categoria === categoriaAtual;
+        const matchBusca = (p.nome || '').toLowerCase().includes(termoBusca.toLowerCase()) ||
+                           (p.descricao || '').toLowerCase().includes(termoBusca.toLowerCase());
+        return matchCat && matchBusca;
       });
 
-      const [usuario, setUsuario] = useState(() => {
-        const saved = localStorage.getItem('sagrado_usuario');
-        return saved ? JSON.parse(saved) : null;
-      });
-
-      const [isCartOpen, setIsCartOpen] = useState(false);
-      const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-      const [authTab, setAuthTab] = useState('entrar');
-      const [isContaModalOpen, setIsContaModalOpen] = useState(false);
-      const [quickViewProduct, setQuickViewProduct] = useState(null);
-      const [imgIndexModal, setImgIndexModal] = useState(0);
-
-      const [fiados, setFiados] = useState([]);
-      const [fiadoParaPagar, setFiadoParaPagar] = useState(null);
-      const [comprovanteBase64, setComprovanteBase64] = useState('');
-      const [enviandoComprovante, setEnviandoComprovante] = useState(false);
-
-      const [infoPix, setInfoPix] = useState({
-        chave_pix: 'sagradochocolates@gmail.com',
-        beneficiario: 'Sagrado Chocolates'
-      });
-
-      const [categoriaAtiva, setCategoriaAtiva] = useState('todos');
-      const [busca, setBusca] = useState('');
-      const [toasts, setToasts] = useState([]);
-
-      const [authNome, setAuthNome] = useState('');
-      const [authEmail, setAuthEmail] = useState('');
-      const [authSenha, setAuthSenha] = useState('');
-      const [authTelefone, setAuthTelefone] = useState('');
-      const [authLoading, setAuthLoading] = useState(false);
-
-      useEffect(() => {
-        carregarProdutosServidor();
-        carregarInfoPix();
-      }, []);
-
-      useEffect(() => {
-        localStorage.setItem('sagrado_carrinho', JSON.stringify(carrinho));
-      }, [carrinho]);
-
-      useEffect(() => {
-        if (usuario) {
-          localStorage.setItem('sagrado_usuario', JSON.stringify(usuario));
-          carregarMeusFiados(usuario.id);
-        } else {
-          localStorage.removeItem('sagrado_usuario');
-          setFiados([]);
-        }
-      }, [usuario]);
-
-      useEffect(() => {
-        if (window.lucide) window.lucide.createIcons();
-      }, [produtos, carrinho, isCartOpen, isAuthModalOpen, isContaModalOpen, quickViewProduct, fiadoParaPagar, fiados, toasts]);
-
-      const addToast = (mensagem, tipo = 'info') => {
-        const id = Date.now();
-        setToasts(prev => [...prev, { id, mensagem, tipo }]);
-        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
-      };
-
-      async function carregarProdutosServidor() {
-        try {
-          const res = await fetch('/api/produtos');
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setProdutos(data);
-          }
-        } catch (e) {
-          console.error("Erro ao carregar produtos:", e);
-        }
+      if (filtrados.length === 0) {
+        grid.innerHTML = '<div class="col-span-3 text-center py-16 text-brand-muted text-sm">Nenhum sabor encontrado para sua busca.</div>';
+        return;
       }
 
-      async function carregarInfoPix() {
-        try {
-          const res = await fetch('/api/admin/info-pix');
-          const data = await res.json();
-          if (data && data.chave_pix) setInfoPix(data);
-        } catch (e) {
-          console.error(e);
-        }
-      }
+      grid.innerHTML = filtrados.map(p => {
+        const fotos = p.imagens && p.imagens.length > 0 ? p.imagens : [p.img || 'https://via.placeholder.com/300'];
+        const fotoCapa = fotos[0];
+        const numFotosBadge = fotos.length > 1 ? `<div class="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-brand-dark/80 text-brand-gold text-xs font-bold border border-brand-gold/30">${fotos.length} fotos</div>` : '';
 
-      async function carregarMeusFiados(usuarioId) {
-        try {
-          const res = await fetch(`/api/cliente/fiados?usuario_id=${usuarioId}`);
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            setFiados(data);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      async function handleCadastro(e) {
-        e.preventDefault();
-        setAuthLoading(true);
-        try {
-          const res = await fetch('/api/cliente/cadastro', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              nome: authNome,
-              email: authEmail,
-              senha: authSenha,
-              telefone: authTelefone
-            })
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setUsuario(data.usuario);
-            setIsAuthModalOpen(false);
-            addToast(`Bem-vindo(a), ${data.usuario.nome}!`, 'sucesso');
-            setAuthNome(''); setAuthEmail(''); setAuthSenha(''); setAuthTelefone('');
-          } else {
-            addToast(data.erro || 'Erro ao criar conta.');
-          }
-        } catch (err) {
-          addToast('Erro de conexão com o servidor.');
-        } finally {
-          setAuthLoading(false);
-        }
-      }
-
-      async function handleLogin(e) {
-        e.preventDefault();
-        setAuthLoading(true);
-        try {
-          const res = await fetch('/api/cliente/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: authEmail,
-              senha: authSenha
-            })
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setUsuario(data.usuario);
-            setIsAuthModalOpen(false);
-            addToast(`Olá novamente, ${data.usuario.nome}!`, 'sucesso');
-            setAuthEmail(''); setAuthSenha('');
-          } else {
-            addToast(data.erro || 'E-mail ou senha incorretos.');
-          }
-        } catch (err) {
-          addToast('Erro ao conectar com o servidor.');
-        } finally {
-          setAuthLoading(false);
-        }
-      }
-
-      function handleLogout() {
-        setUsuario(null);
-        setIsContaModalOpen(false);
-        addToast('Você saiu da sua conta.');
-      }
-
-      function abrirModalPagarPix(fiado) {
-        setFiadoParaPagar(fiado);
-        setComprovanteBase64('');
-      }
-
-      function copiarChavePix() {
-        navigator.clipboard.writeText(infoPix.chave_pix);
-        addToast('Chave PIX copiada!', 'sucesso');
-      }
-
-      function processarComprovanteArquivo(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          setComprovanteBase64(e.target.result);
-          addToast('Comprovante carregado!');
-        };
-        reader.readAsDataURL(file);
-      }
-
-      async function enviarComprovantePagamento() {
-        if (!comprovanteBase64) {
-          return addToast('Anexe a foto do comprovante primeiro!');
-        }
-
-        setEnviandoComprovante(true);
-        try {
-          const res = await fetch('/api/cliente/fiados/anexar-comprovante', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              fiado_id: fiadoParaPagar.id,
-              comprovante: comprovanteBase64
-            })
-          });
-          const data = await res.json();
-          if (res.ok) {
-            addToast('Comprovante enviado para o vendedor!', 'sucesso');
-            setFiadoParaPagar(null);
-            setComprovanteBase64('');
-            if (usuario) carregarMeusFiados(usuario.id);
-          } else {
-            addToast(data.erro || 'Erro ao enviar comprovante.');
-          }
-        } catch (e) {
-          addToast('Erro de conexão com o servidor.');
-        } finally {
-          setEnviandoComprovante(false);
-        }
-      }
-
-      const adicionarAoCarrinho = (produto, e) => {
-        if (e) e.stopPropagation();
-        setCarrinho(prev => {
-          const item = prev.find(i => i.id === produto.id);
-          if (item) {
-            return prev.map(i => i.id === produto.id ? { ...i, quantidade: i.quantidade + 1 } : i);
-          }
-          return [...prev, { ...produto, quantidade: 1 }];
-        });
-        addToast(`Adicionado: ${produto.nome}`);
-      };
-
-      const alterarQuantidade = (id, delta) => {
-        setCarrinho(prev =>
-          prev.map(i => i.id === id ? { ...i, quantidade: i.quantidade + delta } : i)
-              .filter(i => i.quantidade > 0)
-        );
-      };
-
-      const removerDoCarrinho = (id) => {
-        setCarrinho(prev => prev.filter(i => i.id !== id));
-        addToast("Item removido da sacola.");
-      };
-
-      const totalItens = useMemo(() => carrinho.reduce((acc, i) => acc + i.quantidade, 0), [carrinho]);
-      const subtotalFinanceiro = useMemo(() => carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0), [carrinho]);
-      const totalDevendoCliente = useMemo(() => {
-        return fiados.filter(f => f.status !== 'pago').reduce((acc, f) => acc + f.valor, 0);
-      }, [fiados]);
-
-      const produtosFiltrados = useMemo(() => {
-        return produtos.filter(p => {
-          const matchCat = categoriaAtiva === 'todos' || p.categoria === categoriaAtiva;
-          const matchBusca = (p.nome || '').toLowerCase().includes(busca.toLowerCase()) ||
-                             (p.descricao || '').toLowerCase().includes(busca.toLowerCase());
-          return matchCat && matchBusca;
-        });
-      }, [produtos, categoriaAtiva, busca]);
-
-      const finalizarPedidoWhatsApp = () => {
-        if (carrinho.length === 0) return addToast("A sacola está vazia.");
-        let texto = `*Olá, Sagrado Chocolates! Gostaria de fazer um pedido artesanal:*\n\n`;
-        if (usuario) {
-          texto += `*Cliente:* ${usuario.nome} (${usuario.email})\n\n`;
-        }
-        carrinho.forEach(item => {
-          texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}\n`;
-        });
-        texto += `\n*Total do Pedido: R$ ${subtotalFinanceiro.toFixed(2).replace('.', ',')}*`;
-        texto += `\n\nPor favor, confirmem a disponibilidade!`;
-
-        window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
-        setCarrinho([]);
-        setIsCartOpen(false);
-        addToast("Pedido enviado para o WhatsApp!");
-      };
-
-      return (
-        <div className="min-h-screen flex flex-col bg-brand-dark">
-
-          <div className="bg-gradient-to-r from-brand-ruby via-brand-surface to-brand-ruby text-brand-gold text-xs py-2 px-4 text-center font-medium border-b border-brand-gold/20 flex items-center justify-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
-            <span>Edição Especial: Cones Trufados Artesanais com Cacau Nobre</span>
-          </div>
-
-          <header className="sticky top-0 z-40 glass-panel border-b border-brand-gold/20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-              
-              <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-brand-gold via-brand-goldDark to-brand-ruby flex items-center justify-center shadow-glow-gold border border-brand-gold/40">
-                  <span className="font-serif font-black text-brand-dark text-xl">S</span>
+        return `
+          <div onclick="abrirModalProduto(${p.id})" class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group cursor-pointer">
+            <div>
+              <div class="relative h-60 overflow-hidden bg-brand-surface">
+                <img src="${fotoCapa}" alt="${p.nome}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute top-3 left-3">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-dark/80 text-brand-gold border border-brand-gold/30 backdrop-blur-md">
+                    ${p.tag || 'Artesanal'}
+                  </span>
                 </div>
-                <div>
-                  <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-gold">
-                    SAGRADO
-                  </h1>
-                  <p className="text-[10px] tracking-[0.25em] text-brand-muted uppercase">Cones Trufados Artesanais</p>
-                </div>
+                ${numFotosBadge}
               </div>
 
-              <nav className="flex items-center gap-2 sm:gap-3">
-                <a
-                  href="/admin"
-                  className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30"
-                >
-                  <i data-lucide="layout-dashboard" className="w-4 h-4"></i>
-                  <span>Painel Admin</span>
-                </a>
-
-                <button
-                  onClick={() => {
-                    if (usuario) {
-                      setIsContaModalOpen(true);
-                      carregarMeusFiados(usuario.id);
-                    } else {
-                      setIsAuthModalOpen(true);
-                    }
-                  }}
-                  className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border"
-                >
-                  <i data-lucide="user" className="w-4 h-4 text-brand-gold"></i>
-                  <span>{usuario ? `Olá, ${usuario.nome.split(' ')[0]}` : 'Entrar / Criar Conta'}</span>
-                  
-                  {totalDevendoCliente > 0 && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition"
-                >
-                  <i data-lucide="shopping-bag" className="w-4 h-4"></i>
-                  <span className="hidden sm:inline">Sacola</span>
-                  <span className="bg-brand-dark text-brand-gold text-xs font-black px-2 py-0.5 rounded-full border border-brand-gold/40">
-                    {totalItens}
-                  </span>
-                </button>
-              </nav>
+              <div class="p-6">
+                <h4 class="font-serif text-lg font-bold text-brand-gold mb-2">${p.nome}</h4>
+                <p class="text-brand-muted text-xs leading-relaxed line-clamp-2">${p.descricao || 'Cone trufado artesanal feito com puro chocolate nobre e recheio cremoso.'}</p>
+              </div>
             </div>
-          </header>
 
-          {usuario && totalDevendoCliente > 0 && (
-            <div className="bg-amber-950/80 border-b border-amber-600/40 px-4 py-2 text-center text-xs text-amber-200 flex items-center justify-center gap-3">
-              <i data-lucide="alert-circle" className="w-4 h-4 text-amber-400"></i>
-              <span>Você possui um débito de fiado pendente de <strong>R$ {totalDevendoCliente.toFixed(2).replace('.', ',')}</strong>.</span>
-              <button 
-                onClick={() => setIsContaModalOpen(true)}
-                className="underline text-amber-300 font-bold hover:text-white"
-              >
-                Pagar com PIX agora
+            <div class="px-6 pb-6 pt-2 border-t border-brand-border/40 flex items-center justify-between gap-4">
+              <div>
+                <span class="text-xs uppercase text-brand-muted font-bold block">Preço</span>
+                <span class="font-serif text-xl font-bold text-brand-cream">
+                  R$ ${p.preco.toFixed(2).replace('.', ',')}
+                </span>
+              </div>
+
+              <button onclick="adicionarAoCarrinhoPorId(${p.id}, event)" class="btn-shimmer flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight hover:from-brand-gold hover:to-brand-goldDark text-brand-cream hover:text-brand-dark font-bold text-xs transition flex items-center justify-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Adicionar</span>
               </button>
             </div>
-          )}
-
-          <section className="relative overflow-hidden pt-12 pb-20 border-b border-brand-gold/15 bg-gradient-to-b from-brand-surface via-brand-dark to-brand-dark">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div className="lg:col-span-7 text-center lg:text-left">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-semibold uppercase mb-6 backdrop-blur-sm">
-                    <i data-lucide="sparkles" className="w-3.5 h-3.5"></i>
-                    <span>Cacau Nobre Selecionado & Recheio Cremoso</span>
-                  </div>
-
-                  <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-cream leading-[1.15] mb-6">
-                    O Inconfundível <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-amber-400">
-                      Cone Trufado
-                    </span> <br />
-                    Artesanal.
-                  </h2>
-
-                  <p className="text-brand-muted text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8">
-                    Casquinha ultra crocante por fora e ganache densamente aveludada por dentro. Banhado no mais puro chocolate nobre temperado.
-                  </p>
-
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                    <a
-                      href="#catalogo"
-                      className="btn-shimmer px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-semibold shadow-glow-ruby hover:brightness-110 transition flex items-center gap-2"
-                    >
-                      <span>Ver Cardápio</span>
-                      <i data-lucide="arrow-right" className="w-4 h-4"></i>
-                    </a>
-
-                    {!usuario ? (
-                      <button
-                        onClick={() => { setIsAuthModalOpen(true); setAuthTab('cadastrar'); }}
-                        className="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2"
-                      >
-                        <i data-lucide="user-plus" className="w-4 h-4"></i>
-                        <span>Criar Minha Conta</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setIsContaModalOpen(true)}
-                        className="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2"
-                      >
-                        <i data-lucide="receipt" className="w-4 h-4"></i>
-                        <span>Meus Fiados / Débitos</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="lg:col-span-5 flex justify-center">
-                  <div className="relative group w-full max-w-md">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-brand-gold via-brand-ruby to-brand-gold rounded-2xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
-                    <div className="relative rounded-2xl overflow-hidden glass-panel border border-brand-gold/40 p-3 shadow-2xl">
-                      <div className="relative h-80 sm:h-96 rounded-xl overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85"
-                          alt="Cone Trufado Sagrado Chocolates"
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent opacity-80"></div>
-                        <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl glass-panel border border-brand-gold/20 flex items-center justify-between">
-                          <div>
-                            <p className="text-xs text-brand-gold uppercase tracking-wider font-semibold">Destaque da Casa</p>
-                            <h4 className="font-serif text-sm font-bold text-brand-cream">Morango Cremoso Especial</h4>
-                          </div>
-                          <span className="px-3 py-1 rounded-full bg-brand-gold text-brand-dark font-black text-sm">
-                            R$ 12,00
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6 w-full">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-              <div>
-                <span className="text-brand-gold text-xs font-semibold tracking-widest uppercase">Cardápio de Delícias</span>
-                <h3 className="font-serif text-3xl font-bold text-brand-cream mt-1">Nossos Sabores Artesanais</h3>
-              </div>
-
-              <div className="relative w-full md:w-80">
-                <i data-lucide="search" className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted"></i>
-                <input
-                  type="text"
-                  placeholder="Buscar sabor ou ingrediente..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-brand-cream placeholder-brand-muted text-sm focus:outline-none focus:border-brand-gold transition"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto pb-4">
-              {[
-                { id: 'todos', label: 'Todos os Sabores' },
-                { id: 'classicos', label: 'Tradicionais & Gourmet' },
-                { id: 'frutados', label: 'Frutas Nobres' },
-                { id: 'exclusivos', label: 'Especiais do Chef' }
-              ].map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setCategoriaAtiva(cat.id)}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap ${
-                    categoriaAtiva === cat.id
-                      ? 'bg-brand-gold text-brand-dark shadow-glow-gold'
-                      : 'glass-panel text-brand-muted hover:text-brand-cream'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {produtosFiltrados.map(produto => (
-                <div
-                  key={produto.id}
-                  onClick={() => { setQuickViewProduct(produto); setImgIndexModal(0); }}
-                  className="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group cursor-pointer"
-                >
-                  <div>
-                    <div className="relative h-60 overflow-hidden bg-brand-surface">
-                      <img
-                        src={produto.img || (produto.imagens && produto.imagens[0]) || 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80'}
-                        alt={produto.nome}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <span className="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-brand-dark/80 text-brand-gold border border-brand-gold/30 backdrop-blur-md">
-                          {produto.tag || 'Artesanal'}
-                        </span>
-                      </div>
-                      {produto.imagens && produto.imagens.length > 1 && (
-                        <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-brand-dark/80 text-brand-gold text-[10px] font-bold border border-brand-gold/30">
-                          {produto.imagens.length} fotos
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-6">
-                      <h4 className="font-serif text-lg font-bold text-brand-gold mb-2">{produto.nome}</h4>
-                      <p className="text-brand-muted text-xs leading-relaxed line-clamp-2">{produto.descricao || 'Cone trufado artesanal com chocolate nobre e recheio cremoso irresistível.'}</p>
-                    </div>
-                  </div>
-
-                  <div className="px-6 pb-6 pt-2 border-t border-brand-border/40 flex items-center justify-between gap-4">
-                    <div>
-                      <span className="text-[10px] uppercase text-brand-muted font-bold block">Preço</span>
-                      <span className="font-serif text-xl font-bold text-brand-cream">
-                        R$ {produto.preco.toFixed(2).replace('.', ',')}
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={(e) => adicionarAoCarrinho(produto, e)}
-                      className="btn-shimmer flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight hover:from-brand-gold hover:to-brand-goldDark text-brand-cream hover:text-brand-dark font-bold text-xs transition flex items-center justify-center gap-2"
-                    >
-                      <i data-lucide="plus" className="w-4 h-4"></i>
-                      <span>Adicionar</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </main>
-
-          {quickViewProduct && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-              <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
-                <button onClick={() => setQuickViewProduct(null)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-                  <i data-lucide="x" className="w-5 h-5"></i>
-                </button>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                  <div>
-                    <div className="relative rounded-2xl overflow-hidden h-64 bg-brand-dark border border-brand-border">
-                      <img
-                        src={(quickViewProduct.imagens && quickViewProduct.imagens[imgIndexModal]) || quickViewProduct.img}
-                        alt={quickViewProduct.nome}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    {quickViewProduct.imagens && quickViewProduct.imagens.length > 1 && (
-                      <div className="grid grid-cols-4 gap-2 mt-3">
-                        {quickViewProduct.imagens.map((foto, idx) => (
-                          <div
-                            key={idx}
-                            onClick={() => setImgIndexModal(idx)}
-                            className={`h-14 rounded-lg overflow-hidden border cursor-pointer ${imgIndexModal === idx ? 'border-brand-gold scale-105' : 'border-brand-border opacity-70'} transition`}
-                          >
-                            <img src={foto} className="w-full h-full object-cover" />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <span className="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
-                      {quickViewProduct.tag || 'Gourmet'}
-                    </span>
-                    <h3 className="font-serif text-2xl font-bold text-brand-cream mt-3 mb-2">{quickViewProduct.nome}</h3>
-                    <p className="text-brand-muted text-xs mb-4">{quickViewProduct.descricao || 'Feito artesanalmente com ingredientes de primeira qualidade.'}</p>
-                    
-                    <div className="text-xs space-y-1 bg-brand-surface/60 p-3 rounded-xl border border-brand-border/40 mb-6">
-                      <p><strong className="text-brand-gold">Estoque Disponível:</strong> {quickViewProduct.estoque} unidades</p>
-                      <p className="text-xl font-serif font-bold text-brand-gold mt-2">
-                        R$ {quickViewProduct.preco.toFixed(2).replace('.', ',')}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => { adicionarAoCarrinho(quickViewProduct); setQuickViewProduct(null); }}
-                      className="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2 shadow-lg"
-                    >
-                      <i data-lucide="plus" className="w-4 h-4"></i>
-                      <span>Adicionar à Sacola</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {isAuthModalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-              <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
-                <button onClick={() => setIsAuthModalOpen(false)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-                  <i data-lucide="x" className="w-5 h-5"></i>
-                </button>
-
-                <div className="flex border-b border-brand-border mb-6">
-                  <button
-                    onClick={() => setAuthTab('entrar')}
-                    className={`flex-1 py-3 text-xs sm:text-sm font-bold border-b-2 transition ${authTab === 'entrar' ? 'border-brand-gold text-brand-gold' : 'border-transparent text-brand-muted'}`}
-                  >
-                    Entrar na Conta
-                  </button>
-                  <button
-                    onClick={() => setAuthTab('cadastrar')}
-                    className={`flex-1 py-3 text-xs sm:text-sm font-bold border-b-2 transition ${authTab === 'cadastrar' ? 'border-brand-gold text-brand-gold' : 'border-transparent text-brand-muted'}`}
-                  >
-                    Criar Nova Conta
-                  </button>
-                </div>
-
-                {authTab === 'entrar' ? (
-                  <form onSubmit={handleLogin} className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail</label>
-                      <input
-                        type="email"
-                        required
-                        value={authEmail}
-                        onChange={(e) => setAuthEmail(e.target.value)}
-                        placeholder="exemplo@email.com"
-                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Sua Senha</label>
-                      <input
-                        type="password"
-                        required
-                        value={authSenha}
-                        onChange={(e) => setAuthSenha(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={authLoading}
-                      className="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition"
-                    >
-                      {authLoading ? 'Entrando...' : 'Entrar'}
-                    </button>
-                  </form>
-                ) : (
-                  <form onSubmit={handleCadastro} className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome Completo *</label>
-                      <input
-                        type="text"
-                        required
-                        value={authNome}
-                        onChange={(e) => setAuthNome(e.target.value)}
-                        placeholder="Seu nome"
-                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail *</label>
-                      <input
-                        type="email"
-                        required
-                        value={authEmail}
-                        onChange={(e) => setAuthEmail(e.target.value)}
-                        placeholder="seu@email.com"
-                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">WhatsApp / Telefone</label>
-                      <input
-                        type="tel"
-                        value={authTelefone}
-                        onChange={(e) => setAuthTelefone(e.target.value)}
-                        placeholder="(16) 99999-9999"
-                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Crie uma Senha *</label>
-                      <input
-                        type="password"
-                        required
-                        value={authSenha}
-                        onChange={(e) => setAuthSenha(e.target.value)}
-                        placeholder="Mínimo de 4 caracteres"
-                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={authLoading}
-                      className="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition"
-                    >
-                      {authLoading ? 'Salvando no Banco...' : 'Criar Minha Conta no Site'}
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
-          )}
-
-          {isContaModalOpen && usuario && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-              <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
-                <button onClick={() => setIsContaModalOpen(false)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-                  <i data-lucide="x" className="w-5 h-5"></i>
-                </button>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-brand-border gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center font-bold text-lg font-serif">
-                      {usuario.nome.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-xl font-bold text-brand-cream">{usuario.nome}</h3>
-                      <p className="text-xs text-brand-muted">{usuario.email} • {usuario.telefone || 'Sem telefone'}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto"
-                  >
-                    <i data-lucide="log-out" className="w-3.5 h-3.5"></i>
-                    <span>Sair da Conta</span>
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
-                  <div className="glass-card p-4 rounded-2xl border border-brand-gold/30">
-                    <span className="text-xs text-brand-muted uppercase font-semibold">Total a Pagar em Aberto</span>
-                    <div className="font-serif text-2xl font-bold text-amber-400 mt-1">
-                      R$ {totalDevendoCliente.toFixed(2).replace('.', ',')}
-                    </div>
-                  </div>
-                  <div className="glass-card p-4 rounded-2xl border border-brand-border">
-                    <span className="text-xs text-brand-muted uppercase font-semibold">Status Geral</span>
-                    <div className="text-sm font-bold text-brand-cream mt-2 flex items-center gap-2">
-                      {totalDevendoCliente === 0 ? (
-                        <span className="text-emerald-400 flex items-center gap-1">
-                          <i data-lucide="check-circle" className="w-4 h-4"></i> Você não possui débitos pendentes!
-                        </span>
-                      ) : (
-                        <span className="text-amber-400 flex items-center gap-1">
-                          <i data-lucide="clock" className="w-4 h-4"></i> Há valores pendentes para acerto.
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-serif text-lg font-bold text-brand-gold">Meus Fiados / Consumo Anotado</h4>
-                    <button
-                      onClick={() => carregarMeusFiados(usuario.id)}
-                      className="text-xs text-brand-muted hover:text-brand-gold flex items-center gap-1"
-                    >
-                      <i data-lucide="refresh-cw" className="w-3.5 h-3.5"></i>
-                      <span>Atualizar</span>
-                    </button>
-                  </div>
-
-                  {fiados.length === 0 ? (
-                    <div className="p-8 text-center glass-card rounded-2xl border border-brand-border text-xs text-brand-muted">
-                      Nenhum fiado ou débito lançado na sua conta. Você está 100% em dia!
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {fiados.map(f => (
-                        <div key={f.id} className="glass-card p-4 rounded-2xl border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-serif font-bold text-base text-brand-cream">
-                                R$ {f.valor.toFixed(2).replace('.', ',')}
-                              </span>
-                              {f.status === 'pago' && (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
-                                  Pago ✓
-                                </span>
-                              )}
-                              {f.status === 'comprovante_enviado' && (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">
-                                  Comprovante em Análise
-                                </span>
-                              )}
-                              {f.status === 'pendente' && (
-                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-800">
-                                  Pendente
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-xs text-brand-gold mt-1"><strong>Itens:</strong> {f.descricao}</p>
-                            <span className="text-[10px] text-brand-muted">Lançado em: {f.criado_em}</span>
-                          </div>
-
-                          <div>
-                            {f.status === 'pendente' && (
-                              <button
-                                onClick={() => abrirModalPagarPix(f)}
-                                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"
-                              >
-                                <i data-lucide="qr-code" className="w-4 h-4"></i>
-                                <span>Pagar com PIX</span>
-                              </button>
-                            )}
-
-                            {f.status === 'comprovante_enviado' && (
-                              <div className="text-[11px] text-amber-300 font-semibold bg-amber-950/60 px-3 py-2 rounded-xl border border-amber-800/40 text-center">
-                                Aguardando vendedor confirmar
-                              </div>
-                            )}
-
-                            {f.status === 'pago' && (
-                              <div className="text-[11px] text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-2 rounded-xl border border-emerald-800/40 text-center">
-                                Liquidado em {f.pago_em}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {fiadoParaPagar && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-              <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
-                <button onClick={() => setFiadoParaPagar(null)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-                  <i data-lucide="x" className="w-5 h-5"></i>
-                </button>
-
-                <div className="text-center mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-950/80 border border-emerald-600/40 text-emerald-400 flex items-center justify-center mx-auto mb-2">
-                    <i data-lucide="qr-code" className="w-6 h-6"></i>
-                  </div>
-                  <h3 className="font-serif text-xl font-bold text-brand-cream">Pagar com PIX</h3>
-                  <p className="text-xs text-brand-muted">Débito: {fiadoParaPagar.descricao}</p>
-                  <div className="font-serif text-3xl font-bold text-brand-gold mt-2">
-                    R$ {fiadoParaPagar.valor.toFixed(2).replace('.', ',')}
-                  </div>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-2 mb-6">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-brand-muted">Beneficiário:</span>
-                    <strong className="text-brand-cream">{infoPix.beneficiario}</strong>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-brand-muted">Chave PIX:</span>
-                    <strong className="text-brand-gold">{infoPix.chave_pix}</strong>
-                  </div>
-                  <button
-                    onClick={copiarChavePix}
-                    className="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition"
-                  >
-                    <i data-lucide="copy" className="w-4 h-4"></i>
-                    <span>Copiar Chave PIX</span>
-                  </button>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-brand-surface/70 border border-brand-border space-y-3 mb-6">
-                  <label className="block text-xs font-bold text-brand-gold uppercase">
-                    Anexar Comprovante do PIX *
-                  </label>
-                  <p className="text-[11px] text-brand-muted">
-                    Tire um print ou foto do comprovante e anexe abaixo:
-                  </p>
-
-                  <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-xl cursor-pointer bg-brand-dark/50 hover:bg-brand-gold/5 transition group">
-                    <i data-lucide="upload" className="w-6 h-6 text-brand-gold group-hover:scale-110 transition"></i>
-                    <span className="text-xs font-bold text-brand-gold mt-1.5">Escolher Comprovante (Galeria/Arquivos)</span>
-                    <input type="file" accept="image/*" onChange={processarComprovanteArquivo} className="hidden" />
-                  </label>
-
-                  {comprovanteBase64 && (
-                    <div className="relative rounded-xl overflow-hidden border border-emerald-500 h-28 bg-brand-dark">
-                      <img src={comprovanteBase64} alt="Comprovante" className="w-full h-full object-contain" />
-                      <span className="absolute bottom-1 right-2 text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full font-bold">
-                        Anexado com sucesso ✓
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setFiadoParaPagar(null)}
-                    className="flex-1 py-3 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={enviarComprovantePagamento}
-                    disabled={enviandoComprovante || !comprovanteBase64}
-                    className="btn-shimmer flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-xs shadow-lg hover:brightness-110 transition disabled:opacity-50"
-                  >
-                    {enviandoComprovante ? 'Enviando...' : 'Enviar Comprovante'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {isCartOpen && (
-            <div className="fixed inset-0 z-50 overflow-hidden">
-              <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
-              <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-                <div className="w-screen max-w-md glass-panel bg-brand-dark/95 border-l border-brand-gold/30 flex flex-col justify-between shadow-2xl">
-                  <div className="p-6 border-b border-brand-border/80 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <i data-lucide="shopping-bag" className="w-5 h-5 text-brand-gold"></i>
-                      <h3 className="font-serif text-xl font-bold text-brand-cream">Sua Sacola Gourmet</h3>
-                    </div>
-                    <button onClick={() => setIsCartOpen(false)} className="p-2 text-brand-muted hover:text-brand-cream">
-                      <i data-lucide="x" className="w-5 h-5"></i>
-                    </button>
-                  </div>
-
-                  <div className="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
-                    <div className="flex justify-between mb-1.5">
-                      <span className="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
-                      <span className="font-bold text-brand-gold">
-                        {subtotalFinanceiro >= 50 ? 'Garantido!' : `Faltam R$ ${(50 - subtotalFinanceiro).toFixed(2).replace('.', ',')}`}
-                      </span>
-                    </div>
-                    <div className="w-full bg-brand-card rounded-full h-1.</span>
-                    </div>
-                    <div className="w-full bg-brand-card rounded-full h-1.5 overflow-hidden">
-                      <div
-                        className="bg-brand-gold h-full transition-all duration-300"
-                        style={{ width: `${Math.min(100, (subtotalFinanceiro / 50) * 100)}%` }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                    {carrinho.length === 0 ? (
-                      <p className="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
-                    ) : (
-                      carrinho.map(item => (
-                        <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl bg-brand-surface/60 border border-brand-border/60">
-                          <img src={item.img} alt={item.nome} className="w-14 h-14 object-cover rounded-lg" />
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-sm text-brand-cream truncate">{item.nome}</h4>
-                            <span className="text-xs text-brand-gold font-bold">R$ {item.preco.toFixed(2).replace('.', ',')}</span>
-                            <div className="flex items-center gap-2 mt-2">
-                              <button onClick={() => alterarQuantidade(item.id, -1)} className="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">-</button>
-                              <span className="text-xs font-bold w-4 text-center">{item.quantidade}</span>
-                              <button onClick={() => alterarQuantidade(item.id, 1)} className="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">+</button>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end justify-between self-stretch">
-                            <button onClick={() => removerDoCarrinho(item.id)} className="text-brand-muted hover:text-rose-400">
-                              <i data-lucide="trash-2" className="w-4 h-4"></i>
-                            </button>
-                            <span className="font-serif font-bold text-sm text-brand-cream">
-                              R$ {(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-
-                  {carrinho.length > 0 && (
-                    <div className="p-6 border-t border-brand-border/80 bg-brand-surface/40 space-y-4">
-                      <div className="flex justify-between text-base font-bold text-brand-cream">
-                        <span>Total:</span>
-                        <span className="font-serif text-xl text-brand-gold">R$ {subtotalFinanceiro.toFixed(2).replace('.', ',')}</span>
-                      </div>
-
-                      <button
-                        onClick={finalizarPedidoWhatsApp}
-                        className="btn-shimmer w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition"
-                      >
-                        <i data-lucide="message-circle" className="w-4 h-4"></i>
-                        <span>Pedir no WhatsApp</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none">
-            {toasts.map(t => (
-              <div key={t.id} className="pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${t.tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'} animate-ping`}></div>
-                <span>{t.mensagem}</span>
-              </div>
-            ))}
           </div>
+        `;
+      }).join('');
 
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function selecionarCategoria(cat) {
+      categoriaAtual = cat;
+      document.querySelectorAll('.btn-categoria').forEach(btn => {
+        btn.className = 'btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream';
+      });
+      const ativo = document.getElementById(`cat-${cat}`);
+      if (ativo) ativo.className = 'btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold';
+      renderizarProdutos();
+    }
+
+    function filtrarCardapio() {
+      termoBusca = document.getElementById('campo-busca').value;
+      renderizarProdutos();
+    }
+
+    function abrirModalProduto(id) {
+      const p = listaProdutos.find(item => item.id === id);
+      if (!p) return;
+
+      const fotos = p.imagens && p.imagens.length > 0 ? p.imagens : [p.img];
+      document.getElementById('modal-prod-img-principal').src = fotos[0];
+      document.getElementById('modal-prod-tag').innerText = p.tag || 'Artesanal';
+      document.getElementById('modal-prod-nome').innerText = p.nome;
+      document.getElementById('modal-prod-desc').innerText = p.descricao || 'Feito artesanalmente com ingredientes nobres.';
+      document.getElementById('modal-prod-estoque').innerText = p.estoque || '0';
+      document.getElementById('modal-prod-preco').innerText = `R$ ${p.preco.toFixed(2).replace('.', ',')}`;
+
+      const containerMiniaturas = document.getElementById('modal-prod-miniaturas');
+      if (fotos.length > 1) {
+        containerMiniaturas.innerHTML = fotos.map(f => `
+          <div onclick="document.getElementById('modal-prod-img-principal').src = '${f}'" class="h-14 rounded-lg overflow-hidden border border-brand-border hover:border-brand-gold cursor-pointer transition">
+            <img src="${f}" class="w-full h-full object-cover">
+          </div>
+        `).join('');
+      } else {
+        containerMiniaturas.innerHTML = '';
+      }
+
+      document.getElementById('modal-prod-btn-add').onclick = () => {
+        adicionarAoCarrinho(p);
+        fecharModalProduto();
+      };
+
+      document.getElementById('modal-produto').classList.remove('hidden');
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function fecharModalProduto() {
+      document.getElementById('modal-produto').classList.add('hidden');
+    }
+
+    function adicionarAoCarrinhoPorId(id, event) {
+      if (event) event.stopPropagation();
+      const p = listaProdutos.find(item => item.id === id);
+      if (p) adicionarAoCarrinho(p);
+    }
+
+    function adicionarAoCarrinho(p) {
+      const item = carrinho.find(i => i.id === p.id);
+      if (item) {
+        item.quantidade += 1;
+      } else {
+        carrinho.push({ ...p, quantidade: 1 });
+      }
+      salvarCarrinho();
+      atualizarBadgeCarrinho();
+      renderizarCarrinhoItens();
+      showToast(`Adicionado: ${p.nome}`);
+    }
+
+    function salvarCarrinho() {
+      localStorage.setItem('sagrado_carrinho', JSON.stringify(carrinho));
+    }
+
+    function atualizarBadgeCarrinho() {
+      const total = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
+      document.getElementById('cart-count-badge').innerText = total;
+    }
+
+    function abrirCarrinho() {
+      renderizarCarrinhoItens();
+      document.getElementById('drawer-carrinho').classList.remove('hidden');
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function fecharCarrinho() {
+      document.getElementById('drawer-carrinho').classList.add('hidden');
+    }
+
+    function alterarQtdCarrinho(id, delta) {
+      const item = carrinho.find(i => i.id === id);
+      if (!item) return;
+      item.quantidade += delta;
+      if (item.quantidade <= 0) {
+        carrinho = carrinho.filter(i => i.id !== id);
+      }
+      salvarCarrinho();
+      atualizarBadgeCarrinho();
+      renderizarCarrinhoItens();
+    }
+
+    function removerDoCarrinho(id) {
+      carrinho = carrinho.filter(i => i.id !== id);
+      salvarCarrinho();
+      atualizarBadgeCarrinho();
+      renderizarCarrinhoItens();
+      showToast('Item removido da sacola.');
+    }
+
+    function renderizarCarrinhoItens() {
+      const container = document.getElementById('lista-carrinho-itens');
+      const footer = document.getElementById('carrinho-footer');
+      const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+
+      const statusFrete = document.getElementById('frete-gratis-status');
+      const barraFrete = document.getElementById('frete-gratis-barra');
+      if (subtotal >= 50) {
+        statusFrete.innerText = 'Garantido!';
+        barraFrete.style.width = '100%';
+      } else {
+        statusFrete.innerText = `Faltam R$ ${(50 - subtotal).toFixed(2).replace('.', ',')}`;
+        barraFrete.style.width = `${(subtotal / 50) * 100}%`;
+      }
+
+      if (carrinho.length === 0) {
+        container.innerHTML = '<p class="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>';
+        footer.classList.add('hidden');
+        return;
+      }
+
+      footer.classList.remove('hidden');
+      document.getElementById('carrinho-total-valor').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+
+      container.innerHTML = carrinho.map(item => `
+        <div class="flex items-center gap-4 p-3 rounded-xl bg-brand-surface/60 border border-brand-border/60">
+          <img src="${item.img || (item.imagens && item.imagens[0]) || 'https://via.placeholder.com/60'}" alt="${item.nome}" class="w-14 h-14 object-cover rounded-lg">
+          <div class="flex-1 min-w-0">
+            <h4 class="font-semibold text-sm text-brand-cream truncate">${item.nome}</h4>
+            <span class="text-xs text-brand-gold font-bold">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+            <div class="flex items-center gap-2 mt-2">
+              <button onclick="alterarQtdCarrinho(${item.id}, -1)" class="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">-</button>
+              <span class="text-xs font-bold w-4 text-center">${item.quantidade}</span>
+              <button onclick="alterarQtdCarrinho(${item.id}, 1)" class="w-6 h-6 rounded bg-brand-card text-brand-cream text-xs">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-end justify-between self-stretch">
+            <button onclick="removerDoCarrinho(${item.id})" class="text-brand-muted hover:text-rose-400">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+            <span class="font-serif font-bold text-sm text-brand-cream">
+              R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
+            </span>
+          </div>
         </div>
-      );
+      `).join('');
+
+      if (window.lucide) window.lucide.createIcons();
     }
 
-    const rootElem = document.getElementById('root');
-    if (ReactDOM.createRoot) {
-      ReactDOM.createRoot(rootElem).render(<App />);
-    } else {
-      ReactDOM.render(<App />, rootElem);
+    function finalizarPedidoWhatsApp() {
+      if (carrinho.length === 0) return showToast("A sacola está vazia.");
+      const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+      let texto = `*Olá, Sagrado Chocolates! Gostaria de fazer um pedido artesanal:*\n\n`;
+      if (usuarioLogado) {
+        texto += `*Cliente:* ${usuarioLogado.nome} (${usuarioLogado.email})\n\n`;
+      }
+      carrinho.forEach(item => {
+        texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}\n`;
+      });
+      texto += `\n*Total do Pedido: R$ ${subtotal.toFixed(2).replace('.', ',')}*`;
+      texto += `\n\nPor favor, confirmem a disponibilidade!`;
+
+      window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
+      carrinho = [];
+      salvarCarrinho();
+      atualizarBadgeCarrinho();
+      fecharCarrinho();
+      showToast("Pedido enviado para o WhatsApp!");
     }
-{% endraw %}
+
+    function clicarBotaoConta() {
+      if (usuarioLogado) {
+        abrirModalMinhaConta();
+      } else {
+        abrirModalAuth();
+      }
+    }
+
+    function abrirModalAuth() {
+      document.getElementById('modal-auth').classList.remove('hidden');
+      alternarAbaAuth('entrar');
+    }
+
+    function fecharModalAuth() {
+      document.getElementById('modal-auth').classList.add('hidden');
+    }
+
+    function alternarAbaAuth(aba) {
+      const tabEntrar = document.getElementById('tab-auth-entrar');
+      const tabCadastrar = document.getElementById('tab-auth-cadastrar');
+      const formLogin = document.getElementById('form-login');
+      const formCad = document.getElementById('form-cadastro-cliente');
+
+      if (aba === 'entrar') {
+        tabEntrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition';
+        tabCadastrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition';
+        formLogin.classList.remove('hidden');
+        formCad.classList.add('hidden');
+      } else {
+        tabCadastrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition';
+        tabEntrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition';
+        formCad.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+      }
+    }
+
+    async function fazerLoginCliente(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const senha = document.getElementById('login-senha').value;
+      const btn = document.getElementById('btn-login-submit');
+
+      btn.disabled = true;
+      btn.innerText = 'Entrando...';
+
+      try {
+        const res = await fetch('/api/cliente/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          usuarioLogado = data.usuario;
+          localStorage.setItem('sagrado_usuario', JSON.stringify(usuarioLogado));
+          atualizarEstadoUsuario();
+          fecharModalAuth();
+          showToast(`Olá novamente, ${usuarioLogado.nome}!`, 'sucesso');
+          carregarMeusFiados();
+        } else {
+          showToast(data.erro || 'E-mail ou senha incorretos.');
+        }
+      } catch (err) {
+        showToast('Erro de conexão ao fazer login.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Entrar';
+      }
+    }
+
+    async function fazerCadastroCliente(e) {
+      e.preventDefault();
+      const nome = document.getElementById('cad-nome').value;
+      const email = document.getElementById('cad-email').value;
+      const telefone = document.getElementById('cad-telefone').value;
+      const senha = document.getElementById('cad-senha').value;
+      const btn = document.getElementById('btn-cad-submit');
+
+      btn.disabled = true;
+      btn.innerText = 'Criando conta no banco...';
+
+      try {
+        const res = await fetch('/api/cliente/cadastro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, telefone, senha })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          usuarioLogado = data.usuario;
+          localStorage.setItem('sagrado_usuario', JSON.stringify(usuarioLogado));
+          atualizarEstadoUsuario();
+          fecharModalAuth();
+          showToast(`Bem-vindo(a), ${usuarioLogado.nome}! Conta criada com sucesso!`, 'sucesso');
+          carregarMeusFiados();
+        } else {
+          showToast(data.erro || 'Erro ao criar conta.');
+        }
+      } catch (err) {
+        showToast('Erro de conexão ao criar conta.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Criar Minha Conta no Site';
+      }
+    }
+
+    function fazerLogoutCliente() {
+      usuarioLogado = null;
+      fiadosUsuario = [];
+      localStorage.removeItem('sagrado_usuario');
+      atualizarEstadoUsuario();
+      fecharModalMinhaConta();
+      showToast('Você saiu da sua conta.');
+    }
+
+    function atualizarEstadoUsuario() {
+      const labelConta = document.getElementById('label-conta');
+      const heroBtn = document.getElementById('hero-btn-acao');
+
+      if (usuarioLogado) {
+        labelConta.innerText = `Olá, ${usuarioLogado.nome.split(' ')[0]}`;
+        heroBtn.innerHTML = `<i data-lucide="receipt" class="w-5 h-5"></i><span>Meus Fiados / Débitos</span>`;
+        carregarMeusFiados();
+      } else {
+        labelConta.innerText = 'Entrar / Criar Conta';
+        heroBtn.innerHTML = `<i data-lucide="user-plus" class="w-5 h-5"></i><span>Criar Minha Conta</span>`;
+        document.getElementById('banner-aviso-fiado').classList.add('hidden');
+        document.getElementById('badge-alerta-fiado').classList.add('hidden');
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    async function carregarMeusFiados() {
+      if (!usuarioLogado) return;
+      try {
+        const res = await fetch(`/api/cliente/fiados?usuario_id=${usuarioLogado.id}`);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          fiadosUsuario = data;
+          atualizarResumoFiados();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function recarregarFiadosCliente() {
+      carregarMeusFiados();
+      showToast('Dados atualizados!');
+    }
+
+    function atualizarResumoFiados() {
+      const totalPendente = fiadosUsuario.filter(f => f.status !== 'pago').reduce((acc, f) => acc + f.valor, 0);
+      const banner = document.getElementById('banner-aviso-fiado');
+      const badge = document.getElementById('badge-alerta-fiado');
+
+      if (totalPendente > 0) {
+        banner.classList.remove('hidden');
+        badge.classList.remove('hidden');
+        document.getElementById('banner-valor-fiado').innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
+      } else {
+        banner.classList.add('hidden');
+        badge.classList.add('hidden');
+      }
+
+      document.getElementById('conta-total-devedor').innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
+      const statusBox = document.getElementById('conta-status-geral');
+      if (totalPendente === 0) {
+        statusBox.innerHTML = `<span class="text-emerald-400 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Você não possui débitos pendentes!</span>`;
+      } else {
+        statusBox.innerHTML = `<span class="text-amber-400 flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> Há valores pendentes para acerto.</span>`;
+      }
+
+      const listaContainer = document.getElementById('lista-meus-fiados');
+      if (fiadosUsuario.length === 0) {
+        listaContainer.innerHTML = '<div class="p-8 text-center glass-card rounded-2xl border border-brand-border text-xs text-brand-muted">Nenhum fiado ou débito lançado na sua conta. Você está 100% em dia!</div>';
+        return;
+      }
+
+      listaContainer.innerHTML = fiadosUsuario.map(f => {
+        let badgeStatus = '';
+        let acaoBotao = '';
+
+        if (f.status === 'pago') {
+          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">Pago ✓</span>';
+          acaoBotao = `<div class="text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-2 rounded-xl border border-emerald-800/40 text-center">Liquidado em ${f.pago_em}</div>`;
+        } else if (f.status === 'comprovante_enviado') {
+          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante em Análise</span>';
+          acaoBotao = `<div class="text-xs text-amber-300 font-semibold bg-amber-950/60 px-3 py-2 rounded-xl border border-amber-800/40 text-center">Aguardando confirmação</div>`;
+        } else {
+          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-800">Pendente</span>';
+          acaoBotao =rose-300 border border-rose-800">Pendente</span>';
+          acaoBotao = `<button onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="qr-code" class="w-4 h-4"></i><span>Pagar com PIX</span></button>`;
+        }
+
+        return `
+          <div class="glass-card p-4 rounded-2xl border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-serif font-bold text-lg text-brand-cream">R$ ${f.valor.toFixed(2).replace('.', ',')}</span>
+                ${badgeStatus}
+              </div>
+              <p class="text-xs text-brand-gold mt-1"><strong>Itens:</strong> ${f.descricao}</p>
+              <span class="text-xs text-brand-muted">Lançado em: ${f.criado_em}</span>
+            </div>
+            <div>${acaoBotao}</div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function abrirModalMinhaConta() {
+      if (!usuarioLogado) return abrirModalAuth();
+      document.getElementById('perfil-avatar').innerText = usuarioLogado.nome.charAt(0).toUpperCase();
+      document.getElementById('perfil-nome').innerText = usuarioLogado.nome;
+      document.getElementById('perfil-contato').innerText = `${usuarioLogado.email} • ${usuarioLogado.telefone || 'Sem telefone'}`;
+      document.getElementById('modal-conta').classList.remove('hidden');
+      carregarMeusFiados();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function fecharModalMinhaConta() {
+      document.getElementById('modal-conta').classList.add('hidden');
+    }
+
+    function abrirModalPagarPix(fiadoId) {
+      fiadoSelecionadoParaPagar = fiadosUsuario.find(f => f.id === fiadoId);
+      if (!fiadoSelecionadoParaPagar) return;
+
+      comprovanteBase64 = '';
+      document.getElementById('pix-descricao').innerText = `Débito: ${fiadoSelecionadoParaPagar.descricao}`;
+      document.getElementById('pix-valor').innerText = `R$ ${fiadoSelecionadoParaPagar.valor.toFixed(2).replace('.', ',')}`;
+      document.getElementById('pix-beneficiario').innerText = infoPix.beneficiario;
+      document.getElementById('pix-chave').innerText = infoPix.chave_pix;
+      document.getElementById('preview-comprovante-box').classList.add('hidden');
+      document.getElementById('comprovante-file-input').value = '';
+
+      document.getElementById('modal-pagar-pix').classList.remove('hidden');
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function fecharModalPagarPix() {
+      document.getElementById('modal-pagar-pix').classList.add('hidden');
+    }
+
+    function copiarChavePix() {
+      navigator.clipboard.writeText(infoPix.chave_pix);
+      showToast('Chave PIX copiada para a área de transferência!', 'sucesso');
+    }
+
+    function processarComprovanteSelecionado(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        comprovanteBase64 = e.target.result;
+        document.getElementById('preview-comprovante-img').src = comprovanteBase64;
+        document.getElementById('preview-comprovante-box').classList.remove('hidden');
+        showToast('Comprovante anexado!');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function enviarComprovante() {
+      if (!comprovanteBase64) {
+        return showToast('Selecione a foto do comprovante primeiro!');
+      }
+
+      const btn = document.getElementById('btn-enviar-comprovante');
+      btn.disabled = true;
+      btn.innerText = 'Enviando...';
+
+      try {
+        const res = await fetch('/api/cliente/fiados/anexar-comprovante', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fiado_id: fiadoSelecionadoParaPagar.id,
+            comprovante: comprovanteBase64
+          })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast('Comprovante enviado com sucesso para conferência do vendedor!', 'sucesso');
+          fecharModalPagarPix();
+          carregarMeusFiados();
+        } else {
+          showToast(data.erro || 'Erro ao enviar comprovante.');
+        }
+      } catch (err) {
+        showToast('Erro de conexão ao enviar comprovante.');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Enviar Comprovante';
+      }
+    }
   </script>
 </body>
 </html>
