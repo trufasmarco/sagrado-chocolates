@@ -52,34 +52,21 @@
   </script>
 
   <style>
-    /* Custom Luxury Scrollbars */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #120705;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #3e1b14;
-      border-radius: 9999px;
-      border: 1px solid rgba(229, 192, 123, 0.2);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #B89745;
-    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #120705; }
+    ::-webkit-scrollbar-thumb { background: #3e1b14; border-radius: 9999px; border: 1px solid rgba(229, 192, 123, 0.2); }
+    ::-webkit-scrollbar-thumb:hover { background: #B89745; }
 
-    /* Glassmorphism Classes */
     .glass-panel {
-      background: rgba(27, 12, 9, 0.8);
+      background: rgba(27, 12, 9, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(229, 192, 123, 0.18);
+      border: 1px solid rgba(229, 192, 123, 0.2);
     }
     .glass-card {
-      background: linear-gradient(145deg, rgba(36, 16, 12, 0.8) 0%, rgba(20, 8, 6, 0.9) 100%);
+      background: linear-gradient(145deg, rgba(36, 16, 12, 0.85) 0%, rgba(20, 8, 6, 0.95) 100%);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(229, 192, 123, 0.12);
+      border: 1px solid rgba(229, 192, 123, 0.15);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .glass-card:hover {
@@ -88,7 +75,6 @@
       box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 192, 123, 0.15);
     }
 
-    /* Shimmer Button Effect */
     .btn-shimmer {
       position: relative;
       overflow: hidden;
@@ -112,7 +98,7 @@
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
 
-    const INITIAL_PRODUCTS = [
+    const PRODUTOS_PADRAO = [
       {
         id: 1,
         nome: "Cone Trufado Morango Cremoso",
@@ -120,123 +106,270 @@
         tag: "Mais Vendido",
         preco: 12.00,
         estoque: 50,
-        descricao: "Casquinha artesanal folhada crocante, blindada com chocolate nobre e recheada com ganache aveludada de morangos selecionados.",
-        ingredientes: "Chocolate belga 54%, morangos frescos, leite condensado artesanal, casquinha crocante.",
-        calorias: "285 kcal",
+        descricao: "Casquinha artesanal folhada crocante, blindada com chocolate nobre e recheada com ganache aveludada de morangos frescos.",
         img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80",
-        rating: 4.9,
-        reviewsCount: 128
+        imagens: ["https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80"],
+        rating: 4.9
       },
       {
         id: 2,
         nome: "Cone Trufado Doce de Leite Imperial",
         categoria: "classicos",
-        tag: "Receita Mineira",
+        tag: "Receita Nobre",
         preco: 11.00,
         estoque: 45,
-        descricao: "Doce de leite de cozimento lento em tacho de cobre, toque sutil de flor de sal e casquinha banhada no chocolate meio amargo.",
-        ingredientes: "Doce de leite artesanal, flor de sal de Guérande, chocolate meio amargo 60%, casquinha de baunilha.",
-        calorias: "295 kcal",
+        descricao: "Doce de leite de cozimento lento em tacho, toque sutil de flor de sal e casquinha banhada no chocolate meio amargo.",
         img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
-        rating: 5.0,
-        reviewsCount: 94
+        imagens: ["https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"],
+        rating: 5.0
       },
       {
         id: 3,
         nome: "Cone Trufado Brigadeiro Gourmet 70%",
         categoria: "classicos",
-        tag: "Chef's Choice",
+        tag: "Favorito do Chef",
         preco: 10.00,
         estoque: 60,
-        descricao: "Brigadeiro aveludado feito com cacau 100% puro e pedaços de chocolate belga, finalizado com granulado artesanal crocante.",
-        ingredientes: "Cacau nobre, nibs de cacau, creme de leite fresco, raspas de chocolate meio amargo.",
-        calorias: "270 kcal",
+        descricao: "Brigadeiro aveludado feito com cacau nobre puro e casquinha crocante banhada no chocolate ao leite belga.",
         img: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80",
-        rating: 4.8,
-        reviewsCount: 156
-      },
-      {
-        id: 4,
-        nome: "Cone Trufado Beijinho Nobre de Coco",
-        categoria: "classicos",
-        tag: "Novo",
-        preco: 10.00,
-        estoque: 40,
-        descricao: "Recheio cremoso com coco em flocos tostado levemente e chocolate branco caramelizado que derrete no paladar.",
-        ingredientes: "Coco ralado úmido, chocolate branco nobre, leite condensado e crocante de castanhas.",
-        calorias: "260 kcal",
-        img: "https://images.unsplash.com/photo-1575372587186-5007394dce63?auto=format&fit=crop&w=600&q=80",
-        rating: 4.7,
-        reviewsCount: 82
-      },
-      {
-        id: 5,
-        nome: "Cone Trufado Maracujá Tropical Ouro",
-        categoria: "frutados",
-        tag: "Refrescante",
-        preco: 11.00,
-        estoque: 55,
-        descricao: "Equilíbrio entre a acidez sedutora do maracujá natural e o dulçor envolvente do chocolate meio amargo.",
-        ingredientes: "Polpa pura de maracujá, chocolate ao leite nobre, casquinha crocante sabor canela.",
-        calorias: "275 kcal",
-        img: "https://images.unsplash.com/photo-1526081347589-7fa3cb41b4b2?auto=format&fit=crop&w=600&q=80",
-        rating: 4.9,
-        reviewsCount: 110
-      },
-      {
-        id: 6,
-        nome: "Cone Trufado Pistache Siciliano & Rubi",
-        categoria: "exclusivos",
-        tag: "Edição Especial",
-        preco: 14.50,
-        estoque: 25,
-        descricao: "Brigadeiro de pistache de Bronte com ganache aveludada e casquinha banhada no autêntico chocolate Ruby.",
-        ingredientes: "Pistache siciliano puro, chocolate Ruby Callebaut, manteiga noisette, casquinha folhada.",
-        calorias: "310 kcal",
-        img: "https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=600&q=80",
-        rating: 5.0,
-        reviewsCount: 204
+        imagens: ["https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80"],
+        rating: 4.8
       }
     ];
 
     function App() {
-      const [produtos, setProdutos] = useState(() => {
-        const saved = localStorage.getItem('sagrado_produtos');
-        return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-      });
-
+      // PRODUTOS
+      const [produtos, setProdutos] = useState(PRODUTOS_PADRAO);
+      
+      // CARRINHO
       const [carrinho, setCarrinho] = useState(() => {
-        const saved = localStorage.getItem('sagrado_carrinho_v2');
+        const saved = localStorage.getItem('sagrado_carrinho');
         return saved ? JSON.parse(saved) : [];
       });
 
-      const [isCartOpen, setIsCartOpen] = useState(false);
-      const [isLoginOpen, setIsLoginOpen] = useState(false);
-      const [isAdminOpen, setIsAdminOpen] = useState(false);
-      const [quickViewProduct, setQuickViewProduct] = useState(null);
+      // USUÁRIO LOGADO
+      const [usuario, setUsuario] = useState(() => {
+        const saved = localStorage.getItem('sagrado_usuario');
+        return saved ? JSON.parse(saved) : null;
+      });
 
+      // MODAIS E ESTADOS
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+      const [authTab, setAuthTab] = useState('entrar');
+      const [isContaModalOpen, setIsContaModalOpen] = useState(false);
+      const [quickViewProduct, setQuickViewProduct] = useState(null);
+      const [imgIndexModal, setImgIndexModal] = useState(0);
+
+      // FIADOS DO CLIENTE
+      const [fiados, setFiados] = useState([]);
+      const [fiadoParaPagar, setFiadoParaPagar] = useState(null);
+      const [comprovanteBase64, setComprovanteBase64] = useState('');
+      const [enviandoComprovante, setEnviandoComprovante] = useState(false);
+
+      // CHAVE PIX DO ADMIN
+      const [infoPix, setInfoPix] = useState({
+        chave_pix: 'sagradochocolates@gmail.com',
+        beneficiario: 'Sagrado Chocolates'
+      });
+
+      // FILTROS
       const [categoriaAtiva, setCategoriaAtiva] = useState('todos');
       const [busca, setBusca] = useState('');
       const [toasts, setToasts] = useState([]);
-      const [usuario, setUsuario] = useState(null);
+
+      // FORMULÁRIOS DE AUTH
+      const [authNome, setAuthNome] = useState('');
+      const [authEmail, setAuthEmail] = useState('');
+      const [authSenha, setAuthSenha] = useState('');
+      const [authTelefone, setAuthTelefone] = useState('');
+      const [authLoading, setAuthLoading] = useState(false);
 
       useEffect(() => {
-        localStorage.setItem('sagrado_carrinho_v2', JSON.stringify(carrinho));
+        carregarProdutosServidor();
+        carregarInfoPix();
+      }, []);
+
+      useEffect(() => {
+        localStorage.setItem('sagrado_carrinho', JSON.stringify(carrinho));
       }, [carrinho]);
 
       useEffect(() => {
-        localStorage.setItem('sagrado_produtos', JSON.stringify(produtos));
-      }, [produtos]);
+        if (usuario) {
+          localStorage.setItem('sagrado_usuario', JSON.stringify(usuario));
+          carregarMeusFiados(usuario.id);
+        } else {
+          localStorage.removeItem('sagrado_usuario');
+          setFiados([]);
+        }
+      }, [usuario]);
 
       useEffect(() => {
         if (window.lucide) window.lucide.createIcons();
-      }, [produtos, carrinho, isCartOpen, isAdminOpen, isLoginOpen, quickViewProduct, toasts]);
+      }, [produtos, carrinho, isCartOpen, isAuthModalOpen, isContaModalOpen, quickViewProduct, fiadoParaPagar, fiados, toasts]);
 
-      const addToast = (mensagem) => {
+      const addToast = (mensagem, tipo = 'info') => {
         const id = Date.now();
-        setToasts(prev => [...prev, { id, mensagem }]);
-        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3500);
+        setToasts(prev => [...prev, { id, mensagem, tipo }]);
+        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
       };
+
+      async function carregarProdutosServidor() {
+        try {
+          const res = await fetch('/api/produtos');
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setProdutos(data);
+          }
+        } catch (e) {
+          console.error("Erro ao carregar produtos:", e);
+        }
+      }
+
+      async function carregarInfoPix() {
+        try {
+          const res = await fetch('/api/admin/info-pix');
+          const data = await res.json();
+          if (data && data.chave_pix) setInfoPix(data);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      async function carregarMeusFiados(usuarioId) {
+        try {
+          const res = await fetch(`/api/cliente/fiados?usuario_id=${usuarioId}`);
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            setFiados(data);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // ================= AUTENTICAÇÃO =================
+
+      async function handleCadastro(e) {
+        e.preventDefault();
+        setAuthLoading(true);
+        try {
+          const res = await fetch('/api/cliente/cadastro', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nome: authNome,
+              email: authEmail,
+              senha: authSenha,
+              telefone: authTelefone
+            })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setUsuario(data.usuario);
+            setIsAuthModalOpen(false);
+            addToast(`Bem-vindo(a), ${data.usuario.nome}! Sua conta foi criada no PostgreSQL com sucesso!`, 'sucesso');
+            setAuthNome(''); setAuthEmail(''); setAuthSenha(''); setAuthTelefone('');
+          } else {
+            addToast(data.erro || 'Erro ao criar conta.');
+          }
+        } catch (err) {
+          addToast('Erro de conexão com o servidor.');
+        } finally {
+          setAuthLoading(false);
+        }
+      }
+
+      async function handleLogin(e) {
+        e.preventDefault();
+        setAuthLoading(true);
+        try {
+          const res = await fetch('/api/cliente/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: authEmail,
+              senha: authSenha
+            })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setUsuario(data.usuario);
+            setIsAuthModalOpen(false);
+            addToast(`Olá novamente, ${data.usuario.nome}!`, 'sucesso');
+            setAuthEmail(''); setAuthSenha('');
+          } else {
+            addToast(data.erro || 'E-mail ou senha incorretos.');
+          }
+        } catch (err) {
+          addToast('Erro ao conectar com o servidor.');
+        } finally {
+          setAuthLoading(false);
+        }
+      }
+
+      function handleLogout() {
+        setUsuario(null);
+        setIsContaModalOpen(false);
+        addToast('Você saiu da sua conta.');
+      }
+
+      // ================= FIADO E PAGAMENTO PIX =================
+
+      function abrirModalPagarPix(fiado) {
+        setFiadoParaPagar(fiado);
+        setComprovanteBase64('');
+      }
+
+      function copiarChavePix() {
+        navigator.clipboard.writeText(infoPix.chave_pix);
+        addToast('Chave PIX copiada para a área de transferência!', 'sucesso');
+      }
+
+      function processarComprovanteArquivo(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          setComprovanteBase64(e.target.result);
+          addToast('Comprovante carregado com sucesso!');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      async function enviarComprovantePagamento() {
+        if (!comprovanteBase64) {
+          return addToast('Por favor, anexe a foto ou arquivo do comprovante primeiro!');
+        }
+
+        setEnviandoComprovante(true);
+        try {
+          const res = await fetch('/api/cliente/fiados/anexar-comprovante', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fiado_id: fiadoParaPagar.id,
+              comprovante: comprovanteBase64
+            })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            addToast('Comprovante enviado! O vendedor irá conferir no painel.', 'sucesso');
+            setFiadoParaPagar(null);
+            setComprovanteBase64('');
+            if (usuario) carregarMeusFiados(usuario.id);
+          } else {
+            addToast(data.erro || 'Erro ao enviar comprovante.');
+          }
+        } catch (e) {
+          addToast('Erro de conexão ao enviar comprovante.');
+        } finally {
+          setEnviandoComprovante(false);
+        }
+      }
+
+      // ================= CARRINHO =================
 
       const adicionarAoCarrinho = (produto, e) => {
         if (e) e.stopPropagation();
@@ -264,12 +397,15 @@
 
       const totalItens = useMemo(() => carrinho.reduce((acc, i) => acc + i.quantidade, 0), [carrinho]);
       const subtotalFinanceiro = useMemo(() => carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0), [carrinho]);
+      const totalDevendoCliente = useMemo(() => {
+        return fiados.filter(f => f.status !== 'pago').reduce((acc, f) => acc + f.valor, 0);
+      }, [fiados]);
 
       const produtosFiltrados = useMemo(() => {
         return produtos.filter(p => {
           const matchCat = categoriaAtiva === 'todos' || p.categoria === categoriaAtiva;
-          const matchBusca = p.nome.toLowerCase().includes(busca.toLowerCase()) ||
-                             p.descricao.toLowerCase().includes(busca.toLowerCase());
+          const matchBusca = (p.nome || '').toLowerCase().includes(busca.toLowerCase()) ||
+                             (p.descricao || '').toLowerCase().includes(busca.toLowerCase());
           return matchCat && matchBusca;
         });
       }, [produtos, categoriaAtiva, busca]);
@@ -277,11 +413,14 @@
       const finalizarPedidoWhatsApp = () => {
         if (carrinho.length === 0) return addToast("A sacola está vazia.");
         let texto = `*Olá, Sagrado Chocolates! Gostaria de fazer um pedido artesanal:*\n\n`;
+        if (usuario) {
+          texto += `*Cliente:* ${usuario.nome} (${usuario.email})\n\n`;
+        }
         carrinho.forEach(item => {
           texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}\n`;
         });
         texto += `\n*Total do Pedido: R$ ${subtotalFinanceiro.toFixed(2).replace('.', ',')}*`;
-        texto += `\n\nPor favor, confirmem o tempo estimado de preparo e chave PIX!`;
+        texto += `\n\nPor favor, confirmem a disponibilidade para entrega/retirada!`;
 
         window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
         setCarrinho([]);
@@ -291,15 +430,17 @@
 
       return (
         <div className="min-h-screen flex flex-col bg-brand-dark">
+
           {/* Top Announcement Bar */}
           <div className="bg-gradient-to-r from-brand-ruby via-brand-surface to-brand-ruby text-brand-gold text-xs py-2 px-4 text-center font-medium border-b border-brand-gold/20 flex items-center justify-center gap-2">
             <span className="w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
-            <span>Edição Especial: Frete Grátis em pedidos acima de R$ 50,00</span>
+            <span>Edição Especial: Cones Trufados Artesanais feitos com Cacau Nobre</span>
           </div>
 
           {/* Header Superior */}
           <header className="sticky top-0 z-40 glass-panel border-b border-brand-gold/20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+              
               <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <div className="w-11 h-11 rounded-full bg-gradient-to-br from-brand-gold via-brand-goldDark to-brand-ruby flex items-center justify-center shadow-glow-gold border border-brand-gold/40">
                   <span className="font-serif font-black text-brand-dark text-xl">S</span>
@@ -313,22 +454,35 @@
               </div>
 
               <nav className="flex items-center gap-2 sm:gap-3">
-                <button
-                  onClick={() => setIsAdminOpen(true)}
+                <a
+                  href="/admin"
                   className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30"
                 >
                   <i data-lucide="layout-dashboard" className="w-4 h-4"></i>
                   <span>Painel Admin</span>
-                </button>
+                </a>
 
+                {/* BOTÃO DA CONTA DO CLIENTE */}
                 <button
-                  onClick={() => setIsLoginOpen(true)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border"
+                  onClick={() => {
+                    if (usuario) {
+                      setIsContaModalOpen(true);
+                      carregarMeusFiados(usuario.id);
+                    } else {
+                      setIsAuthModalOpen(true);
+                    }
+                  }}
+                  className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border"
                 >
                   <i data-lucide="user" className="w-4 h-4 text-brand-gold"></i>
-                  <span className="hidden md:inline">{usuario ? usuario.nome : 'Minha Conta'}</span>
+                  <span>{usuario ? `Olá, ${usuario.nome.split(' ')[0]}` : 'Entrar / Criar Conta'}</span>
+                  
+                  {totalDevendoCliente > 0 && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
+                  )}
                 </button>
 
+                {/* SACOLA */}
                 <button
                   onClick={() => setIsCartOpen(true)}
                   className="btn-shimmer relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition"
@@ -343,6 +497,20 @@
             </div>
           </header>
 
+          {/* Banner de Aviso de Débito Pendente */}
+          {usuario && totalDevendoCliente > 0 && (
+            <div className="bg-amber-950/80 border-b border-amber-600/40 px-4 py-2 text-center text-xs text-amber-200 flex items-center justify-center gap-3">
+              <i data-lucide="alert-circle" className="w-4 h-4 text-amber-400"></i>
+              <span>Você possui um débito de fiado pendente de <strong>R$ {totalDevendoCliente.toFixed(2).replace('.', ',')}</strong>.</span>
+              <button 
+                onClick={() => setIsContaModalOpen(true)}
+                className="underline text-amber-300 font-bold hover:text-white"
+              >
+                Pagar com PIX agora
+              </button>
+            </div>
+          )}
+
           {/* Hero Section */}
           <section className="relative overflow-hidden pt-12 pb-20 border-b border-brand-gold/15 bg-gradient-to-b from-brand-surface via-brand-dark to-brand-dark">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -350,7 +518,7 @@
                 <div className="lg:col-span-7 text-center lg:text-left">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-xs font-semibold uppercase mb-6 backdrop-blur-sm">
                     <i data-lucide="sparkles" className="w-3.5 h-3.5"></i>
-                    <span>Cacau 100% Nobre & Casquinha Secreta</span>
+                    <span>Cacau Nobre Selecionado & Recheio Cremoso</span>
                   </div>
 
                   <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-cream leading-[1.15] mb-6">
@@ -362,7 +530,7 @@
                   </h2>
 
                   <p className="text-brand-muted text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8">
-                    Crocância por fora e ganache densamente aveludada por dentro. Banhado manualmente em chocolate nobre temperado.
+                    Casquinha ultra crocante por fora e ganache densamente aveludada por dentro. Banhado no mais puro chocolate nobre temperado.
                   </p>
 
                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
@@ -374,13 +542,23 @@
                       <i data-lucide="arrow-right" className="w-4 h-4"></i>
                     </a>
 
-                    <button
-                      onClick={() => setIsCartOpen(true)}
-                      className="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2"
-                    >
-                      <i data-lucide="shopping-bag" className="w-4 h-4"></i>
-                      <span>Sacola ({totalItens})</span>
-                    </button>
+                    {!usuario ? (
+                      <button
+                        onClick={() => { setIsAuthModalOpen(true); setAuthTab('cadastrar'); }}
+                        className="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2"
+                      >
+                        <i data-lucide="user-plus" className="w-4 h-4"></i>
+                        <span>Criar Minha Conta</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setIsContaModalOpen(true)}
+                        className="px-6 py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center gap-2"
+                      >
+                        <i data-lucide="receipt" className="w-4 h-4"></i>
+                        <span>Meus Fiados / Débitos</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -390,19 +568,15 @@
                     <div className="relative rounded-2xl overflow-hidden glass-panel border border-brand-gold/40 p-3 shadow-2xl">
                       <div className="relative h-80 sm:h-96 rounded-xl overflow-hidden">
                         <img
-                          src="input_file_0.png"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85";
-                          }}
+                          src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85"
                           alt="Cone Trufado Sagrado Chocolates"
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent opacity-80"></div>
                         <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl glass-panel border border-brand-gold/20 flex items-center justify-between">
                           <div>
-                            <p className="text-xs text-brand-gold uppercase tracking-wider font-semibold">Destaque do Mestre</p>
-                            <h4 className="font-serif text-sm font-bold text-brand-cream">Morango Cremoso & Chocolate Nobre</h4>
+                            <p className="text-xs text-brand-gold uppercase tracking-wider font-semibold">Destaque da Casa</p>
+                            <h4 className="font-serif text-sm font-bold text-brand-cream">Morango Cremoso Especial</h4>
                           </div>
                           <span className="px-3 py-1 rounded-full bg-brand-gold text-brand-dark font-black text-sm">
                             R$ 12,00
@@ -420,7 +594,7 @@
           <section id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6 w-full">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
               <div>
-                <span className="text-brand-gold text-xs font-semibold tracking-widest uppercase">Cardápio Selecionado</span>
+                <span className="text-brand-gold text-xs font-semibold tracking-widest uppercase">Cardápio de Delícias</span>
                 <h3 className="font-serif text-3xl font-bold text-brand-cream mt-1">Nossos Sabores Artesanais</h3>
               </div>
 
@@ -464,31 +638,32 @@
               {produtosFiltrados.map(produto => (
                 <div
                   key={produto.id}
-                  onClick={() => setQuickViewProduct(produto)}
+                  onClick={() => { setQuickViewProduct(produto); setImgIndexModal(0); }}
                   className="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group cursor-pointer"
                 >
                   <div>
                     <div className="relative h-60 overflow-hidden bg-brand-surface">
                       <img
-                        src={produto.img}
+                        src={produto.img || (produto.imagens && produto.imagens[0]) || 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80'}
                         alt={produto.nome}
                         loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                       />
                       <div className="absolute top-3 left-3">
                         <span className="px-3 py-1 rounded-full text-[11px] font-bold uppercase bg-brand-dark/80 text-brand-gold border border-brand-gold/30 backdrop-blur-md">
-                          {produto.tag}
+                          {produto.tag || 'Artesanal'}
                         </span>
                       </div>
-                      <div className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-dark/80 text-brand-cream text-xs font-semibold border border-white/10 backdrop-blur-md">
-                        <i data-lucide="star" className="w-3.5 h-3.5 fill-brand-gold text-brand-gold"></i>
-                        <span>{produto.rating}</span>
-                      </div>
+                      {produto.imagens && produto.imagens.length > 1 && (
+                        <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-brand-dark/80 text-brand-gold text-[10px] font-bold border border-brand-gold/30">
+                          {produto.imagens.length} fotos
+                        </div>
+                      )}
                     </div>
 
                     <div className="p-6">
                       <h4 className="font-serif text-lg font-bold text-brand-gold mb-2">{produto.nome}</h4>
-                      <p className="text-brand-muted text-xs leading-relaxed line-clamp-2">{produto.descricao}</p>
+                      <p className="text-brand-muted text-xs leading-relaxed line-clamp-2">{produto.descricao || 'Cone trufado artesanal com chocolate nobre e recheio cremoso irresistível.'}</p>
                     </div>
                   </div>
 
@@ -513,7 +688,389 @@
             </div>
           </main>
 
-          {/* Drawer Lateral do Carrinho */}
+          {/* ================= MODAL: QUICK VIEW DO PRODUTO ================= */}
+          {quickViewProduct && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+              <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+                <button onClick={() => setQuickViewProduct(null)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                  <i data-lucide="x" className="w-5 h-5"></i>
+                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                  <div>
+                    <div className="relative rounded-2xl overflow-hidden h-64 bg-brand-dark border border-brand-border">
+                      <img
+                        src={(quickViewProduct.imagens && quickViewProduct.imagens[imgIndexModal]) || quickViewProduct.img}
+                        alt={quickViewProduct.nome}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {quickViewProduct.imagens && quickViewProduct.imagens.length > 1 && (
+                      <div className="grid grid-cols-4 gap-2 mt-3">
+                        {quickViewProduct.imagens.map((foto, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => setImgIndexModal(idx)}
+                            className={`h-14 rounded-lg overflow-hidden border cursor-pointer ${imgIndexModal === idx ? 'border-brand-gold scale-105' : 'border-brand-border opacity-70'} transition`}
+                          >
+                            <img src={foto} className="w-full h-full object-cover" />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <span className="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
+                      {quickViewProduct.tag || 'Gourmet'}
+                    </span>
+                    <h3 className="font-serif text-2xl font-bold text-brand-cream mt-3 mb-2">{quickViewProduct.nome}</h3>
+                    <p className="text-brand-muted text-xs mb-4">{quickViewProduct.descricao || 'Feito artesanalmente com ingredientes de primeira qualidade.'}</p>
+                    
+                    <div className="text-xs space-y-1 bg-brand-surface/60 p-3 rounded-xl border border-brand-border/40 mb-6">
+                      <p><strong className="text-brand-gold">Estoque Disponível:</strong> {quickViewProduct.estoque} unidades</p>
+                      <p className="text-xl font-serif font-bold text-brand-gold mt-2">
+                        R$ {quickViewProduct.preco.toFixed(2).replace('.', ',')}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => { adicionarAoCarrinho(quickViewProduct); setQuickViewProduct(null); }}
+                      className="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2 shadow-lg"
+                    >
+                      <i data-lucide="plus" className="w-4 h-4"></i>
+                      <span>Adicionar à Sacola</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= MODAL: CRIAR CONTA OU ENTRAR ================= */}
+          {isAuthModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+              <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+                <button onClick={() => setIsAuthModalOpen(false)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                  <i data-lucide="x" className="w-5 h-5"></i>
+                </button>
+
+                <div className="flex border-b border-brand-border mb-6">
+                  <button
+                    onClick={() => setAuthTab('entrar')}
+                    className={`flex-1 py-3 text-xs sm:text-sm font-bold border-b-2 transition ${authTab === 'entrar' ? 'border-brand-gold text-brand-gold' : 'border-transparent text-brand-muted'}`}
+                  >
+                    Entrar na Conta
+                  </button>
+                  <button
+                    onClick={() => setAuthTab('cadastrar')}
+                    className={`flex-1 py-3 text-xs sm:text-sm font-bold border-b-2 transition ${authTab === 'cadastrar' ? 'border-brand-gold text-brand-gold' : 'border-transparent text-brand-muted'}`}
+                  >
+                    Criar Nova Conta
+                  </button>
+                </div>
+
+                {authTab === 'entrar' ? (
+                  <form onSubmit={handleLogin} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail</label>
+                      <input
+                        type="email"
+                        required
+                        value={authEmail}
+                        onChange={(e) => setAuthEmail(e.target.value)}
+                        placeholder="exemplo@email.com"
+                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Sua Senha</label>
+                      <input
+                        type="password"
+                        required
+                        value={authSenha}
+                        onChange={(e) => setAuthSenha(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={authLoading}
+                      className="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition"
+                    >
+                      {authLoading ? 'Entrando...' : 'Entrar'}
+                    </button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleCadastro} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome Completo *</label>
+                      <input
+                        type="text"
+                        required
+                        value={authNome}
+                        onChange={(e) => setAuthNome(e.target.value)}
+                        placeholder="Seu nome"
+                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail *</label>
+                      <input
+                        type="email"
+                        required
+                        value={authEmail}
+                        onChange={(e) => setAuthEmail(e.target.value)}
+                        placeholder="seu@email.com"
+                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">WhatsApp / Telefone</label>
+                      <input
+                        type="tel"
+                        value={authTelefone}
+                        onChange={(e) => setAuthTelefone(e.target.value)}
+                        placeholder="(16) 99999-9999"
+                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-brand-gold uppercase mb-1">Crie uma Senha *</label>
+                      <input
+                        type="password"
+                        required
+                        value={authSenha}
+                        onChange={(e) => setAuthSenha(e.target.value)}
+                        placeholder="Mínimo de 4 caracteres"
+                        className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={authLoading}
+                      className="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition"
+                    >
+                      {authLoading ? 'Salvando no Banco...' : 'Criar Minha Conta no Site'}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ================= MODAL: MINHA CONTA / ABA DE FIADOS ================= */}
+          {isContaModalOpen && usuario && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+              <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
+                <button onClick={() => setIsContaModalOpen(false)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                  <i data-lucide="x" className="w-5 h-5"></i>
+                </button>
+
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-brand-border gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center font-bold text-lg font-serif">
+                      {usuario.nome.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-xl font-bold text-brand-cream">{usuario.nome}</h3>
+                      <p className="text-xs text-brand-muted">{usuario.email} • {usuario.telefone || 'Sem telefone'}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto"
+                  >
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Sair da Conta</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+                  <div className="glass-card p-4 rounded-2xl border border-brand-gold/30">
+                    <span className="text-xs text-brand-muted uppercase font-semibold">Total a Pagar em Aberto</span>
+                    <div className="font-serif text-2xl font-bold text-amber-400 mt-1">
+                      R$ {totalDevendoCliente.toFixed(2).replace('.', ',')}
+                    </div>
+                  </div>
+                  <div className="glass-card p-4 rounded-2xl border border-brand-border">
+                    <span className="text-xs text-brand-muted uppercase font-semibold">Status Geral</span>
+                    <div className="text-sm font-bold text-brand-cream mt-2 flex items-center gap-2">
+                      {totalDevendoCliente === 0 ? (
+                        <span className="text-emerald-400 flex items-center gap-1">
+                          <i data-lucide="check-circle" className="w-4 h-4"></i> Você não possui débitos pendentes!
+                        </span>
+                      ) : (
+                        <span className="text-amber-400 flex items-center gap-1">
+                          <i data-lucide="clock" className="w-4 h-4"></i> Há valores pendentes para acerto.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ABA DE FIADOS */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-serif text-lg font-bold text-brand-gold">Meus Fiados / Consumo Anotado</h4>
+                    <button
+                      onClick={() => carregarMeusFiados(usuario.id)}
+                      className="text-xs text-brand-muted hover:text-brand-gold flex items-center gap-1"
+                    >
+                      <i data-lucide="refresh-cw" className="w-3.5 h-3.5"></i>
+                      <span>Atualizar</span>
+                    </button>
+                  </div>
+
+                  {fiados.length === 0 ? (
+                    <div className="p-8 text-center glass-card rounded-2xl border border-brand-border text-xs text-brand-muted">
+                      Nenhum fiado ou débito lançado na sua conta. Você está 100% em dia!
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {fiados.map(f => (
+                        <div key={f.id} className="glass-card p-4 rounded-2xl border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-serif font-bold text-base text-brand-cream">
+                                R$ {f.valor.toFixed(2).replace('.', ',')}
+                              </span>
+                              {f.status === 'pago' && (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
+                                  Pago ✓
+                                </span>
+                              )}
+                              {f.status === 'comprovante_enviado' && (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">
+                                  Comprovante em Análise
+                                </span>
+                              )}
+                              {f.status === 'pendente' && (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-800">
+                                  Pendente
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-brand-gold mt-1"><strong>Itens:</strong> ${f.descricao}</p>
+                            <span className="text-[10px] text-brand-muted">Lançado em: {f.criado_em}</span>
+                          </div>
+
+                          <div>
+                            {f.status === 'pendente' && (
+                              <button
+                                onClick={() => abrirModalPagarPix(f)}
+                                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"
+                              >
+                                <i data-lucide="qr-code" className="w-4 h-4"></i>
+                                <span>Pagar com PIX</span>
+                              </button>
+                            )}
+
+                            {f.status === 'comprovante_enviado' && (
+                              <div className="text-[11px] text-amber-300 font-semibold bg-amber-950/60 px-3 py-2 rounded-xl border border-amber-800/40 text-center">
+                                Aguardando vendedor confirmar
+                              </div>
+                            )}
+
+                            {f.status === 'pago' && (
+                              <div className="text-[11px] text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-2 rounded-xl border border-emerald-800/40 text-center">
+                                Liquidado em {f.pago_em}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= MODAL: PAGAR COM PIX E ANEXAR COMPROVANTE ================= */}
+          {fiadoParaPagar && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+              <div className="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+                <button onClick={() => setFiadoParaPagar(null)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                  <i data-lucide="x" className="w-5 h-5"></i>
+                </button>
+
+                <div className="text-center mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-950/80 border border-emerald-600/40 text-emerald-400 flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="qr-code" className="w-6 h-6"></i>
+                  </div>
+                  <h3 className="font-serif text-xl font-bold text-brand-cream">Pagar com PIX</h3>
+                  <p className="text-xs text-brand-muted">Débito: {fiadoParaPagar.descricao}</p>
+                  <div className="font-serif text-3xl font-bold text-brand-gold mt-2">
+                    R$ {fiadoParaPagar.valor.toFixed(2).replace('.', ',')}
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-2 mb-6">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-muted">Beneficiário:</span>
+                    <strong className="text-brand-cream">{infoPix.beneficiario}</strong>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-muted">Chave PIX:</span>
+                    <strong className="text-brand-gold">{infoPix.chave_pix}</strong>
+                  </div>
+                  <button
+                    onClick={copiarChavePix}
+                    className="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition"
+                  >
+                    <i data-lucide="copy" className="w-4 h-4"></i>
+                    <span>Copiar Chave PIX</span>
+                  </button>
+                </div>
+
+                {/* ANEXAR COMPROVANTE */}
+                <div className="p-4 rounded-2xl bg-brand-surface/70 border border-brand-border space-y-3 mb-6">
+                  <label className="block text-xs font-bold text-brand-gold uppercase">
+                    Anexar Comprovante do PIX *
+                  </label>
+                  <p className="text-[11px] text-brand-muted">
+                    Tire um print ou foto do comprovante e anexe abaixo para o vendedor confirmar seu pagamento:
+                  </p>
+
+                  <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-xl cursor-pointer bg-brand-dark/50 hover:bg-brand-gold/5 transition group">
+                    <i data-lucide="upload" className="w-6 h-6 text-brand-gold group-hover:scale-110 transition"></i>
+                    <span className="text-xs font-bold text-brand-gold mt-1.5">Escolher Comprovante (Galeria/Arquivos)</span>
+                    <input type="file" accept="image/*" onChange={processarComprovanteArquivo} className="hidden" />
+                  </label>
+
+                  {comprovanteBase64 && (
+                    <div className="relative rounded-xl overflow-hidden border border-emerald-500 h-28 bg-brand-dark">
+                      <img src={comprovanteBase64} alt="Comprovante" className="w-full h-full object-contain" />
+                      <span className="absolute bottom-1 right-2 text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                        Anexado com sucesso ✓
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setFiadoParaPagar(null)}
+                    className="flex-1 py-3 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={enviarComprovantePagamento}
+                    disabled={enviandoComprovante || !comprovanteBase64}
+                    className="btn-shimmer flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-xs shadow-lg hover:brightness-110 transition disabled:opacity-50"
+                  >
+                    {enviandoComprovante ? 'Enviando...' : 'Enviar Comprovante'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================= DRAWER DO CARRINHO ================= */}
           {isCartOpen && (
             <div className="fixed inset-0 z-50 overflow-hidden">
               <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
@@ -529,7 +1086,6 @@
                     </button>
                   </div>
 
-                  {/* Frete Grátis */}
                   <div className="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
                     <div className="flex justify-between mb-1.5">
                       <span className="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
@@ -545,7 +1101,6 @@
                     </div>
                   </div>
 
-                  {/* Lista */}
                   <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {carrinho.length === 0 ? (
                       <p className="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
@@ -567,6 +1122,8 @@
                               <i data-lucide="trash-2" className="w-4 h-4"></i>
                             </button>
                             <span className="font-serif font-bold text-sm text-brand-cream">
+                              R$ {(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
+                            ">
                               R$ {(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
                             </span>
                           </div>
@@ -596,127 +1153,16 @@
             </div>
           )}
 
-          {/* Quick View Modal */}
-          {quickViewProduct && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-              <div className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8">
-                <button onClick={() => setQuickViewProduct(null)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-                  <i data-lucide="x" className="w-5 h-5"></i>
-                </button>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-                  <img src={quickViewProduct.img} alt={quickViewProduct.nome} className="rounded-2xl w-full h-64 object-cover" />
-                  <div>
-                    <span className="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">
-                      {quickViewProduct.tag}
-                    </span>
-                    <h3 className="font-serif text-2xl font-bold text-brand-cream mt-3 mb-2">{quickViewProduct.nome}</h3>
-                    <p className="text-brand-muted text-xs mb-4">{quickViewProduct.descricao}</p>
-                    <div className="text-xs space-y-1 bg-brand-surface/60 p-3 rounded-xl border border-brand-border/40 mb-6">
-                      <p><strong className="text-brand-gold">Ingredientes:</strong> {quickViewProduct.ingredientes}</p>
-                      <p><strong className="text-brand-gold">Calorias:</strong> {quickViewProduct.calorias}</p>
-                    </div>
-                    <button
-                      onClick={() => { adicionarAoCarrinho(quickViewProduct); setQuickViewProduct(null); }}
-                      className="btn-shimmer w-full py-3 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2"
-                    >
-                      <i data-lucide="plus" className="w-4 h-4"></i>
-                      <span>Adicionar à Sacola</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Modal Login */}
-          {isLoginOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-              <div className="relative w-full max-w-md glass-panel rounded-3xl p-8">
-                <button onClick={() => setIsLoginOpen(false)} className="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-                  <i data-lucide="x" className="w-5 h-5"></i>
-                </button>
-                <h3 className="font-serif text-2xl font-bold text-center text-brand-cream mb-6">Acesse sua Conta</h3>
-                <form onSubmit={(e) => { e.preventDefault(); setUsuario({ nome: 'Cliente VIP' }); setIsLoginOpen(false); addToast('Sessão iniciada!'); }} className="space-y-4">
-                  <input type="email" required placeholder="seu@email.com" className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream" />
-                  <input type="password" required placeholder="Senha" className="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream" />
-                  <button type="submit" className="btn-shimmer w-full py-3 rounded-xl bg-brand-gold text-brand-dark font-bold text-sm">Entrar</button>
-                </form>
-              </div>
-            </div>
-          )}
-
-          {/* Admin Dashboard */}
-          {isAdminOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md">
-              <div className="relative w-full max-w-4xl glass-panel rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-brand-border">
-                  <h3 className="font-serif text-2xl font-bold text-brand-cream">Painel de Gestão e Confeitaria</h3>
-                  <button onClick={() => setIsAdminOpen(false)} className="p-2 text-brand-muted hover:text-brand-cream">
-                    <i data-lucide="x" className="w-5 h-5"></i>
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                  <div className="glass-card p-5 rounded-2xl">
-                    <span className="text-brand-muted text-xs">Vendas Hoje</span>
-                    <div className="font-serif text-3xl font-bold text-brand-cream mt-1">R$ 1.480,00</div>
-                  </div>
-                  <div className="glass-card p-5 rounded-2xl">
-                    <span className="text-brand-muted text-xs">Estoque Total</span>
-                    <div className="font-serif text-3xl font-bold text-brand-cream mt-1">
-                      {produtos.reduce((acc, p) => acc + p.estoque, 0)} un
-                    </div>
-                  </div>
-                  <div className="glass-card p-5 rounded-2xl">
-                    <span className="text-brand-muted text-xs">Margem Média</span>
-                    <div className="font-serif text-3xl font-bold text-brand-cream mt-1">68.4%</div>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto rounded-2xl border border-brand-border">
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-brand-surface text-brand-gold text-xs uppercase">
-                      <tr>
-                        <th className="p-4">Sabor</th>
-                        <th className="p-4">Estoque</th>
-                        <th className="p-4">Preço</th>
-                        <th className="p-4 text-right">Ajuste</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-brand-border/40">
-                      {produtos.map(p => (
-                        <tr key={p.id}>
-                          <td className="p-4 font-semibold text-brand-cream">{p.nome}</td>
-                          <td className="p-4">{p.estoque} un</td>
-                          <td className="p-4 text-brand-gold font-bold">R$ {p.preco.toFixed(2).replace('.', ',')}</td>
-                          <td className="p-4 text-right space-x-1">
-                            <button
-                              onClick={() => setProdutos(prev => prev.map(i => i.id === p.id ? { ...i, estoque: Math.max(0, i.estoque - 5) } : i))}
-                              className="px-2.5 py-1 rounded bg-brand-surface text-xs text-brand-muted hover:text-brand-cream border border-brand-border"
-                            >-5</button>
-                            <button
-                              onClick={() => setProdutos(prev => prev.map(i => i.id === p.id ? { ...i, estoque: i.estoque + 10 } : i))}
-                              className="px-2.5 py-1 rounded bg-brand-surface text-xs text-brand-gold hover:text-brand-goldLight border border-brand-gold/30"
-                            >+10</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Toast Container */}
           <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none">
             {toasts.map(t => (
               <div key={t.id} className="pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-brand-gold animate-ping"></div>
+                <div className={`w-2 h-2 rounded-full ${t.tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'} animate-ping`}></div>
                 <span>{t.mensagem}</span>
               </div>
             ))}
           </div>
+
         </div>
       );
     }
