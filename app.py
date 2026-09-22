@@ -1,9 +1,12 @@
 import os
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 import psycopg2
 import psycopg2.extras
 
 app = Flask(__name__)
+# Enable CORS for all domains so the React frontend can talk to the Flask API
+CORS(app)
 
 # SENHA DO ADMINISTRADOR
 SENHA_ADMIN = "123456"
@@ -34,14 +37,6 @@ def init_db():
     except Exception as e:
         print(f"ERRO CRITICO NO BANCO: {e}")
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
-
 @app.route('/api/login', methods=['POST'])
 def login_admin():
     dados = request.json
@@ -68,6 +63,7 @@ def listar_produtos():
         } for p in produtos]
         return jsonify(lista)
     except Exception as e:
+        print(f"Error fetching products: {e}")
         return jsonify([]), 200
 
 @app.route('/api/produtos', methods=['POST'])
@@ -96,3 +92,37 @@ else:
         init_db()
     except Exception as e:
         print(f"Erro no init_db global: {e}")
+```eof
+
+```text:requirements.txt
+Flask==3.0.2
+psycopg2-binary==2.9.9
+gunicorn==21.2.0
+Flask-Cors==4.0.0
+```eof
+
+Based on the image you sent of your GitHub repository, it looks like you are currently serving HTML templates directly from Flask (`templates/index.html`, `templates/admin.html`).
+
+When moving to a modern React architecture, especially if you plan to deploy on a service like Vercel (for the frontend) and Railway (for the backend), you need to separate them.
+
+Here is the plan to adapt your repository for this new architecture:
+
+1.  **The Backend (Flask API on Railway):** We need to update your `app.py` to act *only* as an API (JSON data) and stop serving HTML files. We also must add `flask-cors` so your React app can securely request data from it. I have generated the updated `app.py` and `requirements.txt` above.
+2.  **The Frontend (React App):** The massive `index_2.html` file you tested previously is a standalone React app bundled into one file (using Babel). This is great for quick tests, but for production, you should create a proper React project (e.g., using Vite) and deploy it separately on Vercel.
+
+**Steps to transition to Railway (Backend):**
+
+1.  **Update GitHub:**
+    *   Replace your current `app.py` with the new one generated above. Notice that I removed the `@app.route('/')` and `@app.route('/admin')` that served HTML. It is now a pure API.
+    *   Update your `requirements.txt` to include `Flask-Cors==4.0.0`.
+    *   You can safely **delete** the `templates` and `static` folders from your GitHub repository if you intend to host the frontend elsewhere (like Vercel). The Flask app no longer needs them.
+2.  **Deploy on Railway:**
+    *   Log in to [Railway.app](https://railway.app/).
+    *   Click "New Project" -> "Deploy from GitHub repo".
+    *   Select your `sagrado-chocolates` repository.
+    *   Railway will automatically detect the `Procfile` and `requirements.txt` and build your Python environment.
+    *   Once deployed, go to the "Settings" tab of your service in Railway, look for "Networking", and click "Generate Domain". This will give you your new API URL (e.g., `[https://sagrado-backend-production.up.railway.app](https://sagrado-backend-production.up.railway.app)`).
+
+**Next Steps for the Frontend:**
+
+Once your Flask API is running on Railway, we need to set up the React frontend. Do you want to continue using that single standalone HTML file (which is easier to host but less professional), or do you want me to guide you through creating a real React project (using Vite) to deploy on Vercel for free?
