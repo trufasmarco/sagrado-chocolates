@@ -34,12 +34,12 @@ def init_db():
     except Exception as e:
         print(f"ERRO CRITICO NO BANCO: {e}")
 
-# Rota para a página principal (Vitrine)
+# Rota para a página principal (Vitrine HTML)
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Rota para o painel do vendedor
+# Rota para o painel do vendedor (Admin HTML)
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
@@ -99,3 +99,4 @@ else:
         init_db()
     except Exception as e:
         print(f"Erro no init_db global: {e}")
+```eof
