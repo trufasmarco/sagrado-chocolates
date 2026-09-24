@@ -14,7 +14,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 SENHA_ADMIN = os.environ.get("SENHA_ADMIN", "123456")
 
 # DADOS DO PIX DO VENDEDOR
-CHAVE_PIX_DEFAULT = os.environ.get("CHAVE_PIX", "sagradochocolates@gmail.com")
+CHAVE_PIX_DEFAULT = os.environ.get("CHAVE_PIX", "Almeidamarcolima@gmail.com")
 NOME_BENEFICIARIO = os.environ.get("NOME_BENEFICIARIO", "Sagrado Chocolates")
 
 # URL do PostgreSQL (Railway / Neon)
@@ -364,7 +364,7 @@ def anexar_comprovante_cliente():
         cursor.execute(
             '''UPDATE fiados 
                SET status = 'comprovante_enviado', comprovante = %s 
-               WHERE id = %s AND status = 'pendente' ''',
+               WHERE id = %s AND status IN ('pendente', 'recusado') ''',
             (comprovante, fiado_id)
         )
         conn.commit()
@@ -553,3 +553,4 @@ else:
         init_db()
     except Exception as e:
         print(f"Erro no init_db global: {e}")
+
