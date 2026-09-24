@@ -1,1247 +1,885 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sagrado Chocolates | Cones Trufados Artesanais</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Cinzel & Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Lucide Icons (Mesma versao comprovada do Admin) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              dark: '#0e0504',
-              surface: '#1b0c09',
-              card: '#24100c',
-              border: '#452019',
-              gold: '#E5C07B',
-              goldLight: '#F3E2B8',
-              goldDark: '#B89745',
-              ruby: '#6E121B',
-              rubyLight: '#991B28',
-              cream: '#FDFBF7',
-              muted: '#A99A8E'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Administrador | Sagrado Chocolates</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                dark: '#0e0504',
+                surface: '#1b0c09',
+                card: '#24100c',
+                border: '#452019',
+                gold: '#E5C07B',
+                goldLight: '#F3E2B8',
+                goldDark: '#B89745',
+                ruby: '#6E121B',
+                rubyLight: '#991B28',
+                cream: '#FDFBF7',
+                muted: '#A99A8E'
+              }
+            },
+            fontFamily: {
+              serif: ['"Cinzel"', 'serif'],
+              sans: ['"Inter"', 'sans-serif']
             }
-          },
-          fontFamily: {
-            serif: ['"Cinzel"', 'serif'],
-            sans: ['"Inter"', 'sans-serif']
-          },
-          boxShadow: {
-            'glow-gold': '0 0 25px -5px rgba(229, 192, 123, 0.3)',
-            'glow-ruby': '0 0 30px -5px rgba(153, 27, 40, 0.4)',
           }
         }
       }
-    }
-  </script>
-
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    html, body { 
-      font-size: 16px; 
-      background-color: #0e0504;
-      color: #FDFBF7;
-      overflow-x: hidden;
-      width: 100%;
-      max-width: 100vw;
-      margin: 0;
-      padding: 0;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #120705; }
-    ::-webkit-scrollbar-thumb { background: #3e1b14; border-radius: 9999px; border: 1px solid rgba(229, 192, 123, 0.2); }
-    ::-webkit-scrollbar-thumb:hover { background: #B89745; }
-
-    .glass-panel {
-      background: rgba(27, 12, 9, 0.9);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(229, 192, 123, 0.2);
-    }
-    .glass-card {
-      background: linear-gradient(145deg, rgba(36, 16, 12, 0.9) 0%, rgba(20, 8, 6, 0.95) 100%);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(229, 192, 123, 0.15);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .glass-card:hover {
-      border-color: rgba(229, 192, 123, 0.45);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(229, 192, 123, 0.15);
-    }
-
-    .btn-shimmer {
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-shimmer::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      transform: translateX(-100%);
-      background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-      animation: shimmer 3.5s infinite;
-    }
-    @keyframes shimmer { 100% { transform: translateX(100%); } }
-
-    button, a {
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-  </style>
+    </script>
+    <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      html, body {
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+        margin: 0;
+        padding: 0;
+      }
+      .glass-panel {
+        background: rgba(27, 12, 9, 0.85);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(229, 192, 123, 0.2);
+      }
+      .glass-card {
+        background: linear-gradient(145deg, rgba(36, 16, 12, 0.9) 0%, rgba(20, 8, 6, 0.95) 100%);
+        border: 1px solid rgba(229, 192, 123, 0.15);
+      }
+    </style>
 </head>
-<body class="bg-brand-dark text-brand-cream font-sans antialiased selection:bg-brand-gold selection:text-brand-dark min-h-screen flex flex-col">
+<body class="bg-brand-dark text-brand-cream font-sans min-h-screen">
 
-  <!-- Faixa Promocional Superior -->
-  <div class="bg-gradient-to-r from-brand-ruby via-brand-surface to-brand-ruby text-brand-gold text-xs py-2 px-3 sm:py-2.5 sm:px-4 text-center font-medium border-b border-brand-gold/20 flex items-center justify-center gap-2 w-full">
-    <span class="w-2 h-2 rounded-full bg-brand-gold animate-pulse shrink-0"></span>
-    <span class="text-xs sm:text-sm">Edição Especial: Cones Trufados Artesanais com Cacau Nobre</span>
-  </div>
-
-  <!-- Header Superior -->
-  <header class="sticky top-0 z-40 glass-panel border-b border-brand-gold/20 w-full">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
-      
-      <!-- Logo -->
-      <div class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-brand-gold via-brand-goldDark to-brand-ruby flex items-center justify-center shadow-glow-gold border border-brand-gold/40 shrink-0">
-          <span class="font-serif font-black text-brand-dark text-xl sm:text-2xl">S</span>
-        </div>
-        <div>
-          <h1 class="font-serif text-lg sm:text-2xl font-bold tracking-wider sm:tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-brand-gold leading-tight">
-            SAGRADO
-          </h1>
-          <p class="hidden sm:block text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] text-brand-muted uppercase">Cones Trufados Artesanais</p>
-        </div>
-      </div>
-
-      <!-- Navegação / Ações -->
-      <nav class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        <a href="/admin" title="Painel Admin" class="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-brand-muted hover:text-brand-gold hover:bg-brand-gold/10 transition border border-transparent hover:border-brand-gold/30 shrink-0">
-          <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i>
-          <span class="hidden md:inline">Painel Admin</span>
-          <span class="hidden sm:inline md:hidden">Admin</span>
-        </a>
-
-        <!-- Botão Conta -->
-        <button type="button" id="btn-conta" onclick="clicarBotaoConta()" title="Minha Conta" class="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-brand-cream hover:text-brand-gold hover:bg-brand-card transition border border-brand-border shrink-0">
-          <i data-lucide="user" class="w-4 h-4 text-brand-gold shrink-0"></i>
-          <span id="label-conta" class="hidden sm:inline">Entrar / Criar Conta</span>
-          <span id="badge-alerta-fiado" style="display:none;" class="w-2.5 h-2.5 rounded-full bg-amber-400 absolute -top-1 -right-1 animate-ping"></span>
-        </button>
-
-        <!-- Botão Sacola -->
-        <button type="button" id="btn-sacola-header" onclick="abrirCarrinho()" title="Sacola de Compras" class="btn-shimmer relative flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold shadow-glow-gold hover:brightness-110 active:scale-95 transition shrink-0">
-          <i data-lucide="shopping-bag" class="w-4 h-4 sm:w-5 sm:h-5 shrink-0"></i>
-          <span class="hidden sm:inline">Sacola</span>
-          <span id="cart-count-badge" class="bg-brand-dark text-brand-gold text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-0.5 rounded-full border border-brand-gold/40">0</span>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Banner de Fiado Pendente -->
-  <div id="banner-aviso-fiado" style="display:none;" class="bg-amber-950/90 border-b border-amber-600/40 px-4 py-2.5 sm:py-3 text-center text-xs sm:text-sm text-amber-200 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-3 w-full">
-    <div class="flex items-center gap-2">
-      <i data-lucide="alert-circle" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0"></i>
-      <span>Você possui um débito pendente de <strong id="banner-valor-fiado" class="text-amber-300 font-bold">R$ 0,00</strong>.</span>
-    </div>
-    <button type="button" onclick="abrirModalMinhaConta()" class="underline text-amber-300 font-bold hover:text-white sm:ml-2">Pagar com PIX agora</button>
-  </div>
-
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden pt-8 sm:pt-12 pb-14 sm:pb-20 border-b border-brand-gold/15 bg-gradient-to-b from-brand-surface via-brand-dark to-brand-dark w-full">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        <div class="lg:col-span-7 text-center lg:text-left">
-          <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-[11px] sm:text-xs font-semibold uppercase mb-4 sm:mb-6 backdrop-blur-sm max-w-full">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
-            <span class="truncate">Cacau Nobre Selecionado & Recheio Cremoso</span>
-          </div>
-
-          <h2 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-cream leading-[1.15] mb-4 sm:mb-6">
-            O Inconfundível <br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-brand-goldLight to-amber-400">
-              Cone Trufado
-            </span> <br />
-            Artesanal.
-          </h2>
-
-          <p class="text-brand-muted text-sm sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-6 sm:mb-8 px-1 sm:px-0">
-            Casquinha ultra crocante por fora e ganache densamente aveludada por dentro. Banhado no mais puro chocolate nobre temperado.
-          </p>
-
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 max-w-md mx-auto lg:mx-0">
-            <a href="#catalogo" class="btn-shimmer px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-semibold shadow-glow-ruby hover:brightness-110 transition flex items-center justify-center gap-2 text-sm sm:text-base">
-              <span>Ver Cardápio</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-
-            <button type="button" id="hero-btn-acao" onclick="clicarBotaoConta()" class="px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl glass-panel text-brand-gold font-semibold hover:bg-brand-gold/10 transition border border-brand-gold/30 flex items-center justify-center gap-2 text-sm sm:text-base">
-              <i data-lucide="user-plus" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-              <span>Criar Minha Conta</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:col-span-5 flex justify-center w-full">
-          <div class="relative group w-full max-w-sm sm:max-w-md">
-            <div class="absolute -inset-1 bg-gradient-to-r from-brand-gold via-brand-ruby to-brand-gold rounded-2xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
-            <div class="relative rounded-2xl overflow-hidden glass-panel border border-brand-gold/40 p-2.5 sm:p-3 shadow-2xl">
-              <div class="relative h-72 sm:h-96 rounded-xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85"
-                     alt="Cone Trufado Sagrado Chocolates"
-                     class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent opacity-80"></div>
-                <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl glass-panel border border-brand-gold/20 flex items-center justify-between gap-2">
-                  <div class="min-w-0">
-                    <p class="text-[10px] sm:text-xs text-brand-gold uppercase tracking-wider font-semibold truncate">Destaque da Casa</p>
-                    <h4 class="font-serif text-sm sm:text-base font-bold text-brand-cream truncate">Morango Cremoso Especial</h4>
-                  </div>
-                  <span class="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-brand-gold text-brand-dark font-black text-xs sm:text-sm shrink-0">
-                    R$ 12,00
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Filtros e Catálogo -->
-  <section id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-6 w-full">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
-      <div>
-        <span class="text-brand-gold text-xs font-semibold tracking-widest uppercase">Cardápio de Delícias</span>
-        <h3 class="font-serif text-2xl sm:text-3xl font-bold text-brand-cream mt-1">Nossos Sabores Artesanais</h3>
-      </div>
-
-      <div class="relative w-full md:w-80">
-        <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted"></i>
-        <input type="text" id="campo-busca" oninput="filtrarCardapio()" placeholder="Buscar sabor ou ingrediente..."
-               class="w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-brand-surface border border-brand-border text-brand-cream placeholder-brand-muted text-sm focus:outline-none focus:border-brand-gold transition" />
-      </div>
-    </div>
-
-    <!-- Categorias -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-4 max-w-full no-scrollbar">
-      <button type="button" onclick="selecionarCategoria('todos')" id="cat-todos" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold shrink-0">Todos os Sabores</button>
-      <button type="button" onclick="selecionarCategoria('classicos')" id="cat-classicos" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream shrink-0">Tradicionais & Gourmet</button>
-      <button type="button" onclick="selecionarCategoria('frutados')" id="cat-frutados" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream shrink-0">Frutas Nobres</button>
-      <button type="button" onclick="selecionarCategoria('exclusivos')" id="cat-exclusivos" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream shrink-0">Especiais do Chef</button>
-    </div>
-  </section>
-
-  <!-- Grid de Produtos -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
-    <div id="grid-produtos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Injetado dinamicamente -->
-    </div>
-  </main>
-
-  <!-- ================= MODAL: DETALHES DO PRODUTO (QUICK VIEW COM ATÉ 4 FOTOS) ================= -->
-  <div id="modal-produto" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-5 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <button type="button" onclick="fecharModalProduto()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
-        <div>
-          <div class="relative rounded-2xl overflow-hidden h-64 bg-brand-dark border border-brand-border">
-            <img id="modal-prod-img-principal" src="" alt="Produto" class="w-full h-full object-cover">
-          </div>
-          <div id="modal-prod-miniaturas" class="grid grid-cols-4 gap-2 mt-3"></div>
-        </div>
-
-        <div>
-          <span id="modal-prod-tag" class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase bg-brand-gold/20 text-brand-gold border border-brand-gold/30">Gourmet</span>
-          <h3 id="modal-prod-nome" class="font-serif text-2xl font-bold text-brand-cream mt-3 mb-2">Cone Trufado</h3>
-          <p id="modal-prod-desc" class="text-brand-muted text-sm mb-4">Feito artesanalmente.</p>
-          
-          <div class="text-sm space-y-1.5 bg-brand-surface/60 p-4 rounded-xl border border-brand-border/40 mb-6">
-            <p><strong class="text-brand-gold">Estoque Disponível:</strong> <span id="modal-prod-estoque">0</span> unidades</p>
-            <p id="modal-prod-preco" class="text-2xl font-serif font-bold text-brand-gold mt-2">R$ 0,00</p>
-          </div>
-
-          <button type="button" id="modal-prod-btn-add" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight text-brand-cream font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
-            <i data-lucide="plus" class="w-5 h-5"></i>
-            <span>Adicionar à Sacola</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: CRIAR CONTA OU ENTRAR ================= -->
-  <div id="modal-auth" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="relative w-full max-w-md glass-panel rounded-3xl p-5 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <button type="button" onclick="fecharModalAuth()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-
-      <div class="flex border-b border-brand-border mb-6">
-        <button type="button" onclick="alternarAbaAuth('entrar')" id="tab-auth-entrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition">
-          Entrar na Conta
-        </button>
-        <button type="button" onclick="alternarAbaAuth('cadastrar')" id="tab-auth-cadastrar" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition">
-          Criar Nova Conta
-        </button>
-      </div>
-
-      <!-- Formulário Entrar -->
-      <form id="form-login" onsubmit="fazerLoginCliente(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail</label>
-          <input type="email" id="login-email" required placeholder="exemplo@email.com"
-                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Sua Senha</label>
-          <input type="password" id="login-senha" required placeholder="••••••••"
-                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
-        </div>
-        <button type="submit" id="btn-login-submit" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition">
-          Entrar
-        </button>
-      </form>
-
-      <!-- Formulário Cadastrar -->
-      <form id="form-cadastro-cliente" onsubmit="fazerCadastroCliente(event)" style="display:none;" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome Completo *</label>
-          <input type="text" id="cad-nome" required placeholder="Seu nome"
-                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Seu E-mail *</label>
-          <input type="email" id="cad-email" required placeholder="seu@email.com"
-                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">WhatsApp / Telefone</label>
-          <input type="tel" id="cad-telefone" placeholder="(16) 99986-3535"
-                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Crie uma Senha *</label>
-          <input type="password" id="cad-senha" required placeholder="Mínimo de 4 caracteres"
-                 class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
-        </div>
-        <button type="submit" id="btn-cad-submit" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-lg hover:brightness-110 transition">
-          Criar Minha Conta no Site
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: MINHA CONTA / MEUS FIADOS ================= -->
-  <div id="modal-conta" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-    <div class="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <button type="button" onclick="fecharModalMinhaConta()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-brand-border gap-4">
+    <!-- Header Admin -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-brand-gold/20 px-4 sm:px-8 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div id="perfil-avatar" class="w-12 h-12 rounded-full bg-brand-gold text-brand-dark flex items-center justify-center font-bold text-lg font-serif">U</div>
-          <div>
-            <h3 id="perfil-nome" class="font-serif text-xl font-bold text-brand-cream">Nome do Usuário</h3>
-            <p id="perfil-contato" class="text-xs text-brand-muted">email@exemplo.com</p>
-          </div>
-        </div>
-        <button type="button" onclick="fazerLogoutCliente()" class="px-4 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5 self-start sm:self-auto">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
-          <span>Sair da Conta</span>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
-        <div class="glass-card p-4 rounded-2xl border border-brand-gold/30">
-          <span class="text-xs text-brand-muted uppercase font-semibold">Total a Pagar em Aberto</span>
-          <div id="conta-total-devedor" class="font-serif text-3xl font-bold text-amber-400 mt-1">R$ 0,00</div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl border border-brand-border">
-          <span class="text-xs text-brand-muted uppercase font-semibold">Status Geral</span>
-          <div id="conta-status-geral" class="text-sm font-bold text-brand-cream mt-2 flex items-center gap-2">
-            <span class="text-emerald-400 flex items-center gap-1">
-              <i data-lucide="check-circle" class="w-4 h-4"></i> Você não possui débitos pendentes!
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-4">
-        <div class="flex items-center justify-between">
-          <h4 class="font-serif text-lg font-bold text-brand-gold">Meus Fiados / Consumo Anotado</h4>
-          <button type="button" onclick="recarregarFiadosCliente()" class="text-xs text-brand-muted hover:text-brand-gold flex items-center gap-1">
-            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-            <span>Atualizar</span>
-          </button>
-        </div>
-
-        <div id="lista-meus-fiados" class="space-y-3">
-          <!-- Injetado dinamicamente -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: PAGAR COM PIX E ANEXAR COMPROVANTE ================= -->
-  <div id="modal-pagar-pix" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-    <div class="relative w-full max-w-md glass-panel rounded-3xl p-5 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
-      <button type="button" onclick="fecharModalPagarPix()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-
-      <div class="text-center mb-6">
-        <div class="w-12 h-12 rounded-2xl bg-emerald-950/80 border border-emerald-600/40 text-emerald-400 flex items-center justify-center mx-auto mb-2">
-          <i data-lucide="qr-code" class="w-6 h-6"></i>
-        </div>
-        <h3 class="font-serif text-xl font-bold text-brand-cream">Pagar com PIX</h3>
-        <p id="pix-descricao" class="text-xs text-brand-muted">Débito</p>
-        <div id="pix-valor" class="font-serif text-3xl font-bold text-brand-gold mt-2">R$ 0,00</div>
-      </div>
-
-      <div class="p-4 rounded-2xl bg-brand-surface border border-brand-border space-y-2 mb-6">
-        <div class="flex items-center justify-between text-xs">
-          <span class="text-brand-muted">Beneficiário:</span>
-          <strong id="pix-beneficiario" class="text-brand-cream">Sagrado Chocolates</strong>
-        </div>
-        <div class="flex items-center justify-between text-xs">
-          <span class="text-brand-muted">Chave PIX:</span>
-          <strong id="pix-chave" class="text-brand-gold">Almeidamarcolima@gmail.com</strong>
-        </div>
-        <button type="button" onclick="copiarChavePix()" class="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition">
-          <i data-lucide="copy" class="w-4 h-4"></i>
-          <span>Copiar Chave PIX</span>
-        </button>
-      </div>
-
-      <div class="p-4 rounded-2xl bg-brand-surface/70 border border-brand-border space-y-3 mb-6">
-        <label class="block text-xs font-bold text-brand-gold uppercase">
-          Anexar Comprovante do PIX *
-        </label>
-        <p class="text-xs text-brand-muted">
-          Tire um print ou foto do comprovante na sua galeria e anexe abaixo:
-        </p>
-
-        <label class="flex flex-col items-center justify-center p-4 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-xl cursor-pointer bg-brand-dark/50 hover:bg-brand-gold/5 transition group">
-          <i data-lucide="upload" class="w-6 h-6 text-brand-gold group-hover:scale-110 transition"></i>
-          <span class="text-xs font-bold text-brand-gold mt-1.5">Escolher Comprovante (Galeria/Arquivos)</span>
-          <input type="file" id="comprovante-file-input" accept="image/*" onchange="processarComprovanteSelecionado(event)" class="hidden" />
-        </label>
-
-        <div id="preview-comprovante-box" style="display:none;" class="relative rounded-xl overflow-hidden border border-emerald-500 h-28 bg-brand-dark">
-          <img id="preview-comprovante-img" src="" alt="Comprovante" class="w-full h-full object-contain" />
-          <span class="absolute bottom-1 right-2 text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full font-bold">
-            Anexado com sucesso ✓
-          </span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <button type="button" onclick="fecharModalPagarPix()" class="flex-1 py-3 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream">
-          Cancelar
-        </button>
-        <button type="button" id="btn-enviar-comprovante" onclick="enviarComprovante()" class="btn-shimmer flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold text-xs shadow-lg hover:brightness-110 transition">
-          Enviar Comprovante
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= DRAWER DA SACOLA (CARRINHO) ================= -->
-  <div id="drawer-carrinho" style="display:none;" class="fixed inset-0 z-50 overflow-hidden">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="fecharCarrinho()"></div>
-    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-      <div class="w-screen max-w-md glass-panel bg-brand-dark/95 border-l border-brand-gold/30 flex flex-col justify-between shadow-2xl">
-        <div class="p-6 border-b border-brand-border/80 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-gold"></i>
-            <h3 class="font-serif text-xl font-bold text-brand-cream">Sua Sacola Gourmet</h3>
-          </div>
-          <button type="button" onclick="fecharCarrinho()" class="p-2 text-brand-muted hover:text-brand-cream">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <div class="px-6 py-3 bg-brand-surface/70 border-b border-brand-border/40 text-xs">
-          <div class="flex justify-between mb-1.5">
-            <span class="text-brand-muted">Frete Grátis a partir de R$ 50,00</span>
-            <span id="frete-gratis-status" class="font-bold text-brand-gold">Faltam R$ 50,00</span>
-          </div>
-          <div class="w-full bg-brand-card rounded-full h-1.5 overflow-hidden">
-            <div id="frete-gratis-barra" class="bg-brand-gold h-full transition-all duration-300" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <div id="lista-carrinho-itens" class="flex-1 overflow-y-auto p-6 space-y-4">
-          <p class="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>
-        </div>
-
-        <div id="carrinho-footer" style="display:none;" class="p-6 border-t border-brand-border/80 bg-brand-surface/40 space-y-4">
-          <div class="flex justify-between text-base font-bold text-brand-cream">
-            <span>Total:</span>
-            <span id="carrinho-total-valor" class="font-serif text-xl text-brand-gold">R$ 0,00</span>
-          </div>
-
-          <button type="button" onclick="finalizarPedidoWhatsApp()" class="btn-shimmer w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-black font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition">
-            <i data-lucide="message-circle" class="w-5 h-5"></i>
-            <span>Pedir no WhatsApp</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toasts -->
-  <div id="toast-container" class="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 flex flex-col gap-2.5 pointer-events-none max-w-sm ml-auto"></div>
-
-  <!-- JAVASCRIPT ULTRA ROBUSTO (VANILLA JS - ZERO BABEL, ZERO REACT) -->
-  <script>
-    // Armazenamento seguro a prova de falhas
-    function safeGet(key, fallback) {
-      try {
-        const val = localStorage.getItem(key);
-        if (!val || val === 'undefined' || val === 'null') return fallback;
-        return JSON.parse(val);
-      } catch (e) {
-        return fallback;
-      }
-    }
-
-    function safeSet(key, val) {
-      try {
-        localStorage.setItem(key, JSON.stringify(val));
-      } catch (e) {}
-    }
-
-    // PRODUTOS PADRAO INICIAIS
-    const PRODUTOS_PADRAO = [
-      {
-        id: 1,
-        nome: "Cone Trufado Morango Cremoso",
-        categoria: "frutados",
-        tag: "Mais Vendido",
-        preco: 12.00,
-        estoque: 50,
-        descricao: "Casquinha artesanal folhada crocante, blindada com chocolate nobre e recheada com ganache aveludada de morangos frescos.",
-        img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80"]
-      },
-      {
-        id: 2,
-        nome: "Cone Trufado Doce de Leite Imperial",
-        categoria: "classicos",
-        tag: "Receita Nobre",
-        preco: 11.00,
-        estoque: 45,
-        descricao: "Doce de leite de cozimento lento em tacho, toque sutil de flor de sal e casquinha banhada no chocolate meio amargo.",
-        img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"]
-      },
-      {
-        id: 3,
-        nome: "Cone Trufado Brigadeiro Gourmet 70%",
-        categoria: "classicos",
-        tag: "Favorito do Chef",
-        preco: 10.00,
-        estoque: 60,
-        descricao: "Brigadeiro aveludado feito com cacau nobre puro e casquinha crocante banhada no chocolate ao leite belga.",
-        img: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80"]
-      }
-    ];
-
-    let listaProdutos = [...PRODUTOS_PADRAO];
-    let categoriaAtual = 'todos';
-    let termoBusca = '';
-    let carrinho = safeGet('sagrado_carrinho', []);
-    let usuarioLogado = safeGet('sagrado_usuario', null);
-    let fiadosUsuario = [];
-    let fiadoSelecionadoParaPagar = null;
-    let comprovanteBase64 = '';
-    let infoPix = { chave_pix: 'Almeidamarcolima@gmail.com', beneficiario: 'Sagrado Chocolates' };
-
-    function renderizarIcones() {
-      try {
-        if (window.lucide && typeof window.lucide.createIcons === 'function') {
-          window.lucide.createIcons();
-        }
-      } catch (e) {}
-    }
-
-    function showToast(mensagem, tipo = 'info') {
-      const container = document.getElementById('toast-container');
-      if (!container) return;
-      const toast = document.createElement('div');
-      toast.className = 'pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-glow-gold text-brand-cream text-xs font-semibold flex items-center gap-3 animate-bounce';
-      toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'}"></span> <span>${mensagem}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 4000);
-    }
-
-    // Inicializacao imediata
-    function iniciarPagina() {
-      atualizarEstadoUsuario();
-      renderizarProdutos();
-      atualizarBadgeCarrinho();
-      carregarProdutosDoBanco();
-      carregarChavePix();
-      renderizarIcones();
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', iniciarPagina);
-    } else {
-      iniciarPagina();
-    }
-
-    // ================= PRODUTOS =================
-
-    async function carregarProdutosDoBanco() {
-      try {
-        const res = await fetch('/api/produtos');
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
-          listaProdutos = data;
-          renderizarProdutos();
-        }
-      } catch (err) {
-        console.warn("Erro ao buscar da API, mantendo produtos padrão:", err);
-      }
-    }
-
-    async function carregarChavePix() {
-      try {
-        const res = await fetch('/api/admin/info-pix');
-        const data = await res.json();
-        if (data && data.chave_pix) infoPix = data;
-      } catch (err) {}
-    }
-
-    function renderizarProdutos() {
-      const grid = document.getElementById('grid-produtos');
-      if (!grid) return;
-
-      const filtrados = listaProdutos.filter(p => {
-        const matchCat = categoriaAtual === 'todos' || p.categoria === categoriaAtual;
-        const matchBusca = (p.nome || '').toLowerCase().includes(termoBusca.toLowerCase()) ||
-                           (p.descricao || '').toLowerCase().includes(termoBusca.toLowerCase());
-        return matchCat && matchBusca;
-      });
-
-      if (filtrados.length === 0) {
-        grid.innerHTML = '<div class="col-span-3 text-center py-16 text-brand-muted text-sm">Nenhum sabor encontrado para sua busca.</div>';
-        return;
-      }
-
-      grid.innerHTML = filtrados.map(p => {
-        const fotos = p.imagens && p.imagens.length > 0 ? p.imagens : [p.img || 'https://via.placeholder.com/300'];
-        const fotoCapa = fotos[0];
-        const numFotosBadge = fotos.length > 1 ? `<div class="absolute bottom-3 right-3 px-2 py-0.5 rounded-full bg-brand-dark/80 text-brand-gold text-xs font-bold border border-brand-gold/30">${fotos.length} fotos</div>` : '';
-
-        return `
-          <div onclick="abrirModalProduto(${p.id})" class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group cursor-pointer">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-gold to-brand-ruby flex items-center justify-center font-serif font-black text-brand-dark">
+                S
+            </div>
             <div>
-              <div class="relative h-60 overflow-hidden bg-brand-surface">
-                <img src="${fotoCapa}" alt="${p.nome}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                <div class="absolute top-3 left-3">
-                  <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-dark/80 text-brand-gold border border-brand-gold/30 backdrop-blur-md">
-                    ${p.tag || 'Artesanal'}
-                  </span>
-                </div>
-                ${numFotosBadge}
-              </div>
-
-              <div class="p-6">
-                <h4 class="font-serif text-lg font-bold text-brand-gold mb-2">${p.nome}</h4>
-                <p class="text-brand-muted text-xs leading-relaxed line-clamp-2">${p.descricao || 'Cone trufado artesanal feito com puro chocolate nobre e recheio cremoso.'}</p>
-              </div>
+                <h1 class="font-serif text-lg sm:text-xl font-bold text-brand-gold tracking-wider">Painel Administrativo</h1>
+                <p class="text-[10px] text-brand-muted uppercase tracking-widest">Sagrado Chocolates • Gestão Geral</p>
             </div>
-
-            <div class="px-6 pb-6 pt-2 border-t border-brand-border/40 flex items-center justify-between gap-4">
-              <div>
-                <span class="text-xs uppercase text-brand-muted font-bold block">Preço</span>
-                <span class="font-serif text-xl font-bold text-brand-cream">
-                  R$ ${p.preco.toFixed(2).replace('.', ',')}
-                </span>
-              </div>
-
-              <button type="button" onclick="adicionarAoCarrinhoPorId(${p.id}, event)" class="btn-shimmer flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ruby to-brand-rubyLight hover:from-brand-gold hover:to-brand-goldDark text-brand-cream hover:text-brand-dark font-bold text-xs transition flex items-center justify-center gap-2">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>Adicionar</span>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      renderizarIcones();
-    }
-
-    function selecionarCategoria(cat) {
-      categoriaAtual = cat;
-      document.querySelectorAll('.btn-categoria').forEach(btn => {
-        btn.className = 'btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream';
-      });
-      const ativo = document.getElementById(`cat-${cat}`);
-      if (ativo) ativo.className = 'btn-categoria px-4 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold';
-      renderizarProdutos();
-    }
-
-    function filtrarCardapio() {
-      termoBusca = document.getElementById('campo-busca').value;
-      renderizarProdutos();
-    }
-
-    function abrirModalProduto(id) {
-      const p = listaProdutos.find(item => item.id === id);
-      if (!p) return;
-
-      const fotos = p.imagens && p.imagens.length > 0 ? p.imagens : [p.img];
-      document.getElementById('modal-prod-img-principal').src = fotos[0];
-      document.getElementById('modal-prod-tag').innerText = p.tag || 'Artesanal';
-      document.getElementById('modal-prod-nome').innerText = p.nome;
-      document.getElementById('modal-prod-desc').innerText = p.descricao || 'Feito artesanalmente com ingredientes nobres.';
-      document.getElementById('modal-prod-estoque').innerText = p.estoque || '0';
-      document.getElementById('modal-prod-preco').innerText = `R$ ${p.preco.toFixed(2).replace('.', ',')}`;
-
-      const containerMiniaturas = document.getElementById('modal-prod-miniaturas');
-      if (fotos.length > 1) {
-        containerMiniaturas.innerHTML = fotos.map(f => `
-          <div onclick="document.getElementById('modal-prod-img-principal').src = '${f}'" class="h-14 rounded-lg overflow-hidden border border-brand-border hover:border-brand-gold cursor-pointer transition">
-            <img src="${f}" class="w-full h-full object-cover">
-          </div>
-        `).join('');
-      } else {
-        containerMiniaturas.innerHTML = '';
-      }
-
-      document.getElementById('modal-prod-btn-add').onclick = () => {
-        adicionarAoCarrinho(p);
-        fecharModalProduto();
-      };
-
-      document.getElementById('modal-produto').style.display = 'flex';
-      renderizarIcones();
-    }
-
-    function fecharModalProduto() {
-      document.getElementById('modal-produto').style.display = 'none';
-    }
-
-    // ================= CARRINHO =================
-
-    function adicionarAoCarrinhoPorId(id, event) {
-      if (event) event.stopPropagation();
-      const p = listaProdutos.find(item => item.id === id);
-      if (p) adicionarAoCarrinho(p);
-    }
-
-    function adicionarAoCarrinho(p) {
-      const item = carrinho.find(i => i.id === p.id);
-      if (item) {
-        item.quantidade += 1;
-      } else {
-        carrinho.push({ ...p, quantidade: 1 });
-      }
-      safeSet('sagrado_carrinho', carrinho);
-      atualizarBadgeCarrinho();
-      showToast(`Adicionado: ${p.nome}`);
-    }
-
-    function atualizarBadgeCarrinho() {
-      const total = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
-      const badge = document.getElementById('cart-count-badge');
-      if (badge) badge.innerText = total;
-    }
-
-    function abrirCarrinho() {
-      renderizarCarrinhoItens();
-      document.getElementById('drawer-carrinho').style.display = 'block';
-      renderizarIcones();
-    }
-
-    function fecharCarrinho() {
-      document.getElementById('drawer-carrinho').style.display = 'none';
-    }
-
-    function alterarQtdCarrinho(id, delta) {
-      const item = carrinho.find(i => i.id === id);
-      if (!item) return;
-      item.quantidade += delta;
-      if (item.quantidade <= 0) {
-        carrinho = carrinho.filter(i => i.id !== id);
-      }
-      safeSet('sagrado_carrinho', carrinho);
-      atualizarBadgeCarrinho();
-      renderizarCarrinhoItens();
-    }
-
-    function removerDoCarrinho(id) {
-      carrinho = carrinho.filter(i => i.id !== id);
-      safeSet('sagrado_carrinho', carrinho);
-      atualizarBadgeCarrinho();
-      renderizarCarrinhoItens();
-      showToast('Item removido da sacola.');
-    }
-
-    function renderizarCarrinhoItens() {
-      const container = document.getElementById('lista-carrinho-itens');
-      const footer = document.getElementById('carrinho-footer');
-      if (!container || !footer) return;
-
-      const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
-
-      const statusFrete = document.getElementById('frete-gratis-status');
-      const barraFrete = document.getElementById('frete-gratis-barra');
-      if (statusFrete && barraFrete) {
-        if (subtotal >= 50) {
-          statusFrete.innerText = 'Garantido!';
-          barraFrete.style.width = '100%';
-        } else {
-          statusFrete.innerText = `Faltam R$ ${(50 - subtotal).toFixed(2).replace('.', ',')}`;
-          barraFrete.style.width = `${(subtotal / 50) * 100}%`;
-        }
-      }
-
-      if (carrinho.length === 0) {
-        container.innerHTML = '<p class="text-center text-brand-muted py-20 text-sm">Sua sacola está vazia.</p>';
-        footer.style.display = 'none';
-        return;
-      }
-
-      footer.style.display = 'block';
-      document.getElementById('carrinho-total-valor').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-
-      container.innerHTML = carrinho.map(item => `
-        <div class="flex items-center gap-4 p-3 rounded-xl bg-brand-surface/60 border border-brand-border/60">
-          <img src="${item.img || (item.imagens && item.imagens[0]) || 'https://via.placeholder.com/60'}" alt="${item.nome}" class="w-14 h-14 object-cover rounded-lg">
-          <div class="flex-1 min-w-0">
-            <h4 class="font-semibold text-sm text-brand-cream truncate">${item.nome}</h4>
-            <span class="text-xs text-brand-gold font-bold">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
-            <div class="flex items-center gap-2 mt-2">
-              <button type="button" onclick="alterarQtdCarrinho(${item.id}, -1)" class="w-7 h-7 rounded bg-brand-card text-brand-cream text-xs font-bold">-</button>
-              <span class="text-xs font-bold w-4 text-center">${item.quantidade}</span>
-              <button type="button" onclick="alterarQtdCarrinho(${item.id}, 1)" class="w-7 h-7 rounded bg-brand-card text-brand-cream text-xs font-bold">+</button>
-            </div>
-          </div>
-          <div class="flex flex-col items-end justify-between self-stretch">
-            <button type="button" onclick="removerDoCarrinho(${item.id})" class="text-brand-muted hover:text-rose-400 p-1">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/" target="_blank" class="px-3 py-2 rounded-xl text-xs font-semibold text-brand-muted hover:text-brand-gold border border-brand-border hover:border-brand-gold/40 transition flex items-center gap-2">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Ver Loja</span>
+            </a>
+            <button id="btn-sair" onclick="sairAdmin()" class="hidden px-3 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:text-white bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900 transition flex items-center gap-1.5">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                <span>Sair</span>
             </button>
-            <span class="font-serif font-bold text-sm text-brand-cream">
-              R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
-            </span>
-          </div>
         </div>
-      `).join('');
+    </header>
 
-      renderizarIcones();
-    }
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    function finalizarPedidoWhatsApp() {
-      if (carrinho.length === 0) return showToast("A sacola está vazia.");
-      const subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
-      let texto = `*Olá, Sagrado Chocolates! Gostaria de fazer um pedido artesanal:*
-
-`;
-      if (usuarioLogado) {
-        texto += `*Cliente:* ${usuarioLogado.nome} (${usuarioLogado.email})
-
-`;
-      }
-      carrinho.forEach(item => {
-        texto += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
-`;
-      });
-      texto += `
-*Total do Pedido: R$ ${subtotal.toFixed(2).replace('.', ',')}*`;
-      texto += `
-
-Por favor, confirmem a disponibilidade!`;
-
-      window.open(`https://wa.me/5516999863535?text=${encodeURIComponent(texto)}`, '_blank');
-      carrinho = [];
-      safeSet('sagrado_carrinho', carrinho);
-      atualizarBadgeCarrinho();
-      fecharCarrinho();
-      showToast("Pedido enviado para o WhatsApp!");
-    }
-
-    // ================= CONTA E LOGIN =================
-
-    function clicarBotaoConta() {
-      if (usuarioLogado) {
-        abrirModalMinhaConta();
-      } else {
-        abrirModalAuth();
-      }
-    }
-
-    function abrirModalAuth() {
-      document.getElementById('modal-auth').style.display = 'flex';
-      alternarAbaAuth('entrar');
-      renderizarIcones();
-    }
-
-    function fecharModalAuth() {
-      document.getElementById('modal-auth').style.display = 'none';
-    }
-
-    function alternarAbaAuth(aba) {
-      const tabEntrar = document.getElementById('tab-auth-entrar');
-      const tabCadastrar = document.getElementById('tab-auth-cadastrar');
-      const formLogin = document.getElementById('form-login');
-      const formCad = document.getElementById('form-cadastro-cliente');
-
-      if (aba === 'entrar') {
-        tabEntrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition';
-        tabCadastrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition';
-        formLogin.style.display = 'block';
-        formCad.style.display = 'none';
-      } else {
-        tabCadastrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-brand-gold text-brand-gold transition';
-        tabEntrar.className = 'flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-muted transition';
-        formCad.style.display = 'block';
-        formLogin.style.display = 'none';
-      }
-    }
-
-    async function fazerLoginCliente(e) {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const senha = document.getElementById('login-senha').value;
-      const btn = document.getElementById('btn-login-submit');
-
-      btn.disabled = true;
-      btn.innerText = 'Entrando...';
-
-      try {
-        const res = await fetch('/api/cliente/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, senha })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          usuarioLogado = data.usuario;
-          safeSet('sagrado_usuario', usuarioLogado);
-          atualizarEstadoUsuario();
-          fecharModalAuth();
-          showToast(`Olá novamente, ${usuarioLogado.nome}!`, 'sucesso');
-          carregarMeusFiados();
-        } else {
-          showToast(data.erro || 'E-mail ou senha incorretos.');
-        }
-      } catch (err) {
-        showToast('Erro de conexão ao fazer login.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = 'Entrar';
-      }
-    }
-
-    async function fazerCadastroCliente(e) {
-      e.preventDefault();
-      const nome = document.getElementById('cad-nome').value;
-      const email = document.getElementById('cad-email').value;
-      const telefone = document.getElementById('cad-telefone').value;
-      const senha = document.getElementById('cad-senha').value;
-      const btn = document.getElementById('btn-cad-submit');
-
-      btn.disabled = true;
-      btn.innerText = 'Criando conta no banco...';
-
-      try {
-        const res = await fetch('/api/cliente/cadastro', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome, email, telefone, senha })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          usuarioLogado = data.usuario;
-          safeSet('sagrado_usuario', usuarioLogado);
-          atualizarEstadoUsuario();
-          fecharModalAuth();
-          showToast(`Bem-vindo(a), ${usuarioLogado.nome}! Conta criada com sucesso!`, 'sucesso');
-          carregarMeusFiados();
-        } else {
-          showToast(data.erro || 'Erro ao criar conta.');
-        }
-      } catch (err) {
-        showToast('Erro de conexão ao criar conta.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = 'Criar Minha Conta no Site';
-      }
-    }
-
-    function fazerLogoutCliente() {
-      usuarioLogado = null;
-      fiadosUsuario = [];
-      try { localStorage.removeItem('sagrado_usuario'); } catch (e) {}
-      atualizarEstadoUsuario();
-      fecharModalMinhaConta();
-      showToast('Você saiu da sua conta.');
-    }
-
-    function atualizarEstadoUsuario() {
-      const labelConta = document.getElementById('label-conta');
-      const heroBtn = document.getElementById('hero-btn-acao');
-
-      const btnConta = document.getElementById('btn-conta');
-      if (usuarioLogado) {
-        if (labelConta) labelConta.innerText = `Olá, ${usuarioLogado.nome.split(' ')[0]}`;
-        if (btnConta) btnConta.title = `Minha Conta (${usuarioLogado.nome})`;
-        if (heroBtn) heroBtn.innerHTML = `<i data-lucide="receipt" class="w-5 h-5"></i><span>Meus Fiados / Débitos</span>`;
-        carregarMeusFiados();
-      } else {
-        if (labelConta) labelConta.innerText = 'Entrar / Criar Conta';
-        if (btnConta) btnConta.title = 'Entrar / Criar Conta';
-        if (heroBtn) heroBtn.innerHTML = `<i data-lucide="user-plus" class="w-5 h-5"></i><span>Criar Minha Conta</span>`;
-        const banner = document.getElementById('banner-aviso-fiado');
-        const badge = document.getElementById('badge-alerta-fiado');
-        if (banner) banner.style.display = 'none';
-        if (badge) badge.style.display = 'none';
-      }
-      renderizarIcones();
-    }
-
-    async function carregarMeusFiados() {
-      if (!usuarioLogado) return;
-      try {
-        const res = await fetch(`/api/cliente/fiados?usuario_id=${usuarioLogado.id}`);
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          fiadosUsuario = data;
-          atualizarResumoFiados();
-        }
-      } catch (err) {}
-    }
-
-    function recarregarFiadosCliente() {
-      carregarMeusFiados();
-      showToast('Dados atualizados!');
-    }
-
-    function atualizarResumoFiados() {
-      const totalPendente = fiadosUsuario.filter(f => f.status !== 'pago').reduce((acc, f) => acc + f.valor, 0);
-      const banner = document.getElementById('banner-aviso-fiado');
-      const badge = document.getElementById('badge-alerta-fiado');
-
-      if (totalPendente > 0) {
-        if (banner) banner.style.display = 'flex';
-        if (badge) badge.style.display = 'block';
-        const v = document.getElementById('banner-valor-fiado');
-        if (v) v.innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
-      } else {
-        if (banner) banner.style.display = 'none';
-        if (badge) badge.style.display = 'none';
-      }
-
-      const totDev = document.getElementById('conta-total-devedor');
-      if (totDev) totDev.innerText = `R$ ${totalPendente.toFixed(2).replace('.', ',')}`;
-
-      const statusBox = document.getElementById('conta-status-geral');
-      if (statusBox) {
-        if (totalPendente === 0) {
-          statusBox.innerHTML = `<span class="text-emerald-400 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> Você não possui débitos pendentes!</span>`;
-        } else {
-          statusBox.innerHTML = `<span class="text-amber-400 flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> Há valores pendentes para acerto.</span>`;
-        }
-      }
-
-      const listaContainer = document.getElementById('lista-meus-fiados');
-      if (!listaContainer) return;
-
-      if (fiadosUsuario.length === 0) {
-        listaContainer.innerHTML = '<div class="p-8 text-center glass-card rounded-2xl border border-brand-border text-xs text-brand-muted">Nenhum fiado ou débito lançado na sua conta. Você está 100% em dia!</div>';
-        return;
-      }
-
-      listaContainer.innerHTML = fiadosUsuario.map(f => {
-        let badgeStatus = '';
-        let acaoBotao = '';
-
-        if (f.status === 'pago') {
-          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">Pago ✓</span>';
-          acaoBotao = `<div class="text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-3 py-2 rounded-xl border border-emerald-800/40 text-center">Liquidado em ${f.pago_em}</div>`;
-        } else if (f.status === 'comprovante_enviado') {
-          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante em Análise</span>';
-          acaoBotao = `<div class="text-xs text-amber-300 font-semibold bg-amber-950/60 px-3 py-2 rounded-xl border border-amber-800/40 text-center">Aguardando confirmação</div>`;
-        } else if (f.status === 'recusado') {
-          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-800">Comprovante Inválido / Recusado</span>';
-          acaoBotao = `<button type="button" onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>Reenviar Comprovante</span></button>`;
-        } else {
-          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-800">Pendente</span>';
-          acaoBotao = `<button type="button" onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="qr-code" class="w-4 h-4"></i><span>Pagar com PIX</span></button>`;
-        }
-
-        return `
-          <div class="glass-card p-4 rounded-2xl border border-brand-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-serif font-bold text-lg text-brand-cream">R$ ${f.valor.toFixed(2).replace('.', ',')}</span>
-                ${badgeStatus}
-              </div>
-              <p class="text-xs text-brand-gold mt-1"><strong>Itens:</strong> ${f.descricao}</p>
-              <span class="text-xs text-brand-muted">Lançado em: ${f.criado_em}</span>
+        <!-- 1. TELA DE LOGIN DO ADMIN -->
+        <div id="secao-login" class="max-w-md mx-auto my-12 glass-panel p-8 rounded-3xl border border-brand-gold/30 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-brand-gold/10 border border-brand-gold/30 text-brand-gold flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="shield-check" class="w-7 h-7"></i>
             </div>
-            <div>${acaoBotao}</div>
-          </div>
-        `;
-      }).join('');
+            <h2 class="font-serif text-2xl font-bold text-center text-brand-cream mb-2">Acesso Restrito</h2>
+            <p class="text-xs text-center text-brand-muted mb-6">Digite sua senha de administrador para acessar o gerenciamento de produtos e fiados.</p>
+            
+            <form onsubmit="fazerLoginAdmin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gold uppercase tracking-wider mb-2">Senha do Admin</label>
+                    <input type="password" id="senha-admin" required placeholder="Digite a senha"
+                           class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-brand-cream placeholder-brand-muted text-sm focus:outline-none focus:border-brand-gold transition">
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm hover:brightness-110 active:scale-95 transition shadow-lg">
+                    Entrar no Painel
+                </button>
+            </form>
+        </div>
 
-      renderizarIcones();
-    }
+        <!-- 2. CONTEÚDO DO PAINEL (PROTEGIDO) -->
+        <div id="secao-painel" class="hidden space-y-8">
 
-    function abrirModalMinhaConta() {
-      if (!usuarioLogado) return abrirModalAuth();
-      document.getElementById('perfil-avatar').innerText = usuarioLogado.nome.charAt(0).toUpperCase();
-      document.getElementById('perfil-nome').innerText = usuarioLogado.nome;
-      document.getElementById('perfil-contato').innerText = `${usuarioLogado.email} • ${usuarioLogado.telefone || 'Sem telefone'}`;
-      document.getElementById('modal-conta').style.display = 'flex';
-      carregarMeusFiados();
-      renderizarIcones();
-    }
+            <!-- Navegação de Abas -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-brand-border/60">
+                <button onclick="trocarAba('fiado')" id="tab-btn-fiado" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition bg-brand-gold text-brand-dark shadow-lg">
+                    <i data-lucide="receipt" class="w-4 h-4"></i>
+                    <span>Tela de Fiado (Clientes)</span>
+                    <span id="badge-fiados-pendentes" class="hidden bg-brand-ruby text-white text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+                </button>
+                <button onclick="trocarAba('comprovantes')" id="tab-btn-comprovantes" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition glass-panel text-brand-muted hover:text-brand-cream">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span>Comprovantes Enviados</span>
+                    <span id="badge-comprovantes" class="hidden bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
+                </button>
+                <button onclick="trocarAba('produtos')" id="tab-btn-produtos" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition glass-panel text-brand-muted hover:text-brand-cream">
+                    <i data-lucide="package-plus" class="w-4 h-4"></i>
+                    <span>Cadastrar Produtos (Galeria/Fotos)</span>
+                </button>
+            </div>
 
-    function fecharModalMinhaConta() {
-      document.getElementById('modal-conta').style.display = 'none';
-    }
+            <!-- ================= ABA 1: TELA DE FIADO (CLIENTES) ================= -->
+            <div id="aba-fiado" class="space-y-6">
+                <!-- Cards de Resumo -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card p-5 rounded-2xl border border-brand-border">
+                        <span class="text-xs text-brand-muted uppercase font-semibold">Total a Receber em Fiados</span>
+                        <div id="resumo-total-fiado" class="font-serif text-3xl font-bold text-brand-gold mt-1">R$ 0,00</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-border">
+                        <span class="text-xs text-brand-muted uppercase font-semibold">Clientes Cadastrados</span>
+                        <div id="resumo-total-clientes" class="font-serif text-3xl font-bold text-brand-cream mt-1">0</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-border">
+                        <span class="text-xs text-brand-muted uppercase font-semibold">Comprovantes para Conferir</span>
+                        <div id="resumo-total-comprovantes" class="font-serif text-3xl font-bold text-emerald-400 mt-1">0</div>
+                    </div>
+                </div>
 
-    function abrirModalPagarPix(fiadoId) {
-      fiadoSelecionadoParaPagar = fiadosUsuario.find(f => f.id === fiadoId);
-      if (!fiadoSelecionadoParaPagar) return;
+                <!-- Tabela / Lista de Clientes -->
+                <div class="glass-panel p-6 rounded-3xl border border-brand-border">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="font-serif text-xl font-bold text-brand-cream">Pessoas Cadastradas no Site</h3>
+                            <p class="text-xs text-brand-muted">Clique em qualquer cliente para lançar um novo fiado (débito) diretamente na conta dele.</p>
+                        </div>
+                        <div class="relative w-full sm:w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted"></i>
+                            <input type="text" id="filtro-cliente" oninput="filtrarClientes()" placeholder="Filtrar por nome ou e-mail..."
+                                   class="w-full pl-9 pr-3 py-2 rounded-xl bg-brand-surface border border-brand-border text-xs text-brand-cream placeholder-brand-muted focus:outline-none focus:border-brand-gold">
+                        </div>
+                    </div>
 
-      comprovanteBase64 = '';
-      document.getElementById('pix-descricao').innerText = `Débito: ${fiadoSelecionadoParaPagar.descricao}`;
-      document.getElementById('pix-valor').innerText = `R$ ${fiadoSelecionadoParaPagar.valor.toFixed(2).replace('.', ',')}`;
-      document.getElementById('pix-beneficiario').innerText = infoPix.beneficiario;
-      document.getElementById('pix-chave').innerText = infoPix.chave_pix;
-      document.getElementById('preview-comprovante-box').style.display = 'none';
-      document.getElementById('comprovante-file-input').value = '';
+                    <div class="overflow-x-auto rounded-2xl border border-brand-border/60">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-brand-surface text-brand-gold text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="p-4">Cliente</th>
+                                    <th class="p-4">E-mail (Login)</th>
+                                    <th class="p-4">Telefone / Whats</th>
+                                    <th class="p-4">Débito Atual</th>
+                                    <th class="p-4 text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-clientes-tabela" class="divide-y divide-brand-border/40">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-brand-muted text-xs">Carregando clientes...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-      document.getElementById('modal-pagar-pix').style.display = 'flex';
-      renderizarIcones();
-    }
+            <!-- ================= ABA 2: COMPROVANTES ENVIADOS ================= -->
+            <div id="aba-comprovantes" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-3xl border border-brand-border">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="font-serif text-xl font-bold text-brand-cream">Comprovantes de Pagamento PIX</h3>
+                            <p class="text-xs text-brand-muted">Confira os comprovantes enviados pelos clientes e confirme o pagamento para liquidar a dívida.</p>
+                        </div>
+                        <button onclick="carregarFiadosAdmin()" class="px-3 py-2 rounded-xl text-xs font-semibold text-brand-gold glass-card hover:bg-brand-gold/10 transition flex items-center gap-1.5">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            <span>Atualizar</span>
+                        </button>
+                    </div>
 
-    function fecharModalPagarPix() {
-      document.getElementById('modal-pagar-pix').style.display = 'none';
-    }
+                    <div id="lista-comprovantes-container" class="space-y-4">
+                        <p class="text-xs text-brand-muted text-center py-8">Nenhum comprovante pendente no momento.</p>
+                    </div>
+                </div>
 
-    function copiarChavePix() {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(infoPix.chave_pix);
-      } else {
-        const input = document.createElement('input');
-        input.value = infoPix.chave_pix;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-      }
-      showToast('Chave PIX copiada para a área de transferência!', 'sucesso');
-    }
+                <!-- Histórico Completo de Fiados -->
+                <div class="glass-panel p-6 rounded-3xl border border-brand-border">
+                    <h3 class="font-serif text-lg font-bold text-brand-cream mb-4">Histórico Geral de Débitos</h3>
+                    <div class="overflow-x-auto rounded-2xl border border-brand-border/60">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-brand-surface text-brand-gold uppercase">
+                                <tr>
+                                    <th class="p-3">Data</th>
+                                    <th class="p-3">Cliente</th>
+                                    <th class="p-3">Descrição dos Itens</th>
+                                    <th class="p-3">Valor</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3 text-center">Comprovante</th>
+                                    <th class="p-3 text-right">Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historico-fiados-tabela" class="divide-y divide-brand-border/40">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-    function processarComprovanteSelecionado(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+            <!-- ================= ABA 3: CADASTRAR PRODUTOS (COM ATÉ 4 FOTOS DA GALERIA) ================= -->
+            <div id="aba-produtos" class="hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Formulário de Cadastro -->
+                    <div class="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-brand-border">
+                        <h3 class="font-serif text-xl font-bold text-brand-cream mb-2">Cadastrar Novo Produto</h3>
+                        <p class="text-xs text-brand-muted mb-6">Agora você não precisa de URL de imagem! Basta escolher até 4 fotos direto da sua galeria ou arquivos.</p>
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        comprovanteBase64 = e.target.result;
-        document.getElementById('preview-comprovante-img').src = comprovanteBase64;
-        document.getElementById('preview-comprovante-box').style.display = 'block';
-        showToast('Comprovante anexado!');
-      };
-      reader.readAsDataURL(file);
-    }
+                        <form id="form-produto" onsubmit="salvarProduto(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Nome do Produto *</label>
+                                <input type="text" id="prod-nome" required placeholder="Ex: Cone Trufado Ninho com Nutella"
+                                       class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                            </div>
 
-    async function enviarComprovante() {
-      if (!comprovanteBase64) {
-        return showToast('Selecione a foto do comprovante primeiro!');
-      }
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Preço (R$) *</label>
+                                    <input type="number" id="prod-preco" step="0.01" required placeholder="12.00"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Estoque Inicial *</label>
+                                    <input type="number" id="prod-estoque" required placeholder="30"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                                </div>
+                            </div>
 
-      const btn = document.getElementById('btn-enviar-comprovante');
-      btn.disabled = true;
-      btn.innerText = 'Enviando...';
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Categoria</label>
+                                <select id="prod-categoria" class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold">
+                                    <option value="classicos">Tradicionais & Gourmet</option>
+                                    <option value="frutados">Frutas Nobres</option>
+                                    <option value="exclusivos">Especiais do Chef</option>
+                                </select>
+                            </div>
 
-      try {
-        const res = await fetch('/api/cliente/fiados/anexar-comprovante', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fiado_id: fiadoSelecionadoParaPagar.id,
-            comprovante: comprovanteBase64
-          })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          showToast('Comprovante enviado com sucesso para conferência do vendedor!', 'sucesso');
-          fecharModalPagarPix();
-          carregarMeusFiados();
-        } else {
-          showToast(data.erro || 'Erro ao enviar comprovante.');
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Descrição do Cone</label>
+                                <textarea id="prod-descricao" rows="2" placeholder="Descreva os ingredientes, recheio e crocância..."
+                                          class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"></textarea>
+                            </div>
+
+                            <!-- UPLOAD DE FOTOS DA GALERIA / ARQUIVOS -->
+                            <div class="p-4 rounded-2xl bg-brand-surface border border-brand-gold/30 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <label class="block text-xs font-bold text-brand-gold uppercase tracking-wider">
+                                        Fotos do Produto (Até 4 fotos)
+                                    </label>
+                                    <span id="contador-fotos" class="text-[11px] text-brand-muted font-bold">0 de 4 selecionadas</span>
+                                </div>
+                                
+                                <p class="text-[11px] text-brand-muted">
+                                    Selecione imagens direto da galeria do celular ou dos arquivos do seu computador:
+                                </p>
+
+                                <label class="flex flex-col items-center justify-center p-5 border-2 border-dashed border-brand-gold/40 hover:border-brand-gold rounded-2xl cursor-pointer bg-brand-dark/40 hover:bg-brand-gold/5 transition group">
+                                    <i data-lucide="image-plus" class="w-8 h-8 text-brand-gold group-hover:scale-110 transition"></i>
+                                    <span class="text-xs font-bold text-brand-gold mt-2">Clique aqui para abrir a Galeria / Arquivos</span>
+                                    <span class="text-[10px] text-brand-muted mt-1">Formatos aceitos: JPG, PNG, WEBP (Máx. 4 fotos)</span>
+                                    <input type="file" id="fotos-input" accept="image/*" multiple onchange="processarFotosSelecionadas(event)" class="hidden">
+                                </label>
+
+                                <!-- Pré-visualização das 4 fotos -->
+                                <div id="preview-fotos-grid" class="grid grid-cols-4 gap-2 pt-2"></div>
+                            </div>
+
+                            <button type="submit" id="btn-salvar-produto" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm hover:brightness-110 transition shadow-lg flex items-center justify-center gap-2">
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                <span>Salvar Produto no Cardápio</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Produtos Cadastrados -->
+                    <div class="lg:col-span-6 glass-panel p-6 sm:p-8 rounded-3xl border border-brand-border">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-bold text-brand-cream">Produtos no Banco de Dados</h3>
+                            <button onclick="carregarProdutosAdmin()" class="p-2 text-brand-muted hover:text-brand-gold">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div id="lista-produtos-admin" class="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                            <p class="text-xs text-brand-muted text-center py-8">Carregando produtos...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ================= MODAL: LANÇAR DÉBITO / FIADO ================= -->
+    <div id="modal-lancar-fiado" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl">
+            <button onclick="fecharModalFiado()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-gold/10 border border-brand-gold/30 text-brand-gold flex items-center justify-center">
+                    <i data-lucide="receipt" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-serif text-xl font-bold text-brand-cream">Lançar Fiado</h3>
+                    <p id="modal-fiado-cliente-nome" class="text-xs text-brand-gold font-semibold">Cliente: Nome</p>
+                </div>
+            </div>
+
+            <form onsubmit="confirmarLancamentoFiado(event)" class="space-y-4">
+                <input type="hidden" id="modal-fiado-cliente-id">
+
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">Valor da Dívida (R$) *</label>
+                    <input type="number" id="modal-fiado-valor" step="0.01" min="0.01" required placeholder="Ex: 24.00"
+                           class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-lg font-bold text-brand-cream focus:outline-none focus:border-brand-gold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">O que a pessoa pegou? (Descrição) *</label>
+                    <textarea id="modal-fiado-desc" rows="3" required placeholder="Ex: 2 Cones Trufados de Morango e 1 de Nutella"
+                              class="w-full px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold"></textarea>
+                </div>
+
+                <div class="p-3 rounded-xl bg-brand-surface/70 border border-brand-border text-[11px] text-brand-muted flex items-start gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-brand-gold shrink-0 mt-0.5"></i>
+                    <span>Assim que você salvar, este valor vai aparecer imediatamente na conta do cliente com status <strong>Pendente</strong>, junto com a chave PIX e botão de pagar.</span>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" onclick="fecharModalFiado()" class="flex-1 py-3 rounded-xl border border-brand-border text-brand-muted hover:text-brand-cream text-xs font-semibold">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-xs hover:brightness-110 transition shadow-lg">
+                        Confirmar e Lançar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ZOOM DO COMPROVANTE ================= -->
+    <div id="modal-comprovante" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div class="relative w-full max-w-xl glass-panel rounded-3xl p-6 border border-brand-gold/40 shadow-2xl flex flex-col items-center">
+            <button onclick="fecharModalComprovante()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="font-serif text-lg font-bold text-brand-cream mb-4">Comprovante de Pagamento PIX</h3>
+            <div class="w-full max-h-[70vh] overflow-auto rounded-xl border border-brand-border mb-4 bg-brand-dark/50 flex justify-center">
+                <img id="img-zoom-comprovante" src="" alt="Comprovante" class="max-w-full h-auto object-contain">
+            </div>
+            <div id="botoes-acao-comprovante" class="flex items-center gap-3 w-full">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Container de Toasts / Notificações -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        let clientesCache = [];
+        let fiadosCache = [];
+        let fotosBase64 = []; // Guarda até 4 fotos em Base64
+
+        function showToast(msg, tipo = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto px-4 py-3 rounded-2xl glass-panel border border-brand-gold/40 shadow-xl text-brand-cream text-xs font-semibold flex items-center gap-2 animate-bounce';
+            toast.innerHTML = `<span class="w-2 h-2 rounded-full ${tipo === 'sucesso' ? 'bg-emerald-400' : 'bg-brand-gold'}"></span> <span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
         }
-      } catch (err) {
-        showToast('Erro de conexão ao enviar comprovante.');
-      } finally {
-        btn.disabled = false;
-        btn.innerText = 'Enviar Comprovante';
-      }
-    }
 
-    // Exportacao explicita para o escopo global (garantia de funcionamento dos onclicks)
-    window.clicarBotaoConta = clicarBotaoConta;
-    window.abrirModalAuth = abrirModalAuth;
-    window.fecharModalAuth = fecharModalAuth;
-    window.alternarAbaAuth = alternarAbaAuth;
-    window.fazerLoginCliente = fazerLoginCliente;
-    window.fazerCadastroCliente = fazerCadastroCliente;
-    window.fazerLogoutCliente = fazerLogoutCliente;
-    window.abrirModalMinhaConta = abrirModalMinhaConta;
-    window.fecharModalMinhaConta = fecharModalMinhaConta;
-    window.abrirCarrinho = abrirCarrinho;
-    window.fecharCarrinho = fecharCarrinho;
-    window.alterarQtdCarrinho = alterarQtdCarrinho;
-    window.removerDoCarrinho = removerDoCarrinho;
-    window.finalizarPedidoWhatsApp = finalizarPedidoWhatsApp;
-    window.selecionarCategoria = selecionarCategoria;
-    window.filtrarCardapio = filtrarCardapio;
-    window.abrirModalProduto = abrirModalProduto;
-    window.fecharModalProduto = fecharModalProduto;
-    window.adicionarAoCarrinhoPorId = adicionarAoCarrinhoPorId;
-    window.recarregarFiadosCliente = recarregarFiadosCliente;
-    window.abrirModalPagarPix = abrirModalPagarPix;
-    window.fecharModalPagarPix = fecharModalPagarPix;
-    window.copiarChavePix = copiarChavePix;
-    window.processarComprovanteSelecionado = processarComprovanteSelecionado;
-    window.enviarComprovante = enviarComprovante;
-  </script>
+        window.onload = function() {
+            if (sessionStorage.getItem('sagrado_admin_logado') === 'true') {
+                mostrarPainel();
+            }
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        async function fazerLoginAdmin(e) {
+            e.preventDefault();
+            const senha = document.getElementById('senha-admin').value;
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ senha })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    sessionStorage.setItem('sagrado_admin_logado', 'true');
+                    showToast('Acesso autorizado ao painel!', 'sucesso');
+                    mostrarPainel();
+                } else {
+                    showToast(data.erro || 'Senha incorreta!');
+                }
+            } catch (err) {
+                showToast('Erro de conexão ao tentar fazer login.');
+            }
+        }
+
+        function mostrarPainel() {
+            document.getElementById('secao-login').classList.add('hidden');
+            document.getElementById('secao-painel').classList.remove('hidden');
+            document.getElementById('btn-sair').classList.remove('hidden');
+            carregarClientesAdmin();
+            carregarFiadosAdmin();
+            carregarProdutosAdmin();
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function sairAdmin() {
+            sessionStorage.removeItem('sagrado_admin_logado');
+            document.getElementById('secao-painel').classList.add('hidden');
+            document.getElementById('btn-sair').classList.add('hidden');
+            document.getElementById('secao-login').classList.remove('hidden');
+            document.getElementById('senha-admin').value = '';
+            showToast('Você saiu do painel administrativo.');
+        }
+
+        function trocarAba(aba) {
+            ['fiado', 'comprovantes', 'produtos'].forEach(a => {
+                document.getElementById(`aba-${a}`).classList.add('hidden');
+                const btn = document.getElementById(`tab-btn-${a}`);
+                btn.className = 'px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition glass-panel text-brand-muted hover:text-brand-cream';
+            });
+
+            document.getElementById(`aba-${aba}`).classList.remove('hidden');
+            const btnAtivo = document.getElementById(`tab-btn-${aba}`);
+            btnAtivo.className = 'px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition bg-brand-gold text-brand-dark shadow-lg';
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        // ================= CLIENTES E FIADO =================
+
+        async function carregarClientesAdmin() {
+            try {
+                const res = await fetch('/api/admin/clientes');
+                clientesCache = await res.json();
+                renderizarClientes(clientesCache);
+                atualizarResumos();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderizarClientes(lista) {
+            const tbody = document.getElementById('lista-clientes-tabela');
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-brand-muted text-xs">Nenhum cliente cadastrado ainda. Assim que as pessoas criarem conta no site, elas aparecerão aqui!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = lista.map(c => `
+                <tr class="hover:bg-brand-surface/50 transition">
+                    <td class="p-4 font-semibold text-brand-cream flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-full bg-brand-card border border-brand-border flex items-center justify-center font-bold text-xs text-brand-gold">
+                            ${c.nome.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <div>${c.nome}</div>
+                            <span class="text-[10px] text-brand-muted">Cadastrado em: ${c.data_cadastro}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-brand-muted text-xs">${c.email}</td>
+                    <td class="p-4 text-brand-muted text-xs">${c.telefone}</td>
+                    <td class="p-4">
+                        <span class="font-serif font-bold text-sm ${c.total_devendo > 0 ? 'text-amber-400' : 'text-emerald-400'}">
+                            R$ ${c.total_devendo.toFixed(2).replace('.', ',')}
+                        </span>
+                    </td>
+                    <td class="p-4 text-center">
+                        <button onclick="abrirModalFiado(${c.id}, '${c.nome.replace(/'/g, "\\'")}')" 
+                                class="px-3.5 py-2 rounded-xl bg-brand-gold hover:bg-brand-goldLight text-brand-dark font-bold text-xs shadow transition flex items-center gap-1.5 mx-auto">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                            <span>Adicionar Débito</span>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function filtrarClientes() {
+            const termo = document.getElementById('filtro-cliente').value.toLowerCase();
+            const filtrados = clientesCache.filter(c => 
+                c.nome.toLowerCase().includes(termo) || c.email.toLowerCase().includes(termo)
+            );
+            renderizarClientes(filtrados);
+        }
+
+        function abrirModalFiado(id, nome) {
+            document.getElementById('modal-fiado-cliente-id').value = id;
+            document.getElementById('modal-fiado-cliente-nome').innerText = `Cliente selecionado: ${nome}`;
+            document.getElementById('modal-fiado-valor').value = '';
+            document.getElementById('modal-fiado-desc').value = '';
+            document.getElementById('modal-lancar-fiado').classList.remove('hidden');
+        }
+
+        function fecharModalFiado() {
+            document.getElementById('modal-lancar-fiado').classList.add('hidden');
+        }
+
+        async function confirmarLancamentoFiado(e) {
+            e.preventDefault();
+            const usuario_id = document.getElementById('modal-fiado-cliente-id').value;
+            const valor = parseFloat(document.getElementById('modal-fiado-valor').value);
+            const descricao = document.getElementById('modal-fiado-desc').value;
+
+            try {
+                const res = await fetch('/api/admin/fiados', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario_id, valor, descricao })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Débito lançado com sucesso na conta do cliente!', 'sucesso');
+                    fecharModalFiado();
+                    carregarClientesAdmin();
+                    carregarFiadosAdmin();
+                } else {
+                    showToast(data.erro || 'Erro ao lançar débito.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão com o servidor.');
+            }
+        }
+
+        // ================= COMPROVANTES E HISTÓRICO =================
+
+        async function carregarFiadosAdmin() {
+            try {
+                const res = await fetch('/api/admin/fiados');
+                fiadosCache = await res.json();
+                renderizarComprovantes(fiadosCache.filter(f => f.status === 'comprovante_enviado'));
+                renderizarHistoricoFiados(fiadosCache);
+                atualizarResumos();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderizarComprovantes(pendentes) {
+            const container = document.getElementById('lista-comprovantes-container');
+            const badge = document.getElementById('badge-comprovantes');
+
+            if (pendentes.length > 0) {
+                badge.innerText = pendentes.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            if (!pendentes || pendentes.length === 0) {
+                container.innerHTML = '<p class="text-xs text-brand-muted text-center py-8">Nenhum comprovante aguardando conferência no momento. Excelente!</p>';
+                return;
+            }
+
+            container.innerHTML = pendentes.map(f => `
+                <div class="glass-card p-4 sm:p-5 rounded-2xl border border-brand-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden bg-brand-surface border border-brand-border shrink-0 cursor-pointer" onclick="verComprovante('${f.comprovante}', ${f.id})">
+                            <img src="${f.comprovante}" alt="Comprovante" class="w-full h-full object-cover hover:scale-110 transition">
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-bold text-sm text-brand-cream">${f.cliente_nome}</h4>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante Anexado</span>
+                            </div>
+                            <p class="text-xs text-brand-muted">${f.cliente_email} • ${f.cliente_telefone || 'Sem Whats'}</p>
+                            <p class="text-xs text-brand-gold mt-1"><strong>Itens:</strong> ${f.descricao}</p>
+                            <span class="text-[10px] text-brand-muted">Enviado em: ${f.criado_em}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex sm:flex-col items-center sm:items-end justify-between gap-2">
+                        <div class="font-serif font-bold text-xl text-brand-gold">R$ ${f.valor.toFixed(2).replace('.', ',')}</div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="verComprovante('${f.comprovante}', ${f.id})" class="px-3 py-2 rounded-xl glass-panel text-xs text-brand-cream hover:text-brand-gold border border-brand-border">
+                                Ver Foto
+                            </button>
+                            <button onclick="recusarComprovante(${f.id})" class="px-3 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/60 font-bold text-xs shadow flex items-center gap-1.5 transition">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                                <span>Recusar</span>
+                            </button>
+                            <button onclick="alterarStatusFiado(${f.id}, 'pago')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1.5 transition">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                                <span>Confirmar Pagamento</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function renderizarHistoricoFiados(lista) {
+            const tbody = document.getElementById('historico-fiados-tabela');
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-brand-muted">Nenhum registro encontrado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = lista.map(f => {
+                let statusBadge = '';
+                if (f.status === 'pago') {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">Pago ✓</span>';
+                } else if (f.status === 'comprovante_enviado') {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante Enviado</span>';
+                } else if (f.status === 'recusado') {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-800">Comprovante Recusado</span>';
+                } else {
+                    statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-800">Pendente</span>';
+                }
+
+                return `
+                    <tr class="hover:bg-brand-surface/40 transition">
+                        <td class="p-3 text-brand-muted">${f.criado_em}</td>
+                        <td class="p-3 font-semibold text-brand-cream">${f.cliente_nome}</td>
+                        <td class="p-3 text-brand-muted max-w-xs truncate">${f.descricao}</td>
+                        <td class="p-3 font-bold text-brand-gold">R$ ${f.valor.toFixed(2).replace('.', ',')}</td>
+                        <td class="p-3">${statusBadge}</td>
+                        <td class="p-3 text-center">
+                            ${f.tem_comprovante ? `
+                                <button onclick="verComprovante('${f.comprovante}', ${f.id})" class="text-brand-gold hover:underline text-xs">Visualizar</button>
+                            ` : '<span class="text-brand-muted text-[10px]">Sem anexo</span>'}
+                        </td>
+                        <td class="p-3 text-right">
+                            ${f.status !== 'pago' ? `
+                                <button onclick="alterarStatusFiado(${f.id}, 'pago')" class="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-[11px] font-bold">
+                                    Marcar Pago
+                                </button>
+                            ` : `<span class="text-emerald-400 text-xs font-bold">Liquidado</span>`}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function verComprovante(urlBase64, fiadoId) {
+            document.getElementById('img-zoom-comprovante').src = urlBase64;
+            const containerBotoes = document.getElementById('botoes-acao-comprovante');
+            containerBotoes.innerHTML = `
+                <button onclick="fecharModalComprovante()" class="flex-1 py-2.5 rounded-xl border border-brand-border text-xs text-brand-muted hover:text-brand-cream">
+                    Fechar
+                </button>
+                <button onclick="recusarComprovante(${fiadoId})" class="flex-1 py-2.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800/60 font-bold text-xs shadow flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    <span>Recusar Comprovante</span>
+                </button>
+                <button onclick="alterarStatusFiado(${fiadoId}, 'pago'); fecharModalComprovante();" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    <span>Confirmar Pagamento</span>
+                </button>
+            `;
+            document.getElementById('modal-comprovante').classList.remove('hidden');
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        async function recusarComprovante(fiadoId) {
+            if (!confirm('Deseja realmente recusar este comprovante? O status do débito voltará para recusado e o cliente poderá reenviar outro comprovante válido.')) {
+                return;
+            }
+            fecharModalComprovante();
+            await alterarStatusFiado(fiadoId, 'recusado');
+            showToast('Comprovante recusado com sucesso!', 'sucesso');
+        }
+
+        function fecharModalComprovante() {
+            document.getElementById('modal-comprovante').classList.add('hidden');
+        }
+
+        async function alterarStatusFiado(fiadoId, status) {
+            try {
+                const res = await fetch(`/api/admin/fiados/${fiadoId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(data.mensagem || 'Status atualizado!', 'sucesso');
+                    carregarFiadosAdmin();
+                    carregarClientesAdmin();
+                } else {
+                    showToast(data.erro || 'Erro ao alterar status.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão ao alterar status.');
+            }
+        }
+
+        function atualizarResumos() {
+            const total = clientesCache.reduce((acc, c) => acc + (c.total_devendo || 0), 0);
+            document.getElementById('resumo-total-fiado').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resumo-total-clientes').innerText = clientesCache.length;
+
+            const comprovantesPendentes = fiadosCache.filter(f => f.status === 'comprovante_enviado').length;
+            document.getElementById('resumo-total-comprovantes').innerText = comprovantesPendentes;
+        }
+
+        // ================= CADASTRAR PRODUTOS COM ATÉ 4 FOTOS =================
+
+        function processarFotosSelecionadas(event) {
+            const files = Array.from(event.target.files);
+            if (!files.length) return;
+
+            if (fotosBase64.length + files.length > 4) {
+                showToast('Você só pode cadastrar no máximo 4 fotos por produto!');
+            }
+
+            const disponiveis = 4 - fotosBase64.length;
+            const paraAdicionar = files.slice(0, disponiveis);
+
+            paraAdicionar.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fotosBase64.push(e.target.result);
+                    atualizarGridFotos();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Reseta o input para permitir escolher os mesmos arquivos novamente se quiser
+            event.target.value = '';
+        }
+
+        function removerFoto(index) {
+            fotosBase64.splice(index, 1);
+            atualizarGridFotos();
+        }
+
+        function atualizarGridFotos() {
+            const grid = document.getElementById('preview-fotos-grid');
+            const contador = document.getElementById('contador-fotos');
+            contador.innerText = `${fotosBase64.length} de 4 selecionadas`;
+
+            grid.innerHTML = fotosBase64.map((src, idx) => `
+                <div class="relative group rounded-xl overflow-hidden border border-brand-gold/40 h-20 bg-brand-dark">
+                    <img src="${src}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removerFoto(${idx})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-90 hover:opacity-100 shadow">
+                        <i data-lucide="x" class="w-3 h-3"></i>
+                    </button>
+                    ${idx === 0 ? '<span class="absolute bottom-0 inset-x-0 bg-brand-gold/90 text-brand-dark font-black text-[8px] text-center uppercase">Capa</span>' : ''}
+                </div>
+            `).join('');
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        async function salvarProduto(e) {
+            e.preventDefault();
+            const nome = document.getElementById('prod-nome').value;
+            const preco = document.getElementById('prod-preco').value;
+            const estoque = document.getElementById('prod-estoque').value;
+            const categoria = document.getElementById('prod-categoria').value;
+            const descricao = document.getElementById('prod-descricao').value;
+
+            if (fotosBase64.length === 0) {
+                if (!confirm("Você não selecionou nenhuma foto da galeria. Deseja cadastrar o produto mesmo assim com imagem padrão?")) {
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('btn-salvar-produto');
+            btn.disabled = true;
+            btn.innerText = 'Salvando produto no banco...';
+
+            const payload = {
+                nome,
+                preco,
+                estoque,
+                categoria,
+                descricao,
+                imagens: fotosBase64,
+                img: fotosBase64.length > 0 ? fotosBase64[0] : 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80'
+            };
+
+            try {
+                const res = await fetch('/api/produtos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Produto cadastrado com sucesso!', 'sucesso');
+                    document.getElementById('form-produto').reset();
+                    fotosBase64 = [];
+                    atualizarGridFotos();
+                    carregarProdutosAdmin();
+                } else {
+                    showToast(data.erro || 'Erro ao cadastrar produto.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão ao salvar produto.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i><span>Salvar Produto no Cardápio</span>`;
+                if (window.lucide) window.lucide.createIcons();
+            }
+        }
+
+        async function carregarProdutosAdmin() {
+            try {
+                const res = await fetch('/api/produtos');
+                const prods = await res.json();
+                const container = document.getElementById('lista-produtos-admin');
+
+                if (!prods || prods.length === 0) {
+                    container.innerHTML = '<p class="text-xs text-brand-muted text-center py-8">Nenhum produto cadastrado no banco de dados.</p>';
+                    return;
+                }
+
+                container.innerHTML = prods.map(p => `
+                    <div class="glass-card p-3 rounded-2xl border border-brand-border flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <img src="${p.img || 'https://via.placeholder.com/60'}" class="w-12 h-12 rounded-xl object-cover border border-brand-border">
+                            <div>
+                                <h4 class="font-bold text-xs text-brand-cream">${p.nome}</h4>
+                                <span class="text-[11px] text-brand-gold font-bold">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
+                                <span class="text-[10px] text-brand-muted ml-2">Estoque: ${p.estoque} un</span>
+                                <div class="text-[9px] text-brand-muted mt-0.5">${(p.imagens || []).length} fotos anexadas</div>
+                            </div>
+                        </div>
+                        <button onclick="excluirProduto(${p.id})" class="p-2 text-brand-muted hover:text-rose-400" title="Excluir produto">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+                if (window.lucide) window.lucide.createIcons();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function excluirProduto(id) {
+            if (!confirm("Tem certeza que deseja excluir este produto do cardápio?")) return;
+            try {
+                const res = await fetch(`/api/produtos/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Produto excluído com sucesso!', 'sucesso');
+                    carregarProdutosAdmin();
+                } else {
+                    showToast('Erro ao excluir produto.');
+                }
+            } catch (err) {
+                showToast('Erro de conexão ao excluir.');
+            }
+        }
+    </script>
 </body>
 </html>
 
