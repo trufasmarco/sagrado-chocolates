@@ -340,7 +340,7 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-brand-gold uppercase mb-1">WhatsApp / Telefone</label>
-          <input type="tel" id="cad-telefone" placeholder="(16) 99999-9999"
+          <input type="tel" id="cad-telefone" placeholder="(16) 99986-3535"
                  class="w-full px-4 py-3 rounded-xl bg-brand-surface border border-brand-border text-sm text-brand-cream focus:outline-none focus:border-brand-gold" />
         </div>
         <div>
@@ -430,7 +430,7 @@
         </div>
         <div class="flex items-center justify-between text-xs">
           <span class="text-brand-muted">Chave PIX:</span>
-          <strong id="pix-chave" class="text-brand-gold">sagradochocolates@gmail.com</strong>
+          <strong id="pix-chave" class="text-brand-gold">Almeidamarcolima@gmail.com</strong>
         </div>
         <button type="button" onclick="copiarChavePix()" class="w-full mt-2 py-2.5 rounded-xl glass-panel border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 font-bold text-xs flex items-center justify-center gap-2 transition">
           <i data-lucide="copy" class="w-4 h-4"></i>
@@ -582,7 +582,7 @@
     let fiadosUsuario = [];
     let fiadoSelecionadoParaPagar = null;
     let comprovanteBase64 = '';
-    let infoPix = { chave_pix: 'sagradochocolates@gmail.com', beneficiario: 'Sagrado Chocolates' };
+    let infoPix = { chave_pix: 'Almeidamarcolima@gmail.com', beneficiario: 'Sagrado Chocolates' };
 
     function renderizarIcones() {
       try {
@@ -883,7 +883,7 @@
 
 Por favor, confirmem a disponibilidade!`;
 
-      window.open(`https://wa.me/5516999999999?text=${encodeURIComponent(texto)}`, '_blank');
+      window.open(`https://wa.me/5516999863535?text=${encodeURIComponent(texto)}`, '_blank');
       carrinho = [];
       safeSet('sagrado_carrinho', carrinho);
       atualizarBadgeCarrinho();
@@ -1093,6 +1093,9 @@ Por favor, confirmem a disponibilidade!`;
         } else if (f.status === 'comprovante_enviado') {
           badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-950 text-amber-300 border border-amber-800">Comprovante em Análise</span>';
           acaoBotao = `<div class="text-xs text-amber-300 font-semibold bg-amber-950/60 px-3 py-2 rounded-xl border border-amber-800/40 text-center">Aguardando confirmação</div>`;
+        } else if (f.status === 'recusado') {
+          badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-800">Comprovante Inválido / Recusado</span>';
+          acaoBotao = `<button type="button" onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>Reenviar Comprovante</span></button>`;
         } else {
           badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950 text-rose-300 border border-rose-800">Pendente</span>';
           acaoBotao = `<button type="button" onclick="abrirModalPagarPix(${f.id})" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5"><i data-lucide="qr-code" class="w-4 h-4"></i><span>Pagar com PIX</span></button>`;
