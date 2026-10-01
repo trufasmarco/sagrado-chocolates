@@ -544,6 +544,105 @@ def admin_atualizar_status_fiado(fiado_id):
     except Exception as e:
         return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
 
+@app.route('/api/admin/clientes/<int:usuario_id>/ajustar-fiado', methods=['POST'])
+def admin_ajustar_fiado_cliente(usuario_id):
+    try:
+        dados = request.json or {}
+        novo_valor = float(dados.get('valor', 0))
+        motivo = (dados.get('motivo') or 'Ajuste de débito pelo administrador').strip()
+
+        if novo_valor < 0:
+            return jsonify({'erro': 'O valor não pode ser negativo!'}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT id, valor, status FROM fiados WHERE usuario_id = %s AND status != 'pago' ORDER BY id DESC",
+            (usuario_id,)
+        )
+        pendentes = cursor.fetchall()
+
+        if novo_valor == 0:
+            cursor.execute(
+                "UPDATE fiados SET status = 'pago', pago_em = CURRENT_TIMESTAMP WHERE usuario_id = %s AND status != 'pago'",
+                (usuario_id,)
+            )
+            mensagem = 'Débito do cliente zerado com sucesso!'
+        elif not pendentes:
+            cursor.execute(
+                "INSERT INTO fiados (usuario_id, valor, descricao, status) VALUES (%s, %s, %s, 'pendente')",
+                (usuario_id, novo_valor, motivo)
+            )
+            mensagem = f'Novo débito de R$ {novo_valor:.2f} registrado para o cliente!'
+        elif len(pendentes) == 1:
+            cursor.execute(
+                "UPDATE fiados SET valor = %s, descricao = %s WHERE id = %s",
+                (novo_valor, motivo, pendentes[0]['id'])
+            )
+            mensagem = f'Débito do cliente atualizado para R$ {novo_valor:.2f} com sucesso!'
+        else:
+            mais_recente_id = pendentes[0]['id']
+            cursor.execute(
+                "UPDATE fiados SET status = 'pago', pago_em = CURRENT_TIMESTAMP WHERE usuario_id = %s AND status != 'pago' AND id != %s",
+                (usuario_id, mais_recente_id)
+            )
+            cursor.execute(
+                "UPDATE fiados SET valor = %s, descricao = %s WHERE id = %s",
+                (novo_valor, motivo, mais_recente_id)
+            )
+            mensagem = f'Débito do cliente consolidado e atualizado para R$ {novo_valor:.2f}!'
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({'status': 'sucesso', 'mensagem': mensagem})
+    except Exception as e:
+        return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
+
+
+@app.route('/api/admin/fiados/<int:fiado_id>/editar', methods=['POST'])
+def admin_editar_fiado(fiado_id):
+    try:
+        dados = request.json or {}
+        novo_valor = float(dados.get('valor', 0))
+        nova_descricao = dados.get('descricao')
+
+        if novo_valor < 0:
+            return jsonify({'erro': 'O valor não pode ser negativo!'}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        if novo_valor == 0:
+            cursor.execute(
+                "UPDATE fiados SET status = 'pago', pago_em = CURRENT_TIMESTAMP WHERE id = %s",
+                (fiado_id,)
+            )
+            mensagem = 'Fiado marcado como pago (zerado)!'
+        else:
+            if nova_descricao:
+                cursor.execute(
+                    "UPDATE fiados SET valor = %s, descricao = %s WHERE id = %s",
+                    (novo_valor, nova_descricao.strip(), fiado_id)
+                )
+            else:
+                cursor.execute(
+                    "UPDATE fiados SET valor = %s WHERE id = %s",
+                    (novo_valor, fiado_id)
+                )
+            mensagem = f'Valor do fiado atualizado para R$ {novo_valor:.2f} com sucesso!'
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({'status': 'sucesso', 'mensagem': mensagem})
+    except Exception as e:
+        return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
+
+
 if __name__ == '__main__':
     init_db()
     port = int(os.environ.get("PORT", 5000))
