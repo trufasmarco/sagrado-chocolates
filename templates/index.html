@@ -208,16 +208,16 @@
             <div class="absolute -inset-1 bg-gradient-to-r from-brand-gold via-brand-ruby to-brand-gold rounded-2xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
             <div class="relative rounded-2xl overflow-hidden glass-panel border border-brand-gold/40 p-2.5 sm:p-3 shadow-2xl">
               <div class="relative h-72 sm:h-96 rounded-xl overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85"
+                <img id="hero-destaque-img" src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=85"
                      alt="Cone Trufado Sagrado Chocolates"
                      class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-transparent to-transparent opacity-80"></div>
                 <div class="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 p-3 sm:p-4 rounded-xl glass-panel border border-brand-gold/20 flex items-center justify-between gap-2">
                   <div class="min-w-0">
                     <p class="text-[10px] sm:text-xs text-brand-gold uppercase tracking-wider font-semibold truncate">Destaque da Casa</p>
-                    <h4 class="font-serif text-sm sm:text-base font-bold text-brand-cream truncate">Morango Cremoso Especial</h4>
+                    <h4 id="hero-destaque-nome" class="font-serif text-sm sm:text-base font-bold text-brand-cream truncate">Morango Cremoso Especial</h4>
                   </div>
-                  <span class="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-brand-gold text-brand-dark font-black text-xs sm:text-sm shrink-0">
+                  <span id="hero-destaque-preco" class="px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-brand-gold text-brand-dark font-black text-xs sm:text-sm shrink-0">
                     R$ 12,00
                   </span>
                 </div>
@@ -244,12 +244,9 @@
       </div>
     </div>
 
-    <!-- Categorias -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-4 max-w-full no-scrollbar">
+    <!-- Categorias Dinâmicas do Banco -->
+    <div id="barra-categorias" class="flex items-center gap-2 overflow-x-auto pb-4 max-w-full no-scrollbar">
       <button type="button" onclick="selecionarCategoria('todos')" id="cat-todos" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-brand-gold text-brand-dark shadow-glow-gold shrink-0">Todos os Sabores</button>
-      <button type="button" onclick="selecionarCategoria('classicos')" id="cat-classicos" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream shrink-0">Tradicionais & Gourmet</button>
-      <button type="button" onclick="selecionarCategoria('frutados')" id="cat-frutados" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream shrink-0">Frutas Nobres</button>
-      <button type="button" onclick="selecionarCategoria('exclusivos')" id="cat-exclusivos" class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap glass-panel text-brand-muted hover:text-brand-cream shrink-0">Especiais do Chef</button>
     </div>
   </section>
 
@@ -574,44 +571,10 @@
       } catch (e) {}
     }
 
-    // PRODUTOS PADRAO INICIAIS
-    const PRODUTOS_PADRAO = [
-      {
-        id: 1,
-        nome: "Cone Trufado Morango Cremoso",
-        categoria: "frutados",
-        tag: "Mais Vendido",
-        preco: 12.00,
-        estoque: 50,
-        descricao: "Casquinha artesanal folhada crocante, blindada com chocolate nobre e recheada com ganache aveludada de morangos frescos.",
-        img: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80"]
-      },
-      {
-        id: 2,
-        nome: "Cone Trufado Doce de Leite Imperial",
-        categoria: "classicos",
-        tag: "Receita Nobre",
-        preco: 11.00,
-        estoque: 45,
-        descricao: "Doce de leite de cozimento lento em tacho, toque sutil de flor de sal e casquinha banhada no chocolate meio amargo.",
-        img: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"]
-      },
-      {
-        id: 3,
-        nome: "Cone Trufado Brigadeiro Gourmet 70%",
-        categoria: "classicos",
-        tag: "Favorito do Chef",
-        preco: 10.00,
-        estoque: 60,
-        descricao: "Brigadeiro aveludado feito com cacau nobre puro e casquinha crocante banhada no chocolate ao leite belga.",
-        img: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80",
-        imagens: ["https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80"]
-      }
-    ];
-
-    let listaProdutos = [...PRODUTOS_PADRAO];
+    // Apenas produtos reais do banco de dados (sem produtos de teste fixos)
+    const PRODUTOS_PADRAO = [];
+    let listaProdutos = [];
+    let listaCategorias = [];
     let categoriaAtual = 'todos';
     let termoBusca = '';
     let carrinho = safeGet('sagrado_carrinho', []);
@@ -642,8 +605,8 @@
     // Inicializacao imediata
     function iniciarPagina() {
       atualizarEstadoUsuario();
-      renderizarProdutos();
       atualizarBadgeCarrinho();
+      carregarCategoriasDoBanco();
       carregarProdutosDoBanco();
       carregarChavePix();
       renderizarIcones();
@@ -664,17 +627,90 @@
 
     // ================= PRODUTOS =================
 
+    async function carregarCategoriasDoBanco() {
+      try {
+        const res = await fetch('/api/categorias');
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          listaCategorias = data;
+        } else {
+          listaCategorias = [
+            { id: 1, nome: 'Tradicionais & Gourmet', slug: 'classicos' },
+            { id: 2, nome: 'Frutas Nobres', slug: 'frutados' },
+            { id: 3, nome: 'Especiais do Chef', slug: 'exclusivos' }
+          ];
+        }
+      } catch (err) {
+        listaCategorias = [
+          { id: 1, nome: 'Tradicionais & Gourmet', slug: 'classicos' },
+          { id: 2, nome: 'Frutas Nobres', slug: 'frutados' },
+          { id: 3, nome: 'Especiais do Chef', slug: 'exclusivos' }
+        ];
+      }
+      renderizarBarraCategorias();
+    }
+
+    function renderizarBarraCategorias() {
+      const container = document.getElementById('barra-categorias');
+      if (!container) return;
+
+      let html = `
+        <button type="button" onclick="selecionarCategoria('todos')" id="cat-todos" 
+                class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap ${categoriaAtual === 'todos' ? 'bg-brand-gold text-brand-dark shadow-glow-gold' : 'glass-panel text-brand-muted hover:text-brand-cream'} shrink-0">
+          Todos os Sabores
+        </button>
+      `;
+
+      listaCategorias.forEach(c => {
+        const ativa = categoriaAtual === c.slug;
+        html += `
+          <button type="button" onclick="selecionarCategoria('${c.slug}')" id="cat-${c.slug}" 
+                  class="btn-categoria px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap ${ativa ? 'bg-brand-gold text-brand-dark shadow-glow-gold' : 'glass-panel text-brand-muted hover:text-brand-cream'} shrink-0">
+            ${c.nome}
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function selecionarCategoria(cat) {
+      categoriaAtual = cat;
+      renderizarBarraCategorias();
+      renderizarProdutos();
+    }
+
+    function obterNomeCategoria(slug) {
+      const cat = listaCategorias.find(c => c.slug === slug);
+      return cat ? cat.nome : (slug || 'Artesanal');
+    }
+
+    function atualizarDestaqueHero() {
+      if (!listaProdutos || listaProdutos.length === 0) return;
+      const primeiro = listaProdutos[0];
+      const imgElem = document.getElementById('hero-destaque-img');
+      const nomeElem = document.getElementById('hero-destaque-nome');
+      const precoElem = document.getElementById('hero-destaque-preco');
+      if (imgElem && primeiro.img) imgElem.src = primeiro.img;
+      if (nomeElem && primeiro.nome) nomeElem.innerText = primeiro.nome;
+      if (precoElem && primeiro.preco) precoElem.innerText = `R$ ${primeiro.preco.toFixed(2).replace('.', ',')}`;
+    }
+
     async function carregarProdutosDoBanco() {
       try {
         const res = await fetch('/api/produtos');
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           listaProdutos = data;
-          renderizarProdutos();
+        } else {
+          listaProdutos = [];
         }
       } catch (err) {
-        console.warn("Erro ao buscar da API, mantendo produtos padrão:", err);
+        console.warn("Erro ao buscar produtos da API:", err);
+        listaProdutos = [];
       }
+      renderizarProdutos();
+      atualizarDestaqueHero();
     }
 
     async function carregarChavePix() {
@@ -697,7 +733,28 @@
       });
 
       if (filtrados.length === 0) {
-        grid.innerHTML = '<div class="col-span-3 text-center py-16 text-brand-muted text-sm">Nenhum sabor encontrado para sua busca.</div>';
+        if (listaProdutos.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full text-center py-16 px-6 glass-panel rounded-3xl border border-brand-border max-w-lg mx-auto">
+              <div class="w-16 h-16 rounded-2xl bg-brand-gold/10 border border-brand-gold/30 text-brand-gold flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="package-open" class="w-8 h-8 opacity-75"></i>
+              </div>
+              <h4 class="font-serif text-xl font-bold text-brand-cream">Nenhum produto cadastrado no momento</h4>
+              <p class="text-xs text-brand-muted mt-2 leading-relaxed">
+                Assim que novos sabores forem cadastrados pelo administrador no painel, eles aparecerão aqui automaticamente!
+              </p>
+            </div>
+          `;
+        } else {
+          grid.innerHTML = `
+            <div class="col-span-full text-center py-12 px-6 glass-panel rounded-3xl border border-brand-border max-w-md mx-auto">
+              <i data-lucide="search-x" class="w-8 h-8 text-brand-muted mx-auto mb-2 opacity-60"></i>
+              <p class="text-sm font-semibold text-brand-cream">Nenhum sabor encontrado nesta categoria ou busca.</p>
+              <button onclick="selecionarCategoria('todos')" class="mt-3 text-xs text-brand-gold underline font-semibold">Ver todos os sabores</button>
+            </div>
+          `;
+        }
+        renderizarIcones();
         return;
       }
 
@@ -713,7 +770,7 @@
                 <img src="${fotoCapa}" alt="${p.nome}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute top-3 left-3">
                   <span class="px-3 py-1 rounded-full text-xs font-bold uppercase bg-brand-dark/80 text-brand-gold border border-brand-gold/30 backdrop-blur-md">
-                    ${p.tag || 'Artesanal'}
+                    ${obterNomeCategoria(p.categoria)}
                   </span>
                 </div>
                 ${numFotosBadge}
