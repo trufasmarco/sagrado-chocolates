@@ -293,6 +293,43 @@
     </div>
   </div>
 
+  <!-- ================= POPUP: CONVITE PARA LOGIN / CADASTRO ================= -->
+  <div id="modal-convite-auth" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-8 border border-brand-gold/40 shadow-2xl text-center">
+      <!-- Botão Fechar -->
+      <button type="button" onclick="fecharPopupConviteAuth()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-cream p-1.5 rounded-full hover:bg-brand-surface transition" title="Fechar">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Ícone Dourado Elegante -->
+      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand-gold via-brand-goldDark to-brand-ruby flex items-center justify-center mx-auto mb-4 shadow-glow-gold border border-brand-gold/40">
+        <i data-lucide="sparkles" class="w-8 h-8 text-brand-dark"></i>
+      </div>
+
+      <span class="text-brand-gold text-xs font-semibold tracking-widest uppercase">Seja Bem-vindo(a)!</span>
+      <h3 class="font-serif text-2xl font-bold text-brand-cream mt-1 mb-2">Já tem uma conta?</h3>
+      <p class="text-brand-muted text-xs sm:text-sm leading-relaxed mb-6">
+        Faça login ou crie sua conta para acompanhar seus pedidos, consultar seus fiados e aproveitar nossas novidades!
+      </p>
+
+      <div class="space-y-3">
+        <button type="button" onclick="abrirAuthComAba('entrar')" class="btn-shimmer w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-goldDark to-brand-gold text-brand-dark font-bold text-sm shadow-glow-gold hover:brightness-110 active:scale-95 transition flex items-center justify-center gap-2">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Entrar na Minha Conta</span>
+        </button>
+
+        <button type="button" onclick="abrirAuthComAba('cadastrar')" class="w-full py-3.5 rounded-xl glass-panel text-brand-gold font-bold text-sm border border-brand-gold/30 hover:bg-brand-gold/10 active:scale-95 transition flex items-center justify-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span>Criar Nova Conta Grátis</span>
+        </button>
+
+        <button type="button" onclick="fecharPopupConviteAuth()" class="text-xs text-brand-muted hover:text-brand-cream underline pt-2 block mx-auto transition">
+          Continuar navegando no cardápio
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= MODAL: CRIAR CONTA OU ENTRAR ================= -->
   <div id="modal-auth" style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
     <div class="relative w-full max-w-md glass-panel rounded-3xl p-5 sm:p-8 border border-brand-gold/40 shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -610,6 +647,13 @@
       carregarProdutosDoBanco();
       carregarChavePix();
       renderizarIcones();
+
+      // Popup automático convidando para Entrar ou Criar Conta se não estiver logado
+      setTimeout(() => {
+        if (!usuarioLogado && !sessionStorage.getItem('popup_auth_visto')) {
+          abrirPopupConviteAuth();
+        }
+      }, 3500);
     }
 
     if (document.readyState === 'loading') {
@@ -899,6 +943,30 @@ Por favor, confirmem a disponibilidade!`;
       } else {
         abrirModalAuth();
       }
+    }
+
+    // Popup de Boas-Vindas / Convite de Login
+    function abrirPopupConviteAuth() {
+      if (usuarioLogado) return;
+      const modal = document.getElementById('modal-convite-auth');
+      if (modal) {
+        modal.style.display = 'flex';
+        renderizarIcones();
+      }
+    }
+
+    function fecharPopupConviteAuth() {
+      const modal = document.getElementById('modal-convite-auth');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+      sessionStorage.setItem('popup_auth_visto', 'true');
+    }
+
+    function abrirAuthComAba(aba) {
+      fecharPopupConviteAuth();
+      abrirModalAuth();
+      alternarAbaAuth(aba);
     }
 
     function abrirModalAuth() {
@@ -1216,6 +1284,9 @@ Por favor, confirmem a disponibilidade!`;
     }
 
     // Exportacao explicita para o escopo global (garantia de funcionamento dos onclicks)
+    window.abrirPopupConviteAuth = abrirPopupConviteAuth;
+    window.fecharPopupConviteAuth = fecharPopupConviteAuth;
+    window.abrirAuthComAba = abrirAuthComAba;
     window.clicarBotaoConta = clicarBotaoConta;
     window.abrirModalAuth = abrirModalAuth;
     window.fecharModalAuth = fecharModalAuth;
