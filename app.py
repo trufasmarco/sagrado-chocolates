@@ -54,6 +54,29 @@ def init_db():
         except Exception:
             conn.rollback()
 
+        # 4. Tabela de Categorias
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS categorias (
+                id SERIAL PRIMARY KEY,
+                nome TEXT NOT NULL,
+                slug TEXT UNIQUE NOT NULL,
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        ''')
+
+        try:
+            cursor.execute('SELECT COUNT(*) AS total FROM categorias;')
+            res_total = cursor.fetchone()
+            if res_total and res_total['total'] == 0:
+                cursor.execute('''
+                    INSERT INTO categorias (nome, slug) VALUES 
+                    ('Tradicionais & Gourmet', 'classicos'),
+                    ('Frutas Nobres', 'frutados'),
+                    ('Especiais do Chef', 'exclusivos')
+                ''')
+        except Exception:
+            conn.rollback()
+
         # 2. Tabela de Usuários / Clientes
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS usuarios (
@@ -143,6 +166,114 @@ def admin():
         erro_detalhado = traceback.format_exc()
         print("ERRO AO CARREGAR admin.html:\n", erro_detalhado)
         return erro_interno_servidor(e)
+
+# ================= ROTAS DE CATEGORIAS =================
+
+@app.route('/api/categorias', methods=['GET'])
+def listar_categorias():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, nome, slug FROM categorias ORDER BY id ASC')
+        cats = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify([{'id': c['id'], 'nome': c['nome'], 'slug': c['slug']} for c in cats])
+    except Exception as e:
+        return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
+
+@app.route('/api/categorias', methods=['POST'])
+def adicionar_categoria():
+    try:
+        import unicodedata, re
+        dados = request.json or {}
+        nome = (dados.get('nome') or '').strip()
+        slug = (dados.get('slug') or '').strip()
+
+        if not nome:
+            return jsonify({'erro': 'O nome da categoria é obrigatório!'}), 400
+
+        if not slug:
+            s = unicodedata.normalize('NFKD', nome).encode('ascii', 'ignore').decode('utf-8').lower()
+            slug = re.sub(r'[^a-z0-9]+', '-', s).strip('-')
+            if not slug:
+                slug = f"cat-{datetime.now().strftime('%M%S')}"
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT id FROM categorias WHERE slug = %s', (slug,))
+        if cursor.fetchone():
+            cursor.close()
+            conn.close()
+            return jsonify({'erro': f'Já existe uma categoria com o identificador "{slug}"!'}), 400
+
+        cursor.execute('INSERT INTO categorias (nome, slug) VALUES (%s, %s) RETURNING id', (nome, slug))
+        cat_id = cursor.fetchone()['id']
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'sucesso', 'mensagem': 'Categoria criada com sucesso!', 'categoria': {'id': cat_id, 'nome': nome, 'slug': slug}}), 201
+    except Exception as e:
+        return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
+
+@app.route('/api/categorias/<int:cat_id>/editar', methods=['POST'])
+def editar_categoria(cat_id):
+    try:
+        import unicodedata, re
+        dados = request.json or {}
+        novo_nome = (dados.get('nome') or '').strip()
+        novo_slug = (dados.get('slug') or '').strip()
+
+        if not novo_nome:
+            return jsonify({'erro': 'O nome da categoria é obrigatório!'}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT id, slug FROM categorias WHERE id = %s', (cat_id,))
+        cat_atual = cursor.fetchone()
+        if not cat_atual:
+            cursor.close()
+            conn.close()
+            return jsonify({'erro': 'Categoria não encontrada!'}), 404
+
+        slug_antigo = cat_atual['slug']
+        if not novo_slug:
+            s = unicodedata.normalize('NFKD', novo_nome).encode('ascii', 'ignore').decode('utf-8').lower()
+            novo_slug = re.sub(r'[^a-z0-9]+', '-', s).strip('-')
+            if not novo_slug:
+                novo_slug = slug_antigo
+
+        if novo_slug != slug_antigo:
+            cursor.execute('SELECT id FROM categorias WHERE slug = %s AND id != %s', (novo_slug, cat_id))
+            if cursor.fetchone():
+                cursor.close()
+                conn.close()
+                return jsonify({'erro': f'O identificador "{novo_slug}" já está em uso por outra categoria!'}), 400
+
+        cursor.execute('UPDATE categorias SET nome = %s, slug = %s WHERE id = %s', (novo_nome, novo_slug, cat_id))
+        if novo_slug != slug_antigo:
+            cursor.execute('UPDATE produtos SET categoria = %s WHERE categoria = %s', (novo_slug, slug_antigo))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'sucesso', 'mensagem': 'Categoria atualizada com sucesso!'})
+    except Exception as e:
+        return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
+
+@app.route('/api/categorias/<int:cat_id>', methods=['DELETE'])
+def excluir_categoria(cat_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM categorias WHERE id = %s', (cat_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'status': 'sucesso', 'mensagem': 'Categoria excluída com sucesso!'})
+    except Exception as e:
+        return jsonify({'erro': str(e), 'detalhes': traceback.format_exc()}), 500
 
 # ================= ROTAS DE PRODUTOS =================
 
