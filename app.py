@@ -553,4 +553,3 @@ else:
         init_db()
     except Exception as e:
         print(f"Erro no init_db global: {e}")
-
